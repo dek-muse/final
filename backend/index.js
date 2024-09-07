@@ -34,8 +34,8 @@ const userRouter = require('./routes/userRouter');
 
 // Use Routes
 // app.use('/api/auth', authRoutes);
-app.use('/api/auth', userRouter);
-app.use('/api/teachers', teacherRoutes);
+app.use('/', userRouter);
+app.use('/', teacherRoutes);
 
 // Serve static files from the uploads directory
 app.use('/uploads', express.static('uploads'));
