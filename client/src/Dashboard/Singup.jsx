@@ -40,7 +40,7 @@ const SignUp = () => {
     setIsLoading(true); // Start loading
 
     try {
-      await axios.post('http://localhost:5000/api/auth/signup', formData);
+      await axios.post('https://tuserapi.vercel.app/login', formData);
       alert('Sign up successful! Redirecting to login page.'); // Alert message
       navigate('/listUsers'); // Redirect to login page
     } catch (error) {
@@ -94,7 +94,7 @@ const SignUp = () => {
               value={formData.password}
               onChange={handleChange}
               required
-              className={`w-full px-4 py-3 border rounded-lg shadow-sm bg-gray-100 dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
+              className={`w-full px-4 py-3 border rounded-lg shadow-sm  dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
             />
             {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
           </div>
@@ -106,7 +106,7 @@ const SignUp = () => {
               value={formData.role}
               onChange={handleChange}
               required
-              className={`w-full px-4 py-3 border rounded-lg shadow-sm bg-gray-100 dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.role ? 'border-red-500' : 'border-gray-300'}`}
+              className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.role ? 'border-red-500' : 'border-gray-300'}`}
             >
               <option value="">Select a role</option>
               {roles.map(role => (

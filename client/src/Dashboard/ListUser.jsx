@@ -34,7 +34,7 @@ const UserManagement = () => {
     const fetchUsers = async () => {
       setIsLoading(true);
       try {
-        const response = await axios.get('https://backend-pink-beta.vercel.app/api/auth', {
+        const response = await axios.get('https://tuserapi.vercel.app/', {
           headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
         });
         setUsers(response.data);
@@ -88,7 +88,7 @@ const UserManagement = () => {
     setShowConfirmation(false);
     setIsLoading(true);
     try {
-      await axios.delete(`https://backend-pink-beta.vercel.app/api/auth/${userIdToDelete}`, {
+      await axios.delete(`https://tuserapi.vercel.app/${userIdToDelete}`, {
         headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
       });
       setUsers(users.filter(user => user._id !== userIdToDelete));
@@ -114,7 +114,7 @@ const UserManagement = () => {
     setShowConfirmation(false);
     setIsLoading(true);
     try {
-      await axios.put(`https://backend-pink-beta.vercel.app/api/auth/${selectedUser._id}`, selectedUser, {
+      await axios.put(`https://tuserapi.vercel.app/${selectedUser._id}`, selectedUser, {
         headers: {
           'Content-Type': 'application/json',
           'Authorization': `Bearer ${localStorage.getItem('token')}`,

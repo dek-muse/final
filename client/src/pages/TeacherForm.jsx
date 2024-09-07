@@ -201,7 +201,7 @@ const TeacherForm = () => {
       // Exclude picture field in the form submission if it's not needed
       const { picture, ...dataToSend } = teacherData;
   
-      const response = await axios.post('https://backend-pink-beta.vercel.app/api/teachers', dataToSend);
+      const response = await axios.post('https://finalbakend.vercel.app/', dataToSend);
       console.log(response.data);
   
       setIsSubmitted(true);

@@ -161,7 +161,7 @@ const Dashboard = () => {
     const fetchData = async () => {
       setLoading(true);
       try {
-        const response = await axios.get('http://localhost:5000/api/teachers');
+        const response = await axios.get('https://finalbakend.vercel.app/');
         const data = response.data;
         setTeacherData(data);
 
