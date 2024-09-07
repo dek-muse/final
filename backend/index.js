@@ -34,8 +34,8 @@
 
   // Use Routes
   // app.use('/api/auth', authRoutes);
-  app.use('/', userRouter);
-  app.use('/', teacherRoutes);
+  app.use('/api/auth', userRouter);
+  app.use('/api/teachers', teacherRoutes);
 
   // Error Handling Middleware
   app.use(errorHandler);
