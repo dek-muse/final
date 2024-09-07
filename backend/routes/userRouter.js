@@ -12,7 +12,7 @@ const router = express.Router();
 
 // Routes for user management
 router.post('/signup', signup);
-router.post('/login', signin);
+router.post('/', signin);
 router.get('/', getAllUsers);
 router.get('/:id', getUser);
 router.put('/:id', updateUser);
