@@ -28,8 +28,8 @@ const Filters = ({
   districtFilter, setDistrictFilter,
   regions, districts
 }) => (
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6 p-4 bg-white dark:bg-gray-800 rounded shadow-md">
-    <div className="p-4   dark:bg-gray-800 rounded bg-[#b19d60] shadow-sm  shadow-[#b19d60] ">
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6 mb-6 p-4   rounded shadow-md">
+    <div className="p-4   bg-white rounded   shadow-sm dark:bg-gray-800  shadow-[#b19d60] ">
       <h2 className="text-lg font-semibold mb-2 text-gray-800 dark:text-gray-200">Filter by Subject</h2>
       <input
         type="text"
@@ -279,7 +279,7 @@ const Dashboard = () => {
   }
 
   return (
-    <div className="p-6 bg-gray-50 dark:bg-gray-900 min-h-screen">
+    <div className="p-6  min-h-screen">
       <Filters
         subjectFilter={subjectFilter}
         setSubjectFilter={setSubjectFilter}
@@ -298,11 +298,11 @@ const Dashboard = () => {
         nonNativeCount={pieData.find(item => item.name === 'Non-native').value}
       />
       <div className="mb-4">
-        <label className="mr-2 text-lg font-semibold text-gray-800 dark:text-gray-200">Select Chart Type:</label>
+        <label className="mr-2 text-lg font-semibold   ">Select Chart Type:</label>
         <select
           value={selectedChart}
           onChange={e => setSelectedChart(e.target.value)}
-          className="p-2 border border-gray-300 rounded-md bg-white text-gray-800 dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+          className="p-2 border border-gray-300 rounded-md dark:textt-gray-800  dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
         >
           <option value="Pie">Pie Chart</option>
           <option value="Daily">Daily Joining Data</option>

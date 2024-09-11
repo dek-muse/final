@@ -9,17 +9,10 @@ const Home = () => {
   return (
     <div className="font-sans">
       {/* Header Section */}
-      <header className=" ">
-        <div className="max-w-[1280px] mx-auto flex items-center justify-between px-6 py-4">
-          {/* Navigation (Unstyled) */}
-          <nav>
-            {/* Your existing navigation code here, without Tailwind styling */}
-          </nav>
-        </div>
-      </header>
+      
 
       {/* Hero Section */}
-      <section className=" h-[500px] flex items-center justify-between ">
+      <section className=" h-[500px] flex items-center justify-between">
   <div className="px-8 max-w-[50%]">
     <h1 className="text-3xl font-bold mb-4 uppercase text-left">Welcome to Somali Regional State Education Bureau,</h1>
     <p className="mb-6 text-lg text-left">
@@ -103,10 +96,7 @@ const Home = () => {
 
 
 
-<footer className="bg-gray-800 text-white py-6">
-  <div className="max-w-[1280px] mx-auto px-4 text-center">
-    <p>&copy; {new Date().getFullYear()} Somali Regional State Education Bureau. All rights reserved.</p>
-  </div>
+<footer>
 </footer>
 
     </div>

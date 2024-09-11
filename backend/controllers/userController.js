@@ -2,23 +2,28 @@ const User = require('../models/user.Model.js');
 const bcryptjs = require('bcryptjs');
 const jwt = require('jsonwebtoken');
 
+// Sign Up
 const signup = async (req, res) => {
-  const { username, email, password, role } = req.body;
+  const { username, email, password, role, region } = req.body;
 
-  if (!username || !email || !password || !role || username.trim() === '' || email.trim() === '' || password.trim() === '' || role.trim() === '') {
+  // Validate required fields
+  if (!username || !email || !password || !role || !region) {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
-  const hashedPassword = bcryptjs.hashSync(password, 10);
-
-  const newUser = new User({
-    username,
-    email,
-    password: hashedPassword,
-    role, // include role
-  });
-
   try {
+    // Hash the password
+    const hashedPassword = await bcryptjs.hash(password, 10);
+
+    const newUser = new User({
+      username: username.trim(),
+      email: email.trim(),
+      password: hashedPassword,
+      role: role.trim(),
+      region: region.trim(),
+    });
+
+    // Save user to database
     await newUser.save();
     res.status(201).json({ message: 'User registered successfully', _id: newUser._id });
   } catch (error) {
@@ -29,12 +34,11 @@ const signup = async (req, res) => {
   }
 };
 
-
-// Signin (Login)
+// Sign In (Login)
 const signin = async (req, res) => {
   const { email, password } = req.body;
 
-  if (!email || !password || email.trim() === '' || password.trim() === '') {
+  if (!email || !password) {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
@@ -45,51 +49,58 @@ const signin = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
-    const isPasswordValid = bcryptjs.compareSync(password, user.password);
+    const isPasswordValid = await bcryptjs.compare(password, user.password);
 
     if (!isPasswordValid) {
       return res.status(400).json({ message: 'Invalid password' });
     }
 
-    if (!process.env.JWT_SECRET) {
+    const jwtSecret = process.env.JWT_SECRET;
+    if (!jwtSecret) {
       return res.status(500).json({ message: 'JWT secret is not defined' });
     }
 
+    // Generate JWT token
     const token = jwt.sign(
       { id: user._id, role: user.role },
-      process.env.JWT_SECRET,
-      { expiresIn: '1h' } // Token expires in 1 hour
+      jwtSecret,
+      { expiresIn: '1h' }
     );
 
-    const { password: pass, ...rest } = user._doc;
+    // Exclude password from the response
+    const { password: _, ...rest } = user._doc;
 
-    res.status(200).cookie('access_token', token, {
-      httpOnly: true,
-      secure: process.env.NODE_ENV === 'production', // Use secure cookies in production
-      sameSite: 'strict', // Prevent CSRF attacks
-    }).json(rest);
+    res.status(200)
+      .cookie('access_token', token, {
+        httpOnly: true,
+        secure: process.env.NODE_ENV === 'production',
+        sameSite: 'strict',
+      })
+      .json(rest);
   } catch (error) {
-    res.status(500).json({ message: 'Error Networking ', error });
+    res.status(500).json({ message: 'Error during login', error });
   }
 };
 
-// Read (Get user by ID)
+// Get User by ID
 const getUser = async (req, res) => {
   try {
     const user = await User.findById(req.params.id);
     if (!user) {
       return res.status(404).json({ message: 'User not found' });
     }
-    const { password, ...rest } = user._doc;
+
+    // Exclude password from the response
+    const { password: _, ...rest } = user._doc;
     res.status(200).json(rest);
   } catch (error) {
     res.status(500).json({ message: 'Error retrieving user', error });
   }
 };
 
-// Update (Update user by ID)
+// Update User by ID
 const updateUser = async (req, res) => {
-  const { username, email, password, role } = req.body;
+  const { username, email, password, role, region } = req.body;
 
   try {
     const user = await User.findById(req.params.id);
@@ -97,16 +108,19 @@ const updateUser = async (req, res) => {
       return res.status(404).json({ message: 'User not found' });
     }
 
+    // Update user fields if provided
     user.username = username ? username.trim() : user.username;
     user.email = email ? email.trim() : user.email;
-    user.role = role ? role.trim() : user.role; // Update role if provided
+    user.role = role ? role.trim() : user.role;
+    user.region = region ? region.trim() : user.region;
 
+    // Hash the new password if provided
     if (password && password.trim() !== '') {
-      user.password = bcryptjs.hashSync(password, 10);
+      user.password = await bcryptjs.hash(password, 10);
     }
 
     const updatedUser = await user.save();
-    const { password: pass, ...rest } = updatedUser._doc;
+    const { password: _, ...rest } = updatedUser._doc;
     res.status(200).json(rest);
   } catch (error) {
     if (error.code === 11000) {
@@ -116,7 +130,7 @@ const updateUser = async (req, res) => {
   }
 };
 
-// Delete (Delete user by ID)
+// Delete User by ID
 const deleteUser = async (req, res) => {
   try {
     const user = await User.findByIdAndDelete(req.params.id);
@@ -134,7 +148,7 @@ const getAllUsers = async (req, res) => {
   try {
     const users = await User.find({});
     const usersWithoutPasswords = users.map(user => {
-      const { password, ...rest } = user._doc;
+      const { password: _, ...rest } = user._doc;
       return rest;
     });
     res.status(200).json(usersWithoutPasswords);

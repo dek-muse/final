@@ -56,7 +56,7 @@ const Header = () => {
   };
 
   return (
-    <header className={`flex flex-col md:flex-row items-center justify-between p-4 shadow-md ${isDarkMode ? 'bg-[#b19d60] text-white' : 'bg-[#b19d60] text-gray-800'} transition-colors duration-300`}>
+    <header className={`flex flex-col md:flex-row items-center justify-between p-4 shadow-md ${isDarkMode ? 'bg-[#b19d60] text-gray-800' : 'bg-[#b19d60] text-white 0'} transition-colors duration-300`}>
       <div className="flex items-center justify-between w-full md:w-auto">
         <NavLink to="/" className="flex items-center space-x-2 text-2xl font-bold uppercase">
           <img src={logo} alt="Logo" className="h-8 w-8" />
@@ -80,7 +80,7 @@ const Header = () => {
             placeholder="Search..."
             value={searchQuery}
             onChange={handleSearchChange}
-            className="bg-gray-200 dark:bg-gray-700 placeholder-gray-500 text-gray-800 px-4 py-2 rounded-md pl-12 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:text-white dark:placeholder-gray-400"
+            className="bg-gray-800 dark:bg-gray-200 placeholder-gray-500 text-gray-800 px-4 py-2 rounded-md pl-12 focus:outline-none focus:ring-2 focus:ring-gray-400 dark:text-white dark:placeholder-gray-300"
           />
           <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500 dark:text-gray-400" />
           {searchQuery && (

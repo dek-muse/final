@@ -15,6 +15,7 @@ const Button = ({ type = 'button', onClick, disabled, className, children }) => 
 );
 
 const roles = ['Admin', 'SuperAdmin', 'User'];
+const REGIONS = ['Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
 
 const UserManagement = () => {
   const [users, setUsers] = useState([]);
@@ -35,7 +36,7 @@ const UserManagement = () => {
       setIsLoading(true);
       try {
         const response = await axios.get('https://tuserapi.vercel.app/', {
-          headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+          headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
         });
         setUsers(response.data);
         setFilteredUsers(response.data);
@@ -56,14 +57,15 @@ const UserManagement = () => {
       let filtered = users;
 
       if (searchQuery) {
-        filtered = filtered.filter(user =>
-          user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
-          user.email.toLowerCase().includes(searchQuery.toLowerCase())
+        filtered = filtered.filter(
+          (user) =>
+            user.username.toLowerCase().includes(searchQuery.toLowerCase()) ||
+            user.email.toLowerCase().includes(searchQuery.toLowerCase())
         );
       }
 
       if (selectedRole) {
-        filtered = filtered.filter(user => user.role === selectedRole);
+        filtered = filtered.filter((user) => user.role === selectedRole);
       }
 
       setFilteredUsers(filtered);
@@ -89,10 +91,10 @@ const UserManagement = () => {
     setIsLoading(true);
     try {
       await axios.delete(`https://tuserapi.vercel.app/${userIdToDelete}`, {
-        headers: { 'Authorization': `Bearer ${localStorage.getItem('token')}` },
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
       });
-      setUsers(users.filter(user => user._id !== userIdToDelete));
-      setFilteredUsers(filteredUsers.filter(user => user._id !== userIdToDelete));
+      setUsers(users.filter((user) => user._id !== userIdToDelete));
+      setFilteredUsers(filteredUsers.filter((user) => user._id !== userIdToDelete));
       setMessage('User deleted successfully');
       setUserCount(userCount - 1);
     } catch (error) {
@@ -114,15 +116,20 @@ const UserManagement = () => {
     setShowConfirmation(false);
     setIsLoading(true);
     try {
-      await axios.put(`https://tuserapi.vercel.app/${selectedUser._id}`, selectedUser, {
-        headers: {
-          'Content-Type': 'application/json',
-          'Authorization': `Bearer ${localStorage.getItem('token')}`,
-        },
-      });
+      // Only update role and region
+      await axios.put(
+        `https://tuserapi.vercel.app/${selectedUser._id}`,
+        { role: selectedUser.role, region: selectedUser.region },
+        {
+          headers: {
+            'Content-Type': 'application/json',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        }
+      );
       setMessage('User updated successfully');
-      setUsers(users.map(user => (user._id === selectedUser._id ? selectedUser : user)));
-      setFilteredUsers(filteredUsers.map(user => (user._id === selectedUser._id ? selectedUser : user)));
+      setUsers(users.map((user) => (user._id === selectedUser._id ? selectedUser : user)));
+      setFilteredUsers(filteredUsers.map((user) => (user._id === selectedUser._id ? selectedUser : user)));
       setSelectedUser(null);
     } catch (error) {
       console.error('Error updating user:', error);
@@ -132,21 +139,9 @@ const UserManagement = () => {
     }
   };
 
-  const handleFileChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      const reader = new FileReader();
-      reader.onloadend = () => {
-        setSelectedUser({ ...selectedUser, profilePicture: reader.result });
-      };
-      reader.readAsDataURL(file);
-    }
-  };
-
   return (
     <div className="flex flex-col items-center min-h-screen p-8 shadow-2xl border shadow-[#b19d60] border-[#b19d60] rounded-md">
       <div className="p-8 rounded-lg shadow-lg w-full max-w-6xl">
-
         <div className="mb-7 items-center rounded-lg flex justify-between gap-4 p-6 bg-[#b19d60]">
           <h2 className="text-2xl font-bold text-start">User Management</h2>
           <select
@@ -155,14 +150,18 @@ const UserManagement = () => {
             className="px-2 py-1 h-10 border rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800"
           >
             <option value="">All Roles</option>
-            {roles.map(role => (
-              <option key={role} value={role}>{role}</option>
+            {roles.map((role) => (
+              <option key={role} value={role}>
+                {role}
+              </option>
             ))}
           </select>
         </div>
 
         <div className="mb-4 text-lg">
-          <p>Total Users: <span className="font-bold">{userCount}</span></p>
+          <p>
+            Total Users: <span className="font-bold">{userCount}</span>
+          </p>
         </div>
 
         <div>
@@ -170,10 +169,10 @@ const UserManagement = () => {
             <thead>
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">No</th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Profile Picture</th>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Username</th>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Role</th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Region</th>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
               </tr>
             </thead>
@@ -181,28 +180,22 @@ const UserManagement = () => {
               {filteredUsers.map((user, index) => (
                 <tr key={user._id}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{index + 1}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">
-                    <img
-                      src={user.profilePicture}
-                      alt="Profile"
-                      className="w-10 h-10 rounded-full object-cover"
-                    />
-                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{user.username}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">{user.email}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">{user.role}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">{user.region || 'N/A'}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-2">
                     <Button
                       onClick={() => handleEdit(user)}
                       className="bg-[#b19d60] hover:bg-blue-700 text-white"
                     >
-                      <FaEdit className="mr-2" />  
+                      <FaEdit className="mr-2" />
                     </Button>
                     <Button
                       onClick={() => confirmDelete(user._id)}
                       className="bg-red-600 hover:bg-red-700 text-white"
                     >
-                      <FaTrashAlt className="mr-2" />  
+                      <FaTrashAlt className="mr-2" />
                     </Button>
                   </td>
                 </tr>
@@ -211,81 +204,53 @@ const UserManagement = () => {
           </table>
         </div>
 
-        <div className='mt-12'>
+        <div className="mt-12">
           {isLoading && <p className="text-center text-blue-600">Loading...</p>}
           {error && <p className="text-center text-red-600">{error}</p>}
           {message && <p className="text-center text-green-600">{message}</p>}
         </div>
 
+        {/* Edit User Modal */}
         {selectedUser && (
-          <div className="fixed inset-0 flex items-center justify-center bg-gray-200 bg-opacity-75">
-            <div className="p-6 rounded-lg shadow-lg max-w-lg w-full bg-white">
-              <h3 className="text-xl font-bold mb-4 text-gray-800">Edit User</h3>
+          <div className="fixed inset-0 flex items-center justify-center  k bg-opacity-50 z-50">
+            <div className="bg-white dark:bg-slate-700 p-6 rounded-lg shadow-lg w-full max-w-md">
+              <h2 className="text-lg font-bold mb-4">Edit User</h2>
               <form onSubmit={confirmUpdate}>
                 <div className="mb-4">
-                  <label htmlFor="profilePicture" className="block text-gray-700 text-sm font-bold mb-2">Profile Picture</label>
-                  <input
-                    id="profilePicture"
-                    type="file"
-                    accept="image/*"
-                    onChange={handleFileChange}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                  />
-                </div>
-                {selectedUser.profilePicture && (
-                  <div className="mb-4">
-                    <img
-                      src={selectedUser.profilePicture}
-                      alt="Selected Profile"
-                      className="w-20 h-20 rounded-full object-cover"
-                    />
-                  </div>
-                )}
-                <div className="mb-4">
-                  <label htmlFor="username" className="block text-gray-700 text-sm font-bold mb-2">Username</label>
-                  <input
-                    id="username"
-                    type="text"
-                    value={selectedUser.username || ''}
-                    onChange={(e) => setSelectedUser({ ...selectedUser, username: e.target.value })}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label htmlFor="email" className="block text-gray-700 text-sm font-bold mb-2">Email</label>
-                  <input
-                    id="email"
-                    type="email"
-                    value={selectedUser.email || ''}
-                    onChange={(e) => setSelectedUser({ ...selectedUser, email: e.target.value })}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    required
-                  />
-                </div>
-                <div className="mb-4">
-                  <label htmlFor="role" className="block text-gray-700 text-sm font-bold mb-2">Role</label>
+                  <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+                    Role
+                  </label>
                   <select
                     id="role"
-                    value={selectedUser.role || ''}
+                    value={selectedUser.role}
                     onChange={(e) => setSelectedUser({ ...selectedUser, role: e.target.value })}
-                    className="shadow appearance-none border rounded w-full py-2 px-3 text-gray-700 leading-tight focus:outline-none focus:shadow-outline"
-                    required
+                    className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm"
                   >
-                    <option value="">Select a role</option>
-                    {roles.map(role => (
-                      <option key={role} value={role}>{role}</option>
+                    {roles.map((role) => (
+                      <option key={role} value={role}>
+                        {role}
+                      </option>
                     ))}
                   </select>
                 </div>
-                <div className="flex items-center justify-between">
-                  <Button
-                    type="submit"
-                    disabled={isLoading}
-                    className="bg-blue-600 hover:bg-blue-700 text-white"
+                <div className="mb-4">
+                  <label htmlFor="region" className="block text-sm font-medium text-gray-700">
+                    Region
+                  </label>
+                  <select
+                    id="region"
+                    value={selectedUser.region || ''}
+                    onChange={(e) => setSelectedUser({ ...selectedUser, region: e.target.value })}
+                    className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm"
                   >
-                    {isLoading ? 'Updating...' : 'Update'}
-                  </Button>
+                    {REGIONS.map((region) => (
+                      <option key={region} value={region}>
+                        {region}
+                      </option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex justify-end gap-2 mt-4">
                   <Button
                     type="button"
                     onClick={() => setSelectedUser(null)}
@@ -293,30 +258,32 @@ const UserManagement = () => {
                   >
                     Cancel
                   </Button>
+                  <Button type="submit" className="bg-[#b19d60] hover:bg-[#8e793f] text-white">
+                    Update
+                  </Button>
                 </div>
               </form>
             </div>
           </div>
         )}
 
+        {/* Confirmation Modal */}
         {showConfirmation && (
-          <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75">
-            <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
-              <h3 className="text-xl font-bold mb-4 text-gray-800">Confirm Action</h3>
-              <p className="mb-6 text-gray-700">Are you sure you want to {actionType} this user?</p>
-              <div className="flex justify-between">
-                <Button
-                  onClick={() => {
-                    setShowConfirmation(false);
-                    setUserIdToDelete(null);
-                  }}
-                  className="bg-gray-600 hover:bg-gray-700 text-white"
-                >
+          <div className="fixed inset-0 flex items-center justify-center  k bg-opacity-50 z-50">
+            <div className="  p-6 rounded-lg shadow-lg w-full max-w-md">
+              <h2 className="text-lg font-bold mb-4">
+                {actionType === 'delete' ? 'Confirm Delete' : 'Confirm Update'}
+              </h2>
+              <p className="mb-4">
+                Are you sure you want to {actionType === 'delete' ? 'delete' : 'update'} this user?
+              </p>
+              <div className="flex justify-end gap-2">
+                <Button onClick={() => setShowConfirmation(false)} className="bg-gray-600 hover:bg-gray-700 text-white">
                   Cancel
                 </Button>
                 <Button
                   onClick={actionType === 'delete' ? handleConfirmDelete : handleConfirmUpdate}
-                  className="bg-red-600 hover:bg-red-700 text-white"
+                  className="bg-[#b19d60] hover:bg-[#8e793f] text-white"
                 >
                   Confirm
                 </Button>
