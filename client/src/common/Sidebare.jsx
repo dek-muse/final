@@ -52,9 +52,7 @@ const Sidebar = () => {
 
           </div>
 
-          {/* Admin and SuperAdmin Links (Available only for specific regions if required) */}
-
-
+          {/*  SuperAdmin Links Available only for specific ) */}
 
           {userRole === 'SuperAdmin' && (
             <div className="space-y-2">
@@ -133,8 +131,6 @@ const Sidebar = () => {
                   {!isSidebarOpen && <Tooltip content="Users" />}
                 </NavLink>
               )}
-
-
 
               {/* Daawo*/}
               {hasAccessToRegion('Daawo') && (
@@ -255,8 +251,9 @@ const Sidebar = () => {
               )}
             </>
           )}
-          {/* reports Admins by region */}
 
+
+          {/* reports Admins by region */}
           {userRole === 'Admin' && (
             <>
               {/* Afdheer */}
@@ -271,6 +268,108 @@ const Sidebar = () => {
                 <MdReport />
                 {isSidebarOpen ? <span>Report</span> : <Tooltip content="Report" />}
               </NavLink>
+              {/* Report */}
+              <NavLink
+                to="/teacher/report/Afdheer"
+                className={({ isActive }) =>
+                  `flex items-center space-x-4 p-2 hover:bg-[#b19d60] transition-all rounded-md ${isActive ? 'bg-[#b19d60]' : 'bg-transparent'}`
+                }
+              >
+                <MdReport />
+                {isSidebarOpen ? <span>Report</span> : <Tooltip content="Report" />}
+              </NavLink>
+              {/* Report */}
+              <NavLink
+                to="/teacher/report/Daawo"
+                className={({ isActive }) =>
+                  `flex items-center space-x-4 p-2 hover:bg-[#b19d60] transition-all rounded-md ${isActive ? 'bg-[#b19d60]' : 'bg-transparent'}`
+                }
+              >
+                <MdReport />
+                {isSidebarOpen ? <span>Report</span> : <Tooltip content="Report" />}
+              </NavLink>
+              {/* Report */}
+              <NavLink
+                to="/teacher/report/Doolo"
+                className={({ isActive }) =>
+                  `flex items-center space-x-4 p-2 hover:bg-[#b19d60] transition-all rounded-md ${isActive ? 'bg-[#b19d60]' : 'bg-transparent'}`
+                }
+              >
+                <MdReport />
+                {isSidebarOpen ? <span>Report</span> : <Tooltip content="Report" />}
+              </NavLink>
+              {/* Report */}
+              <NavLink
+                to="/teacher/report/Erar"
+                className={({ isActive }) =>
+                  `flex items-center space-x-4 p-2 hover:bg-[#b19d60] transition-all rounded-md ${isActive ? 'bg-[#b19d60]' : 'bg-transparent'}`
+                }
+              >
+                <MdReport />
+                {isSidebarOpen ? <span>Report</span> : <Tooltip content="Report" />}
+              </NavLink>
+              {/* Report */}
+              <NavLink
+                to="/teacher/report/Faafan"
+                className={({ isActive }) =>
+                  `flex items-center space-x-4 p-2 hover:bg-[#b19d60] transition-all rounded-md ${isActive ? 'bg-[#b19d60]' : 'bg-transparent'}`
+                }
+              >
+                <MdReport />
+                {isSidebarOpen ? <span>Report</span> : <Tooltip content="Report" />}
+              </NavLink>
+              {/* Report */}
+              <NavLink
+                to="/teacher/report/Libaan"
+                className={({ isActive }) =>
+                  `flex items-center space-x-4 p-2 hover:bg-[#b19d60] transition-all rounded-md ${isActive ? 'bg-[#b19d60]' : 'bg-transparent'}`
+                }
+              >
+                <MdReport />
+                {isSidebarOpen ? <span>Report</span> : <Tooltip content="Report" />}
+              </NavLink>
+              {/* Report */}
+              <NavLink
+                to="/teacher/report/Nogob"
+                className={({ isActive }) =>
+                  `flex items-center space-x-4 p-2 hover:bg-[#b19d60] transition-all rounded-md ${isActive ? 'bg-[#b19d60]' : 'bg-transparent'}`
+                }
+              >
+                <MdReport />
+                {isSidebarOpen ? <span>Report</span> : <Tooltip content="Report" />}
+              </NavLink>
+              {/* Report */}
+              <NavLink
+                to="/teacher/report/Qoraxay"
+                className={({ isActive }) =>
+                  `flex items-center space-x-4 p-2 hover:bg-[#b19d60] transition-all rounded-md ${isActive ? 'bg-[#b19d60]' : 'bg-transparent'}`
+                }
+              >
+                <MdReport />
+                {isSidebarOpen ? <span>Report</span> : <Tooltip content="Report" />}
+              </NavLink>
+              {/* Report */}
+              <NavLink
+                to="/teacher/report/Shabelle"
+                className={({ isActive }) =>
+                  `flex items-center space-x-4 p-2 hover:bg-[#b19d60] transition-all rounded-md ${isActive ? 'bg-[#b19d60]' : 'bg-transparent'}`
+                }
+              >
+                <MdReport />
+                {isSidebarOpen ? <span>Report</span> : <Tooltip content="Report" />}
+              </NavLink>
+              {/* Report */}
+              <NavLink
+                to="/teacher/report/Sitti"
+                className={({ isActive }) =>
+                  `flex items-center space-x-4 p-2 hover:bg-[#b19d60] transition-all rounded-md ${isActive ? 'bg-[#b19d60]' : 'bg-transparent'}`
+                }
+              >
+                <MdReport />
+                {isSidebarOpen ? <span>Report</span> : <Tooltip content="Report" />}
+              </NavLink>
+
+
 
 
             </>
