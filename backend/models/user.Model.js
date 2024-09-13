@@ -23,7 +23,12 @@ const UserSchema = new mongoose.Schema({
     type: String,
     enum: ['Admin', 'SuperAdmin', 'User'],
     default: 'User'
-  } 
+  },
+  region: {
+    type: String,
+    enum: ['Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'], // Added regions as an enum
+    required: false, // Ensure region is required
+  }, 
 }, { timestamps: true });
 
 const User = mongoose.model('User', UserSchema);

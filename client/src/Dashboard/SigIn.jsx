@@ -2,28 +2,30 @@ import { useState } from 'react';
 import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
-import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice'; // Replace with the actual path to your Redux actions
+import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice'; // Adjust the import path as needed
 
 const Signin = () => {
-  // Local state for form data
-  const [formData, setFormData] = useState({ email: '', password: '' });
+  const [formData, setFormData] = useState({ email: '', password: '', region: '' });
   const [showPassword, setShowPassword] = useState(false);
-  
+  const [role, setRole] = useState(''); // Track role to conditionally show region
+
   // Redux state
   const { loading, error: errorMessage } = useSelector((state) => state.user);
   const dispatch = useDispatch();
   const navigate = useNavigate();
 
-  // Handle form input changes
   const handleChange = (e) => {
     setFormData({ ...formData, [e.target.id]: e.target.value.trim() });
   };
 
-  // Handle form submission
+  const handleRoleChange = (e) => {
+    setRole(e.target.value);
+  };
+
   const handleSubmit = async (e) => {
     e.preventDefault();
 
-    if (!formData.email || !formData.password) {
+    if (!formData.email || !formData.password || (role === 'Admin' && !formData.region)) {
       return dispatch(signInFailure('Please fill all the fields'));
     }
 
@@ -37,9 +39,9 @@ const Signin = () => {
       const data = await res.json();
 
       if (res.ok) {
-        // Store user details in local storage
         localStorage.setItem('token', data.token);
         localStorage.setItem('role', data.role);
+        localStorage.setItem('region', data.region || ''); // Store region if available
         localStorage.setItem('profilePicture', data.profilePicture);
         localStorage.setItem('username', data.username);
 
@@ -52,9 +54,9 @@ const Signin = () => {
       dispatch(signInFailure(error.message || 'An error occurred'));
     }
   };
-    
+
   return (
-    <div className="flex justify-around items-center min-h-screen   -mt-20">
+    <div className="flex justify-around items-center min-h-screen -mt-20">
       <div className="p-8 w-full max-w-md transition-transform transform duration-300 ease-in-out">
         <h2 className="text-4xl font-extrabold mb-6 text-center text-gray-800 dark:text-gray-200">Login</h2>
         <form onSubmit={handleSubmit}>
@@ -95,6 +97,21 @@ const Signin = () => {
               </button>
             </div>
           </div>
+          {role === 'Admin' && (
+            <div className="mb-6">
+              <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300" htmlFor="region">
+                Region
+              </label>
+              <input
+                id="region"
+                type="text"
+                value={formData.region}
+                placeholder="e.g., Sitti"
+                onChange={handleChange}
+                className="shadow-md bg-gray-100 dark:bg-gray-700 placeholder-gray-400 text-gray-900 dark:text-white appearance-none border rounded-lg w-full py-3 px-4 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out transform hover:scale-105"
+              />
+            </div>
+          )}
           {errorMessage && <p className="mb-4 text-red-500 text-center">{errorMessage}</p>}
           <div className="flex items-center justify-between mb-6">
             <button
@@ -106,8 +123,7 @@ const Signin = () => {
             </button>
           </div>
         </form>
-
-         </div>
+      </div>
     </div>
   );
 };

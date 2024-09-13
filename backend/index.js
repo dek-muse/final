@@ -30,11 +30,11 @@ mongoose.connect(process.env.MONGO, {
 // Import Routes
 // const authRoutes = require('../routes/authRoutes');
 const teacherRoutes = require('./routes/teacherRoutes');
-// const userRouter = require('./routes/userRouter');
+const userRouter = require('./routes/userRouter');
 
 // Use Routes
 // app.use('/api/auth', authRoutes);
-// app.use('/', userRouter);
+app.use('/', userRouter);
 app.use('/', teacherRoutes);
 
 // Serve static files from the uploads directory
@@ -49,7 +49,7 @@ app.get('/', (req, res) => {
 app.use(errorHandler);
 
 app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 500;
+  const statusCode = err.statusCode || 5000;
   const message = err.message || 'Internal Server Error';
   res.status(statusCode).json({
     success: false,
