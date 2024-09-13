@@ -1,10 +1,13 @@
 import React, { useEffect, useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
-import { utils, writeFile } from 'xlsx'; 
+import { utils, writeFile } from 'xlsx';
 import { IoDownload, IoPersonAdd, IoPencil, IoTrash, IoSearch } from 'react-icons/io5';
 import TeacherDetailsCard from './TeacherDetailsCard';
-// import { storage } from '../firebase';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage'; // Import Firebase Storage functions
+
+// Ensure Firebase is initialized in your project
+// import { firebaseApp } from '../firebase'; // Import your Firebase configuration
 
 const TeacherList = () => {
   const [teachers, setTeachers] = useState([]);
@@ -16,6 +19,7 @@ const TeacherList = () => {
   const [entriesPerPage, setEntriesPerPage] = useState(17);
   const [filterStatus, setFilterStatus] = useState('all');
   const navigate = useNavigate();
+  const storage = getStorage(); // Initialize Firebase Storage
 
   useEffect(() => {
     const fetchTeachers = async () => {
@@ -24,7 +28,8 @@ const TeacherList = () => {
         const teachersWithImages = await Promise.all(response.data.map(async (teacher) => {
           if (teacher.picture) {
             try {
-              const imageUrl = await storage.refFromURL(teacher.picture).getDownloadURL();
+              const imageRef = ref(storage, teacher.picture); // Get reference to the image
+              const imageUrl = await getDownloadURL(imageRef); // Get download URL
               return { ...teacher, picture: imageUrl };
             } catch (error) {
               console.error('Error fetching image URL:', error);
@@ -42,7 +47,7 @@ const TeacherList = () => {
     };
 
     fetchTeachers();
-  }, []);
+  }, [storage]);
 
   const handleUpdate = (id) => {
     navigate(`/update-teacher/${id}`);
@@ -55,7 +60,7 @@ const TeacherList = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this teacher?')) {
       try {
-        await axios.delete(`https://backend-pink-beta.vercel.app/api/teachers/${id}`);
+        await axios.delete(`https://finalbakend.vercel.app/${id}`);
         setTeachers(teachers.filter(teacher => teacher._id !== id));
       } catch (err) {
         console.error('Failed to delete teacher', err);
@@ -103,7 +108,7 @@ const TeacherList = () => {
     writeFile(workbook, 'Teachers_List.xlsx');
   };
 
-  if (isLoading) 
+  if (isLoading)
     return (
       <div className="flex justify-center items-center min-h-screen bg-gray-50 dark:bg-gray-900">
         <div className="p-6 rounded-lg shadow-lg bg-white dark:bg-gray-800">
@@ -114,7 +119,7 @@ const TeacherList = () => {
       </div>
     );
 
-  if (error) 
+  if (error)
     return <p className="text-center text-red-500">{error}</p>;
 
   return (
@@ -212,17 +217,13 @@ const TeacherList = () => {
                       title="Update"
                     >
                       <IoPencil size={16} />
-                       
                     </button>
-                  
-
                     <button
                       onClick={() => handleDelete(teacher._id)}
                       className="text-red-600 hover:text-red-700 text-sm py-1 px-2 border rounded flex items-center gap-1 transition duration-150"
                       title="Delete"
                     >
                       <IoTrash size={16} />
-                        
                     </button>
                   </td>
                 </tr>
@@ -243,9 +244,7 @@ const TeacherList = () => {
             <button
               key={index}
               onClick={() => paginate(index + 1)}
-              className={`px-4 py-2 border rounded ${
-                currentPage === index + 1 ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600'
-              } hover:bg-blue-500 hover:text-white transition duration-150`}
+              className={`px-4 py-2 border rounded ${currentPage === index + 1 ? 'bg-blue-600 text-white' : 'bg-gray-100 text-gray-600'} hover:bg-blue-500 hover:text-white transition duration-150`}
             >
               {index + 1}
             </button>

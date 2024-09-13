@@ -66,7 +66,7 @@ const UpdateTeacherForm = () => {
   useEffect(() => {
     const fetchTeacher = async () => {
       try {
-        const response = await axios.get(`https://backend-pink-beta.vercel.app/api/teachers/${id}`);
+        const response = await axios.get(`https://finalbakend.vercel.app/${id}`);
         setTeacher(response.data);
       } catch (err) {
         console.error('Error fetching teacher data:', err);
@@ -127,7 +127,7 @@ const UpdateTeacherForm = () => {
     });
 
     try {
-      const response = await axios.put(`https://backend-pink-beta.vercel.app/api/teachers/${id}`, formData, {
+      const response = await axios.put(`https://finalbakend.vercel.app/${id}`, formData, {
         headers: {
           'Content-Type': 'multipart/form-data',
         },
