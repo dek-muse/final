@@ -3,7 +3,7 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 
 const roles = ['Admin', 'SuperAdmin', 'User'];
-const REGIONS = ['Noregion','Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
+const REGIONS = ['c', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
@@ -119,7 +119,7 @@ const SignUp = () => {
             {errors.role && <p className="text-red-500 text-xs mt-1">{errors.role}</p>}
           </div>
           <div className="mb-4">
-            <label htmlFor="region" className="block text-sm font-medium mb-1">Region (Optional)</label>
+            <label htmlFor="region" className="block text-sm font-medium mb-1">Region  </label>
             <select
               id="region"
               name="region"

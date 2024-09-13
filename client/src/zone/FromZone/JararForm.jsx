@@ -222,7 +222,7 @@ const TeacherForm = () => {
         picture: null,
         joiningDate: ''
       });
-      navigate('/teachersList');
+      navigate('/teacher/form/jarar');
     } catch (error) {
       console.error('There was an error creating the teacher!', error);
       alert(`Error: ${error.response.data.error}`);

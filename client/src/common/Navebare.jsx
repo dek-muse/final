@@ -109,10 +109,10 @@ const Header = () => {
               <div className="p-2 border-b dark:border-gray-600">
                 <span className='block text-sm'>{getGreeting()}, {username}!</span>
                 <span className='block text-sm font-medium truncate'>
-                    @{username}
+                  @{username}
                 </span>
                 <span className='block text-sm truncate'>
-                    {email}
+                  {email}
                 </span>
               </div>
               <NavLink to="/profile" className="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600">Profile</NavLink>
