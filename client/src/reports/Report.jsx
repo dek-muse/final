@@ -137,7 +137,7 @@ const TeacherList = ({ teachers, onViewDetails }) => {
               <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.region}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.district}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.subjectsLearned}</td>
-              <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.subjectsTeaching}</td>
+              <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.subjectsTech}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.description}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.sex}</td>
               <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.nativeStatus}</td>
@@ -174,7 +174,7 @@ const TeacherDetailsModal = ({ teacher, onClose }) => {
           <p><strong>Region:</strong> {teacher.region}</p>
           <p><strong>District:</strong> {teacher.district}</p>
           <p><strong>Subjects Learned:</strong> {teacher.subjectsLearned}</p>
-          <p><strong>Subjects Teaching:</strong> {teacher.subjectsTeaching}</p>
+          <p><strong>Subjects Teaching:</strong> {teacher.subjectsTech}</p>
           <p><strong>Description:</strong> {teacher.description}</p>
           <p><strong>Sex:</strong> {teacher.sex}</p>
           <p><strong>Native Status:</strong> {teacher.nativeStatus}</p>
@@ -267,7 +267,7 @@ const App = () => {
       Region: teacher.region,
       District: teacher.district,
       SubjectsLearned: teacher.subjectsLearned,
-      SubjectsTeaching: teacher.subjectsTeaching,
+      subjectsTech: teacher.subjectsTech,
       Description: teacher.description,
       Sex: teacher.sex,
       NativeStatus: teacher.nativeStatus,
@@ -314,11 +314,11 @@ const App = () => {
           Export to Excel
         </button>
         <div>
-          <span className="text-lg font-medium text-gray-100">Total Teachers: {totalTeachers}</span>
-          <span className="text-sm text-gray-400 ml-4">Male: {counts.sex.Male || 0}</span>
-          <span className="text-sm text-gray-400 ml-4">Female: {counts.sex.Female || 0}</span>
-          <span className="text-sm text-gray-400 ml-4">Native: {counts.nativeStatus.Native || 0}</span>
-          <span className="text-sm text-gray-400 ml-4">Non-native: {counts.nativeStatus['Non-native'] || 0}</span>
+          <span className="text-lg font-medium text-gray-600">Total Teachers: {totalTeachers}</span>
+          <span className="text-sm text-gray-600 ml-4">Male: {counts.sex.Male || 0}</span>
+          <span className="text-sm text-gray-600 ml-4">Female: {counts.sex.Female || 0}</span>
+          <span className="text-sm text-gray-600 ml-4">Native: {counts.nativeStatus.Native || 0}</span>
+          <span className="text-sm text-gray-600 ml-4">Non-native: {counts.nativeStatus['Non-native'] || 0}</span>
         </div>
       </div>
       <TeacherList teachers={paginatedTeachers} onViewDetails={handleViewDetails} />

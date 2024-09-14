@@ -4,7 +4,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Sidebare from './common/Sidebare'; // Ensure component name is correct
 import Dashboard from './components/Dashboard';
-import TeacherFormAdmin from './pages/TeacherFormAdmin';
+import TeacherForm from './pages/TeacherForm';
 import TeacherList from './pages/TeacherList';
 import UpdateTeacherForm from './pages/UpdateTeacherForm';
 import NaveBare from './common/Navebare'; // Corrected component name
@@ -86,7 +86,7 @@ const App = () => {
 
               {/* SuperAdmin general   */}
               <Route path="/dashboard" element={<RoleBasedRoute requiredRole="SuperAdmin"><Dashboard /></RoleBasedRoute>} />
-              <Route path="/teacher/formAdmin" element={<RoleBasedRoute requiredRole="SuperAdmin"><TeacherFormAdmin /></RoleBasedRoute>} />
+              <Route path="/teacher/form" element={<RoleBasedRoute requiredRole="SuperAdmin"><TeacherForm /></RoleBasedRoute>} />
               <Route path="/teachersList" element={<RoleBasedRoute requiredRole="SuperAdmin"><TeacherList /></RoleBasedRoute>} />
               <Route path="/signup" element={<RoleBasedRoute requiredRole="SuperAdmin"><Singup /></RoleBasedRoute>} />
               <Route path="/update-teacher/:id" element={<RoleBasedRoute requiredRole="SuperAdmin"><UpdateTeacherForm /></RoleBasedRoute>} />
