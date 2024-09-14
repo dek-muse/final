@@ -5,9 +5,8 @@ import * as XLSX from 'xlsx';
 // Constants
 const REGIONS = [ 'Afdheer'];
 const DISTRICTS = {
-  'Afdheer': ['Hargeelle', 'Dhaawac', 'Baarey', 'limey galbeed', 'Raaso', 'Dollow Bay', 'Ceelkari', 'Qooxle', 'Godgod'],
-   'Jarar': ['Daroor', 'Aware', 'Dhagax-buur', 'Dhagax-madow', 'Gunagado', 'Gashamo', 'Birqod', 'Dig', 'Bilcil buur', 'Araarso', 'Yoocaale'],
-
+  'Afdheer': ['Hargeelle', 'Dhaawac', 'Baarey', 'limey galbeed', 'Raaso', 'Dollow Bay', 'Ceelkari', 'Qooxle', 'Godgod']
+ 
 };
 const teacherType = ['Kg', 'primary', 'secondary', 'preparatory', 'university/colleges'];
 

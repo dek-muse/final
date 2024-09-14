@@ -46,7 +46,7 @@ const Signin = () => {
         localStorage.setItem('username', data.username);
 
         dispatch(signInSuccess(data));
-        navigate('/dashboard');
+        navigate('/', '/');
       } else {
         dispatch(signInFailure(data.message || 'Sign in failed'));
       }

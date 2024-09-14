@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { Navigate } from 'react-router-dom';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
@@ -16,6 +17,7 @@ import ListUser from './Dashboard/ListUser';
 import Home from './Home/Home';
 import NotFound from './context/NotFound';
 import Report from './reports/Report';
+// imports from pages
 import SittiForm from './zone/FromZone/SittiForm';
 import DaawoForm from './zone/FromZone/DaawoForm';
 import ErarForm from './zone/FromZone/ErarForm';
@@ -26,7 +28,18 @@ import NogobForm from './zone/FromZone/NogobForm';
 import QoraxayForm from './zone/FromZone/QoraxayForm';
 import ShabelleForm from './zone/FromZone/ShabelleForm';
 import AfdheerForm from './zone/FromZone/AfdheerForm';
+// imports  reports pages
+import AfdheerReport from "./zone/reportZone/AfdheerReport"
+import DaawoReport from "./zone/reportZone/DaawoReport"
+import DooloReport from "./zone/reportZone/DooloReport"
+import ErarReport from "./zone/reportZone/ErarReport"
+import FaafanReport from "./zone/reportZone/FaafanReport"
 import JararReport from "./zone/reportZone/JararReport"
+import LiibaanReport from "./zone/reportZone/LiibaanReport"
+import NogobReport from "./zone/reportZone/NogobReport"
+import ShabelleReport from "./zone/reportZone/ShabelleReport"
+import SittiReport from "./zone/reportZone//SittiReport"
+import QoraxayReport from "./zone/reportZone/QoraxayReport"
 
 const App = () => {
   return (
@@ -48,7 +61,7 @@ const App = () => {
               <Route path="/teacher/form/sitti" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Sitti"><SittiForm /></RoleBasedRoute>} />
               <Route path="/teacher/form/daawo" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Daawo"><DaawoForm /></RoleBasedRoute>} />
               <Route path="/teacher/form/erar" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Erar"><ErarForm /></RoleBasedRoute>} />
-              <Route path="/teacher/form" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Faafan"><FaafanForm /></RoleBasedRoute>} />
+              <Route path="/teacher/form/fafaan" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Faafan"><FaafanForm /></RoleBasedRoute>} />
               <Route path="/teacher/form/jarar" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Jarar"><JararForm /></RoleBasedRoute>} />
               <Route path="/teacher/form/liibaan" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Liibaan"><LiibaanForm /></RoleBasedRoute>} />
               <Route path="/teacher/form/nogob" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Nogob"><NogobForm /></RoleBasedRoute>} />
@@ -58,18 +71,18 @@ const App = () => {
 
 
               {/* Region-specific teacher Report */}
-              <Route path="/teacher/report/Afdheer" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Afdheer"><JararReport /></RoleBasedRoute>} />
-              <Route path="/teacher/report/Daawo" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Daawo"><JararReport /></RoleBasedRoute>} />
-              <Route path="/teacher/report/Doolo" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Doolo"><JararReport /></RoleBasedRoute>} />
-              <Route path="/teacher/report/Erar" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Erar"><JararReport /></RoleBasedRoute>} />
-              <Route path="/teacher/report/Faafan" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Faafan"><JararReport /></RoleBasedRoute>} />
-              <Route path="/teacher/report/Jarar" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Jarar"><JararReport /></RoleBasedRoute>} />
-              <Route path="/teacher/report/Liibaan" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Liibaan"><JararReport /></RoleBasedRoute>} />
-              <Route path="/teacher/report/Nogob" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Nogob"><JararReport /></RoleBasedRoute>} />
-              <Route path="/teacher/report/Qoraxay" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Qoraxay"><JararReport /></RoleBasedRoute>} />
-              <Route path="/teacher/report/Shabelle" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Shabelle"><JararReport /></RoleBasedRoute>} />
-              <Route path="/teacher/report/Sitti" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Sitti"><JararReport /></RoleBasedRoute>} />
-
+              <Route path="/teacher/report/afdheer" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Afdheer"><AfdheerReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/daawo" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Daawo"><DaawoReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/doolo" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Doolo"><DooloReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/erar" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Erar"><ErarReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/faafan" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Faafan"><FaafanReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/jarar" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Jarar"><JararReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/liibaan" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Liibaan"><LiibaanReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/nogob" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Nogob"><NogobReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/qoraxay" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Qoraxay"><QoraxayReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/shabelle" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Shabelle"><ShabelleReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/sitti" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Sitti"><SittiReport /></RoleBasedRoute>} />
+ 
 
               {/* SuperAdmin general   */}
               <Route path="/dashboard" element={<RoleBasedRoute requiredRole="SuperAdmin"><Dashboard /></RoleBasedRoute>} />

@@ -7,8 +7,7 @@ import * as XLSX from 'xlsx';
 // Constants
 const REGIONS = ['Faafan'];
 const DISTRICTS = {
-  'Afdheer': ['Hargeelle', 'Dhaawac', 'Baarey', 'limey galbeed', 'Raaso', 'Dollow Bay', 'Ceelkari', 'Qooxle', 'Godgod'],
-  'Daawo': ['Qadhadhumo', 'Hudet', 'Mooyale', 'Mubarak'],
+   'Daawo': ['Qadhadhumo', 'Hudet', 'Mooyale', 'Mubarak'],
   'Doolo': ['Daraatole', 'Wardheer- Xarunta Gobalka', 'Danood', 'Galxumur', 'Galaadi', 'Bookh', 'Lehel-yucub'],
   'Erar': ['Fiiq', 'Xamaro', 'Waangay', 'Lagahida', 'Yoxob', 'Salaxaad', 'Mayu-Muluqo', 'Qubi'],
   'Faafan': ['Tuliguuled', 'Goljano', 'Harooreys', 'Shabeleey', 'Harawo', 'Mula', 'Qabribayax', 'Xarshin', 'Gursum', 'Babili', 'Awbare'],
@@ -189,7 +188,7 @@ const TeacherDetailsModal = ({ teacher, onClose }) => {
 const App = () => {
   const [teachers, setTeachers] = useState([]);
   const [filteredTeachers, setFilteredTeachers] = useState([]);
-  const [filters, setFilters] = useState({ name: '', subject: '', region: 'Afdheer', district: '', teacherType: '', yearJoined: '', sex: '', nativeStatus: '' });
+  const [filters, setFilters] = useState({ name: '', subject: '', region: 'Faafan', district: '', teacherType: '', yearJoined: '', sex: '', nativeStatus: '' });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedTeacher, setSelectedTeacher] = useState(null);
@@ -202,7 +201,7 @@ const App = () => {
         const response = await axios.get('https://finalbakend.vercel.app/');
         if (Array.isArray(response.data)) {
           setTeachers(response.data);
-          setFilteredTeachers(response.data.filter(teacher => teacher.region === 'Afdheer')); // Filter to only Afdheer region
+          setFilteredTeachers(response.data.filter(teacher => teacher.region === 'Faafan')); // Filter to only Faafan region
         } else {
           setError('Data format error');
         }
@@ -249,7 +248,7 @@ const App = () => {
   };
 
   const handleResetFilters = () => {
-    setFilters({ name: '', subject: '', region: 'Afdheer', district: '', teacherType: '', yearJoined: '', sex: '', nativeStatus: '' });
+    setFilters({ name: '', subject: '', region: 'Faafan', district: '', teacherType: '', yearJoined: '', sex: '', nativeStatus: '' });
   };
 
   const handleViewDetails = (teacher) => {

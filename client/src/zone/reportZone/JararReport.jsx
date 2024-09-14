@@ -7,8 +7,7 @@ import * as XLSX from 'xlsx';
 // Constants
 const REGIONS = [ 'Jarar'];
 const DISTRICTS = {
-  'Afdheer': ['Hargeelle', 'Dhaawac', 'Baarey', 'limey galbeed', 'Raaso', 'Dollow Bay', 'Ceelkari', 'Qooxle', 'Godgod'],
-   'Jarar': ['Daroor', 'Aware', 'Dhagax-buur', 'Dhagax-madow', 'Gunagado', 'Gashamo', 'Birqod', 'Dig', 'Bilcil buur', 'Araarso', 'Yoocaale'],
+    'Jarar': ['Daroor', 'Aware', 'Dhagax-buur', 'Dhagax-madow', 'Gunagado', 'Gashamo', 'Birqod', 'Dig', 'Bilcil buur', 'Araarso', 'Yoocaale'],
 
 };
 const teacherType = ['Kg', 'primary', 'secondary', 'preparatory', 'university/colleges'];
@@ -180,7 +179,7 @@ const TeacherDetailsModal = ({ teacher, onClose }) => {
 const App = () => {
   const [teachers, setTeachers] = useState([]);
   const [filteredTeachers, setFilteredTeachers] = useState([]);
-  const [filters, setFilters] = useState({ name: '', subject: '', region: 'Afdheer', district: '', teacherType: '', yearJoined: '', sex: '', nativeStatus: '' });
+  const [filters, setFilters] = useState({ name: '', subject: '', region: 'Jarar', district: '', teacherType: '', yearJoined: '', sex: '', nativeStatus: '' });
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
   const [selectedTeacher, setSelectedTeacher] = useState(null);
@@ -193,7 +192,7 @@ const App = () => {
         const response = await axios.get('https://finalbakend.vercel.app/');
         if (Array.isArray(response.data)) {
           setTeachers(response.data);
-          setFilteredTeachers(response.data.filter(teacher => teacher.region === 'Afdheer')); // Filter to only Afdheer region
+          setFilteredTeachers(response.data.filter(teacher => teacher.region === 'Jarar')); // Filter to only Jarar region
         } else {
           setError('Data format error');
         }
@@ -240,7 +239,7 @@ const App = () => {
   };
 
   const handleResetFilters = () => {
-    setFilters({ name: '', subject: '', region: 'Afdheer', district: '', teacherType: '', yearJoined: '', sex: '', nativeStatus: '' });
+    setFilters({ name: '', subject: '', region: 'Jarar', district: '', teacherType: '', yearJoined: '', sex: '', nativeStatus: '' });
   };
 
   const handleViewDetails = (teacher) => {
