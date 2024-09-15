@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice'; // Adjust the import path as needed
-import photo3 from '../assets/photo3.svg'
+import sigin from '../assets/sigin.svg'
 
 const Signin = () => {
   const [formData, setFormData] = useState({ email: '', password: '', region: '' });
@@ -57,13 +57,13 @@ const Signin = () => {
   };
 
   return (
-    <div className="flex justify-around items-center min-h-screen -mt-20">
-      <img src={photo3} alt="Login" className='w-[400px]' />
-      <div className="p-8 w-full max-w-md transition-transform transform duration-300 ease-in-out">
-        <h2 className="text-4xl font-extrabold mb-6 text-center  ">Login</h2>
+    <div className="flex flex-col lg:flex-row justify-center items-center min-h-screen p-4">
+      <img src={sigin} alt="Login" className="w-64 sm:w-80 md:w-[400px] mb-8 lg:mb-0" />
+      <div className="p-6 w-full max-w-md lg:max-w-lg     rounded-lg transition-transform duration-300 ease-in-out">
+        <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-center">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
-            <label className="block text-sm font-semibold mb-2   " htmlFor="email">
+            <label className="block text-sm font-semibold mb-2" htmlFor="email">
               Email
             </label>
             <input
@@ -72,12 +72,12 @@ const Signin = () => {
               value={formData.email}
               placeholder="example@example.com"
               onChange={handleChange}
-              className="shadow-md bg-gray-100 dark:bg-gray-700 placeholder-gray-400 text-gray-900 dark:text-white appearance-none border rounded-lg w-full py-3 px-4 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out transform hover:scale-105"
+              className="shadow-md bg-gray-100 dark:bg-gray-700 placeholder-gray-400 text-gray-900 dark:text-white appearance-none border rounded-lg w-full py-3 px-4 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out"
               required
             />
           </div>
           <div className="mb-6">
-            <label className="block text-sm font-semibold mb-2  " htmlFor="password">
+            <label className="block text-sm font-semibold mb-2" htmlFor="password">
               Password
             </label>
             <div className="relative">
@@ -87,7 +87,7 @@ const Signin = () => {
                 value={formData.password}
                 placeholder="password"
                 onChange={handleChange}
-                className="shadow-md bg-gray-100 dark:bg-gray-700 placeholder-gray-400 text-gray-900 dark:text-white appearance-none border rounded-lg w-full py-3 px-4 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out transform hover:scale-105"
+                className="shadow-md bg-gray-100 dark:bg-gray-700 placeholder-gray-400 text-gray-900 dark:text-white appearance-none border rounded-lg w-full py-3 px-4 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out"
                 required
               />
               <button
@@ -101,7 +101,7 @@ const Signin = () => {
           </div>
           {role === 'Admin' && (
             <div className="mb-6">
-              <label className="block text-sm font-semibold mb-2  " htmlFor="region">
+              <label className="block text-sm font-semibold mb-2" htmlFor="region">
                 Region
               </label>
               <input
@@ -110,7 +110,7 @@ const Signin = () => {
                 value={formData.region}
                 placeholder="e.g., Sitti"
                 onChange={handleChange}
-                className="shadow-md bg-gray-100 dark:bg-gray-700 placeholder-gray-400 text-gray-900 dark:text-white appearance-none border rounded-lg w-full py-3 px-4 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out transform hover:scale-105"
+                className="shadow-md bg-gray-100 dark:bg-gray-700 placeholder-gray-400 text-gray-900 dark:text-white appearance-none border rounded-lg w-full py-3 px-4 leading-tight focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out"
               />
             </div>
           )}
@@ -118,7 +118,7 @@ const Signin = () => {
           <div className="flex items-center justify-between mb-6">
             <button
               type="submit"
-              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out"
+              className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out"
               disabled={loading}
             >
               {loading ? 'Signing in...' : 'Sign In'}

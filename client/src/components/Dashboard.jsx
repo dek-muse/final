@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, PieChart, Pie, Cell, ResponsiveContainer } from 'recharts';
+import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContainer } from 'recharts';
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'; // Import CSS for DatePicker
 
@@ -11,31 +11,9 @@ const getWeekNumber = (date) => {
   return Math.ceil((pastDaysOfYear + firstDayOfYear.getDay() + 1) / 7);
 };
 
-// Pie Chart Component
-const PieChartComponent = ({ data, colors }) => (
-  <ResponsiveContainer width="100%" height={300}>
-    <PieChart>
-      <Pie
-        data={data}
-        dataKey="value"
-        nameKey="name"
-        cx="50%"
-        cy="50%"
-        outerRadius={120}
-        fill="#8884d8"
-      >
-        {data.map((entry, index) => (
-          <Cell key={`cell-${index}`} fill={colors[index % colors.length]} />
-        ))}
-      </Pie>
-      <Tooltip />
-    </PieChart>
-  </ResponsiveContainer>
-);
-
 // Line Chart Component
 const LineChartComponent = ({ data, title }) => (
-  <div className="bg-white p-6 rounded-lg shadow-md border border-gray-300">
+  <div className=" p-6 rounded-lg shadow-md border border-gray-300">
     <h2 className="text-xl font-semibold text-gray-800 mb-4">{title}</h2>
     <ResponsiveContainer width="100%" height={300}>
       <LineChart data={data}>
@@ -62,7 +40,6 @@ const Dashboard = () => {
   const [selectedRegion, setSelectedRegion] = useState('');
   const [selectedDistrict, setSelectedDistrict] = useState('');
   const [selectedTeacherType, setSelectedTeacherType] = useState('');
-  const [searchTerm, setSearchTerm] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
 
@@ -71,7 +48,7 @@ const Dashboard = () => {
   const [weeklyChartData, setWeeklyChartData] = useState([]);
   const [monthlyChartData, setMonthlyChartData] = useState([]);
   const [yearlyChartData, setYearlyChartData] = useState([]);
-  const [selectedChart, setSelectedChart] = useState('Pie'); // State for selected chart
+  const [selectedChart, setSelectedChart] = useState('Daily'); // Default chart type
 
   // States for date range filtering
   const [startDate, setStartDate] = useState(null);
@@ -191,13 +168,12 @@ const Dashboard = () => {
       return teachers.filter(teacher => 
         (!selectedRegion || teacher.region === selectedRegion) &&
         (!selectedDistrict || teacher.district === selectedDistrict) &&
-        (!selectedTeacherType || teacher.teacherType === selectedTeacherType) &&
-        (!searchTerm || teacher.name.toLowerCase().includes(searchTerm.toLowerCase()))
+        (!selectedTeacherType || teacher.teacherType === selectedTeacherType)
       );
     };
 
     setFilteredTeachers(filterByRegionAndDistrict());
-  }, [selectedRegion, selectedDistrict, selectedTeacherType, searchTerm, teachers]);
+  }, [selectedRegion, selectedDistrict, selectedTeacherType, teachers]);
 
   const getCounts = () => {
     const counts = {
@@ -216,151 +192,225 @@ const Dashboard = () => {
   const counts = getCounts();
   const totalTeachers = filteredTeachers.length;
 
-  if (loading) return <div className="text-center text-gray-600">Loading...</div>;
-  if (error) return <div className="text-center text-red-600">{error}</div>;
+  if (loading) return <div className=" ">
+  
+  
+  <div className="flex-col gap-4 w-full flex items-center justify-center">
+      <div className="w-20 h-20 border-4 border-transparent text-blue-400 text-4xl animate-spin flex items-center justify-center border-t-blue-400 rounded-full">
+        <div className="w-16 h-16 border-4 border-transparent text-red-400 text-2xl animate-spin flex items-center justify-center border-t-red-400 rounded-full" />
+        
+      </div>
+    </div>
+
+
+
+  </div>;
+  if (error) return <div className="text-center text-red-600">{error}
+  
+  
+  
+  
+  <div className="flex items-center justify-center w-[30em] h-[30em]">
+      <div className="flex flex-col items-center justify-center mt-[5em] relative">
+        <div className="w-[5em] h-[5em] rounded-full border-2 border-black bg-[#f27405] mb-[-6em] relative z-[-1]">
+          <div className="absolute bg-transparent w-[50px] h-[56px] ml-[1.68em] rounded-full transform rotate-[140deg] border-4 border-transparent shadow-[inset_0px_16px_#a85103,inset_0px_16px_1px_1px_#a85103]" />
+          <div className="absolute mt-[-9.4em] ml-[0.4em] rotate-[-25deg] w-[1em] h-[0.5em] rounded-full bg-[#f69e50]" />
+          <div className="absolute mt-[0.2em] ml-[1.25em] rotate-[-20deg] w-[1.5em] h-[0.8em] rounded-full bg-[#f69e50]" />
+        </div>
+        <div className="w-[17em] h-[9em] mt-[3em] rounded-[15px] bg-[#d36604] flex justify-center border-2 border-[#1d0e01] shadow-[inset_0.2em_0.2em_#e69635] relative">
+          <div className="absolute w-[17em] h-[9em] rounded-[15px] bg-[repeating-radial-gradient(#d36604_0_0.0001%,#00000070_0_0.0002%)] bg-[repeating-conic-gradient(#d36604_0_0.0001%,#00000070_0_0.0002%)] opacity-[0.09]" />
+          <div className="flex items-center justify-center rounded-[15px] shadow-[3.5px_3.5px_0px_#e69635]">
+            <div className="w-auto h-auto rounded-[10px]">
+              <div className="w-[11em] h-[7.75em] flex items-center justify-center rounded-[10px]">
+                <div className="w-[13em] h-[7.85em] border-2 border-[#1d0e01] bg-[repeating-radial-gradient(#000_0_0.0001%,#ffffff_0_0.0002%)] bg-[repeating-conic-gradient(#000_0_0.0001%,#ffffff_0_0.0002%)] bg-blend-difference animate-[b_0.2s_infinite_alternate] rounded-[10px] flex items-center justify-center font-bold text-[#252525] tracking-widest text-center">
+                  Check Your Network :(
+                </div>
+              </div>
+            </div>
+          </div>
+          <div className="flex flex-col items-center self-end space-y-[0.5em]">
+            <div className="w-[4.25em] h-[8em] bg-[#e69635] border-2 border-[#1d0e01] p-[0.6em] rounded-[10px] flex flex-col items-center justify-center space-y-[0.75em] shadow-[3px_3px_0px_#e69635]">
+              <div className="w-[1.65em] h-[1.65em] rounded-full bg-[#7f5934] border-2 border-black shadow-[inset_2px_2px_1px_#b49577,-2px_0px_#513721,-2px_0px_0px_1px_black] relative">
+                <div className="absolute mt-[1em] ml-[0.5em] rotate-[47deg] w-[0.1em] h-[0.4em] bg-[#000000]" />
+                <div className="absolute mt-[0.9em] ml-[0.8em] rotate-[47deg] w-[0.1em] h-[0.55em] bg-[#000000]" />
+                <div className="absolute mt-[-0.1em] ml-[0.65em] rotate-[45deg] w-[0.15em] h-[1.5em] bg-[#000000]" />
+              </div>
+              <div className="w-[1.65em] h-[1.65em] rounded-full bg-[#7f5934] border-2 border-black shadow-[inset_2px_2px_1px_#b49577,-2px_0px_#513721,-2px_0px_0px_1px_black] relative">
+                <div className="absolute mt-[1.05em] ml-[0.8em] rotate-[-45deg] w-[0.15em] h-[0.4em] bg-[#000000]" />
+                <div className="absolute mt-[-0.1em] ml-[0.65em] rotate-[-45deg] w-[0.15em] h-[1.5em] bg-[#000000]" />
+              </div>
+            </div>
+            <div className="flex flex-col space-y-[0.5em]">
+              <div className="flex space-x-[0.25em]">
+                <div className="w-[0.65em] h-[0.65em] rounded-full bg-[#7f5934] border-2 border-black shadow-[inset_1.25px_1.25px_1px_#b49577]" />
+                <div className="w-[0.65em] h-[0.65em] rounded-full bg-[#7f5934] border-2 border-black shadow-[inset_1.25px_1.25px_1px_#b49577]" />
+                <div className="w-[0.65em] h-[0.65em] rounded-full bg-[#7f5934] border-2 border-black shadow-[inset_1.25px_1.25px_1px_#b49577]" />
+              </div>
+              <div className="w-auto h-[2px] bg-[#171717]" />
+            </div>
+          </div>
+        </div>
+        <div className="w-full flex items-center justify-center space-x-[8.7em]">
+          <div className="w-[2em] h-[1em] border-2 border-[#171717] bg-[#4d4d4d] mt-[-0.15em] z-[-1]" />
+          <div className="w-[2em] h-[1em] border-2 border-[#171717] bg-[#4d4d4d] mt-[-0.15em] z-[-1]" />
+          <div className="absolute h-[0.15em] w-[17.5em] bg-[#171717] mt-[0.8em]" />
+        </div>
+      </div>
+    </div>
+    </div>;
 
   return (
     <div className="p-6">
-      {/* Filters */}
-      <div className="mb-6">
-        <div className="flex flex-wrap gap-6">
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700">Select Region</label>
-            <select
-              value={selectedRegion}
-              onChange={(e) => setSelectedRegion(e.target.value)}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-900 focus:ring-indigo-500 focus:border-indigo-500"
-            >
-              <option value="">All Regions</option>
-              {REGIONS.map(region => (
-                <option key={region} value={region}>{region}</option>
-              ))}
-            </select>
-          </div>
+      {/* Summary Section */}
+      <div className="mb-6 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
+  <div className="p-4 rounded-lg bg-white shadow-md">
+    <h3 className="text-[14px] font-semibold text-gray-800 mb-2">Total Teachers</h3>
+    <p className="text-gray-700 text-xl font-bold">{totalTeachers}</p>
+  </div>
 
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700">Select District</label>
+  <div className="p-4 rounded-lg bg-white shadow-md">
+    <h3 className="text-[14px] font-semibold text-gray-800 mb-2">Gender Breakdown</h3>
+    <div className="flex flex-col gap-2">
+      <div className="flex justify-between">
+        <span className="text-gray-600">Male</span>
+        <span className="text-gray-700 text-xl font-bold">{counts.sex.Male || 0}</span>
+      </div>
+      <div className="flex justify-between">
+        <span className="text-gray-600">Female</span>
+        <span className="text-gray-700 text-xl font-bold">{counts.sex.Female || 0}</span>
+      </div>
+    </div>
+  </div>
+
+  <div className="p-4 rounded-lg bg-white shadow-md">
+    <h3 className="text-[14px] font-semibold text-gray-800 mb-2">Native Status</h3>
+    <div className="flex flex-col gap-2">
+      <div className="flex justify-between">
+        <span className="text-gray-600">Native</span>
+        <span className="text-gray-700 text-xl font-bold">{counts.nativeStatus.Native || 0}</span>
+      </div>
+      <div className="flex justify-between">
+        <span className="text-gray-600">Non-native</span>
+        <span className="text-gray-700 text-xl font-bold">{counts.nativeStatus['Non-native'] || 0}</span>
+      </div>
+    </div>
+  </div>
+
+  <div className="p-4 rounded-lg     ">
+  <h3 className="text-[16px] font-semibold text-gray-800 mb-4">Teacher Types</h3>
+  <div className="flex   gap-4">
+    {[
+      { type: 'KG', count: counts.teacherType.Kg || 0 },
+      { type: 'Primary', count: counts.teacherType.Primary || 0 },
+      { type: 'Secondary', count: counts.teacherType.Secondary || 0 },
+      { type: 'Preparatory', count: counts.teacherType.Preparatory || 0 },
+      { type: 'University/Colleges', count: counts.teacherType['University/Colleges'] || 0 }
+    ].map(({ type, count }) => (
+      <div key={type} className="flex-1 min-w-[200px] flex justify-between items-center p-4 rounded-lg border border-gray-300 bg-gray-50">
+        <span className="text-gray-700 font-medium">{type}</span>
+        <span className="text-gray-900 text-lg font-bold">{count}</span>
+      </div>
+    ))}
+  </div>
+</div>
+
+</div>
+
+
+      {/* Filters */}
+      <div className="flex flex-wrap gap-4 mb-6">
+        <div className="w-full sm:w-1/2 md:w-1/3">
+          <label htmlFor="region" className="block mb-2 text-sm font-medium text-gray-700">Region:</label>
+          <select
+            id="region"
+            value={selectedRegion}
+            onChange={(e) => setSelectedRegion(e.target.value)}
+            className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          >
+            <option value="">All Regions</option>
+            {REGIONS.map(region => (
+              <option key={region} value={region}>{region}</option>
+            ))}
+          </select>
+        </div>
+        {selectedRegion && (
+          <div className="w-full sm:w-1/2 md:w-1/3">
+            <label htmlFor="district" className="block mb-2 text-sm font-medium text-gray-700">District:</label>
             <select
+              id="district"
               value={selectedDistrict}
               onChange={(e) => setSelectedDistrict(e.target.value)}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-900"
-              disabled={!selectedRegion}
+              className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
             >
               <option value="">All Districts</option>
-              {selectedRegion && DISTRICTS[selectedRegion]?.map(district => (
+              {(DISTRICTS[selectedRegion] || []).map(district => (
                 <option key={district} value={district}>{district}</option>
               ))}
             </select>
           </div>
-          
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700">Select Teacher Type</label>
-            <select
-              value={selectedTeacherType}
-              onChange={(e) => setSelectedTeacherType(e.target.value)}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-900"
-            >
-              <option value="">All Teacher Types</option>
-              <option value="Kg">Kg</option>
-              <option value="Primary">Primary</option>
-              <option value="Secondary">Secondary</option>
-              <option value="Preparatory">Preparatory</option>
-              <option value="University/Colleges">University/Colleges</option>
-            </select>
-          </div>
-        </div>
-
-        <div className="flex flex-wrap gap-6 mt-4">
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700">Search by Name</label>
-            <input
-              type="text"
-              value={searchTerm}
-              onChange={(e) => setSearchTerm(e.target.value)}
-              placeholder="Search..."
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-900"
-            />
-          </div>
-
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700">Start Date</label>
-            <DatePicker
-              selected={startDate}
-              onChange={(date) => setStartDate(date)}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-900"
-              dateFormat="yyyy-MM-dd"
-              placeholderText="Select start date"
-            />
-          </div>
-
-          <div className="flex-1">
-            <label className="block text-sm font-medium text-gray-700">End Date</label>
-            <DatePicker
-              selected={endDate}
-              onChange={(date) => setEndDate(date)}
-              className="mt-1 block w-full border border-gray-300 rounded-md shadow-sm bg-gray-50 text-gray-900"
-              dateFormat="yyyy-MM-dd"
-              placeholderText="Select end date"
-            />
-          </div>
-        </div>
-
-        {/* Chart Type Selector */}
-        <div className="mb-6 mt-6">
-          <label className="block text-lg font-semibold text-gray-800 dark:text-gray-200">Select Chart Type:</label>
+        )}
+        <div className="w-full sm:w-1/2 md:w-1/3">
+          <label htmlFor="teacherType" className="block mb-2 text-sm font-medium text-gray-700">Teacher Type:</label>
           <select
-            value={selectedChart}
-            onChange={e => setSelectedChart(e.target.value)}
-            className="mt-1 block w-full p-2 border border-gray-300 rounded-md bg-white text-gray-800 dark:bg-gray-800 dark:text-white dark:border-gray-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
+            id="teacherType"
+            value={selectedTeacherType}
+            onChange={(e) => setSelectedTeacherType(e.target.value)}
+            className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
           >
-            <option value="Pie">Pie Chart</option>
-            <option value="Daily">Daily Joining Data</option>
-            <option value="Weekly">Weekly Joining Data</option>
-            <option value="Monthly">Monthly Joining Data</option>
-            <option value="Yearly">Yearly Joining Data</option>
+            <option value="">All Types</option>
+            {['Kg', 'Primary', 'Secondary', 'Preparatory', 'University/Colleges'].map(type => (
+              <option key={type} value={type}>{type}</option>
+            ))}
           </select>
         </div>
+      </div>
 
-        {/* Chart Rendering */}
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-1 gap-6 mb-6">
-          {selectedChart === 'Pie' && (
-            <PieChartComponent
-              data={[
-                { name: 'Male', value: counts.sex.Male || 0 },
-                { name: 'Female', value: counts.sex.Female || 0 }
-              ]}
-              colors={['#0088FE', '#00C49F']}
-            />
-          )}
-          {selectedChart === 'Daily' && (
-            <LineChartComponent data={dailyChartData} title="Daily Joining Data" />
-          )}
-          {selectedChart === 'Weekly' && (
-            <LineChartComponent data={weeklyChartData} title="Weekly Joining Data" />
-          )}
-          {selectedChart === 'Monthly' && (
-            <LineChartComponent data={monthlyChartData} title="Monthly Joining Data" />
-          )}
-          {selectedChart === 'Yearly' && (
-            <LineChartComponent data={yearlyChartData} title="Yearly Joining Data" />
-          )}
-        </div>
-
-        <div className="bg-white p-6 rounded-lg shadow-md border border-gray-300 mt-6">
-          <p className="text-lg font-medium text-gray-900"><strong>Total Teachers:</strong> {totalTeachers}</p>
-          <div className="mt-2">
-            <span className="text-sm text-gray-600 mr-4">Male: {counts.sex.Male || 0}</span>
-            <span className="text-sm text-gray-600 mr-4">Female: {counts.sex.Female || 0}</span>
-            <span className="text-sm text-gray-600 mr-4">Native: {counts.nativeStatus.Native || 0}</span>
-            <span className="text-sm text-gray-600 mr-4">Non-native: {counts.nativeStatus['Non-native'] || 0}</span>
-            <span className="text-sm text-gray-600 mr-4">Kg: {counts.teacherType.Kg || 0}</span>
-            <span className="text-sm text-gray-600 mr-4">Primary: {counts.teacherType.Primary || 0}</span>
-            <span className="text-sm text-gray-600 mr-4">Secondary: {counts.teacherType.Secondary || 0}</span>
-            <span className="text-sm text-gray-600 mr-4">Preparatory: {counts.teacherType.Preparatory || 0}</span>
-            <span className="text-sm text-gray-600">University/Colleges: {counts.teacherType['University/Colleges'] || 0}</span>
-          </div>
+      {/* Date Range Filter */}
+      <div className="mb-6">
+        <label className="block mb-2 text-sm font-medium text-gray-700">Date Range:</label>
+        <div className="flex space-x-4">
+          <DatePicker
+            selected={startDate}
+            onChange={(date) => setStartDate(date)}
+            selectsStart
+            startDate={startDate}
+            endDate={endDate}
+            className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            placeholderText="Start Date"
+          />
+          <DatePicker
+            selected={endDate}
+            onChange={(date) => setEndDate(date)}
+            selectsEnd
+            startDate={startDate}
+            endDate={endDate}
+            minDate={startDate}
+            className="p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+            placeholderText="End Date"
+          />
         </div>
       </div>
+
+      {/* Chart Selector */}
+      <div className="mb-6">
+        <label className="block mb-2 text-sm font-medium text-gray-700">Select Chart Type:</label>
+        <select
+          value={selectedChart}
+          onChange={(e) => setSelectedChart(e.target.value)}
+          className="block w-full p-2 border border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        >
+          <option value="Daily">Daily Chart</option>
+          <option value="Weekly">Weekly Chart</option>
+          <option value="Monthly">Monthly Chart</option>
+          <option value="Yearly">Yearly Chart</option>
+        </select>
+      </div>
+
+      {/* Display Selected Chart */}
+      {selectedChart === 'Daily' && <LineChartComponent data={dailyChartData} title="Daily Teacher Counts" />}
+      {selectedChart === 'Weekly' && <LineChartComponent data={weeklyChartData} title="Weekly Teacher Counts" />}
+      {selectedChart === 'Monthly' && <LineChartComponent data={monthlyChartData} title="Monthly Teacher Counts" />}
+      {selectedChart === 'Yearly' && <LineChartComponent data={yearlyChartData} title="Yearly Teacher Counts" />}
     </div>
   );
 };
