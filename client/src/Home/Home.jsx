@@ -20,8 +20,8 @@ const Home = () => {
       eveniet. Eum quas beatae cumque eum quaeerat.
     </p>
     <div className="flex space-x-4">
-      <button className="bg-transparent border border-white hover:bg-[] hover:text-[#36736C] text-white font-semibold py-3 px-8 rounded transition duration-300">
-        Get Started
+      <button className="bg-transparent border dark:border-black border-white hover:bg-[] hover:text-[#36736C]   font-semibold py-3 px-8 rounded transition duration-300">
+       Call Us
       </button>
     </div>
   </div>

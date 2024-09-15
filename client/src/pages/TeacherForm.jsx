@@ -27,7 +27,7 @@ const subjects = [
 const REGIONS = ['Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
 const DISTRICTS = {
   'Afdheer': [ 'Hargeelle', 'Dhaawac','Baarey', 'limey galbeed', 'Raaso','Dollow Bay','Ceelkari','Qooxle','Godgod'],
-  'Daawo': ['Qadhadhumo','Hudet','Mooyale','Mubarak',],
+  'Daawo': ['Qadhadhumo','Hudet','Mooyale','Mubarak'],
   'Doolo': [ 'Daraatole',    'Wardheer- Xarunta Gobalka','Danood','Galxumur','Galaadi','Bookh','Lehel-yucub'],
   'Erar': ['Fiiq','Xamaro','Waangay','Lagahida','Yoxob','Salaxaad','Mayu-Muluqo','Qubi'],
   'Faafan': ['Tuliguuled','Goljano','Harooreys','Shabeleey','Harawo','Mula','Qabribayax','Xarshin','Gursum','Babili','Awbare',  ],

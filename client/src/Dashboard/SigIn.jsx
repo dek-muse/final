@@ -3,6 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice'; // Adjust the import path as needed
+import photo3 from '../assets/photo3.svg'
 
 const Signin = () => {
   const [formData, setFormData] = useState({ email: '', password: '', region: '' });
@@ -57,11 +58,12 @@ const Signin = () => {
 
   return (
     <div className="flex justify-around items-center min-h-screen -mt-20">
+      <img src={photo3} alt="Login" className='w-[400px]' />
       <div className="p-8 w-full max-w-md transition-transform transform duration-300 ease-in-out">
-        <h2 className="text-4xl font-extrabold mb-6 text-center text-gray-800 dark:text-gray-200">Login</h2>
+        <h2 className="text-4xl font-extrabold mb-6 text-center  ">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
-            <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300" htmlFor="email">
+            <label className="block text-sm font-semibold mb-2   " htmlFor="email">
               Email
             </label>
             <input
@@ -75,7 +77,7 @@ const Signin = () => {
             />
           </div>
           <div className="mb-6">
-            <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300" htmlFor="password">
+            <label className="block text-sm font-semibold mb-2  " htmlFor="password">
               Password
             </label>
             <div className="relative">
@@ -99,7 +101,7 @@ const Signin = () => {
           </div>
           {role === 'Admin' && (
             <div className="mb-6">
-              <label className="block text-sm font-semibold mb-2 text-gray-700 dark:text-gray-300" htmlFor="region">
+              <label className="block text-sm font-semibold mb-2  " htmlFor="region">
                 Region
               </label>
               <input
