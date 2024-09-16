@@ -107,10 +107,8 @@ const Header = () => {
               }
             >
               <div className="p-2 border-b ">
-                <span className='block text-sm'>{getGreeting()}, {username}!</span>
-                <span className='block text-sm font-medium truncate'>
-                  @{username}
-                </span>
+                <span className='block text-sm'>{getGreeting()} @{username}  </span>
+                
                 <span className='block text-sm truncate'>
                   {email}
                 </span>

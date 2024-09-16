@@ -207,7 +207,7 @@ const DashProfile = () => {
   return (
     <div className='max-w-lg mx-auto p-3 w-full'>
       <h1 className='my-7 text-center font-semibold text-3xl'>Profile</h1>
-      <form onSubmit={handleSubmit} className='flex flex-col gap-4 p-6 rounded-lg shadow-md'>
+      <form onSubmit={handleSubmit} className='flex bg-white text-black flex-col gap-4 p-6 rounded-lg shadow-md'>
         <input
           type='file'
           accept='image/*'
@@ -277,20 +277,16 @@ const DashProfile = () => {
         <button
           type='submit'
           disabled={loading || imageFileUploading}
-          className='p-3 rounded-lg shadow-md hover:bg-gray-600 disabled:opacity-50'
+          className='p-3 rounded-lg shadow-md hover:bg-gray-600 bg-gray-400 disabled:opacity-50'
         >
           {loading ? 'Loading...' : 'Update'}
         </button>
       </form>
       <div className='text-red-500 flex justify-between mt-5'>
         <span onClick={() => setShowModal(true)} className='cursor-pointer'>
-          Delete Account
+          
         </span>
-        <Link to='/'>
-          <span onClick={handleSignout} className='cursor-pointer'>
-            Sign Out
-          </span>
-        </Link>
+        
       </div>
       {updateUserSuccess && (
         <Alert color='success' className='mt-5 bg-green-300 text-green-600'>
