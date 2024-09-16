@@ -17,10 +17,10 @@ const teacherSchema = new mongoose.Schema({
   },
   teacherType:{
     type: String, 
-    enum:['Kg', 'secondary', 'primary', 'elementary']
+    enum:['Kg','Primary', 'Secondary', 'Preparatory' , 'University/Colleges']
   },
   address: String,
-  city: String,
+  // city: String,
   region: String,
   district: String,
   qualifications: String,
