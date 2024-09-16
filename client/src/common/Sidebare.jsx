@@ -36,7 +36,7 @@ const Sidebar = () => {
   };
 
   return (
-    <div className={`relative flex ${isSidebarOpen ? 'w-64' : 'w-20'} h-screen transition-all duration-300 fixed bg-gray-800`}>
+    <div className={`relative flex ${isSidebarOpen ? 'w-64' : 'w-20'} h-screen transition-all duration-300 fixed  `}>
       <div className="flex flex-col w-full h-full shadow-2xl shadow-[#b19d60] bg-gray-900 text-white">
         {/* Sidebar Header */}
         <div className="flex items-center justify-between h-12 p-4 border-b border-gray-700">

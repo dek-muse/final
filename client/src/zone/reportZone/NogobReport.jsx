@@ -17,7 +17,7 @@ const DISTRICTS = {
   'Sitti': ['Afdem', 'Ayshaca', 'Mieso', 'Dembel', 'Erar', 'Shiniile', 'Hadhagale', 'Biki', 'Geblalu', 'Dhuunya'],
 };
 ;
-const teacherType = ['Kg', 'primary', 'secondary', 'preparatory', 'university/colleges'];
+const teacherType = ['Kg', 'Primary', 'Secondary', 'Preparatory', 'University/Colleges'];
 
 // Filters Component
 const Filters = ({ filters, onFilterChange, onResetFilters }) => {
@@ -283,11 +283,11 @@ const App = () => {
       </button>
       <div className="mb-6">
         <div>
-          <span className="text-lg font-medium text-gray-100">Total Teachers: {totalTeachers}</span>
-          <span className="text-sm text-gray-400 ml-4">Male: {counts.sex.Male || 0}</span>
-          <span className="text-sm text-gray-400 ml-4">Female: {counts.sex.Female || 0}</span>
-          <span className="text-sm text-gray-400 ml-4">Native: {counts.nativeStatus.Native || 0}</span>
-          <span className="text-sm text-gray-400 ml-4">Non-native: {counts.nativeStatus['Non-native'] || 0}</span>
+          <span className="text-lg font-medium  ">Total Teachers: {totalTeachers}</span>
+          <span className="text-sm  ml-4">Male: {counts.sex.Male || 0}</span>
+          <span className="text-sm  ml-4">Female: {counts.sex.Female || 0}</span>
+          <span className="text-sm  ml-4">Native: {counts.nativeStatus.Native || 0}</span>
+          <span className="text-sm  ml-4">Non-native: {counts.nativeStatus['Non-native'] || 0}</span>
         </div>
       </div>
       <TeacherList teachers={paginatedTeachers} onViewDetails={handleViewDetails} />

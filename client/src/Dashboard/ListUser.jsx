@@ -205,8 +205,16 @@ const UserManagement = () => {
         </div>
 
         <div className="mt-12">
-          {isLoading && <p className="text-center text-blue-600">Loading...</p>}
-          {error && <p className="text-center text-red-600">{error}</p>}
+    
+          {isLoading && 
+          <div className="flex-col gap-4 w-full flex items-center justify-center">
+          <div className="w-20 h-20 border-4 border-transparent text-[#f27405] text-4xl animate-spin flex items-center justify-center border-t-[#f27405] rounded-full">
+            <div className="w-16 h-16 border-4 border-transparent text-gray-800 text-2xl animate-spin flex items-center justify-center border-t-gray-800 rounded-full" />
+            
+          </div>
+        </div>
+        }
+          {error && <p className="text-center text-red-600">:</p>}
           {message && <p className="text-center text-green-600">{message}</p>}
         </div>
 

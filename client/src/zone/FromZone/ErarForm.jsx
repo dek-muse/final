@@ -49,7 +49,7 @@ const subjectsList = [
 
 const sexOptions = ['Male', 'Female'];
 const nativeStatusOptions = ['Native', 'Non-native'];
-const teacherType = ['Kg','primary', 'secondary', 'preparatory' , 'university/colleges']
+const teacherType = ['Kg','Primary', 'Secondary', 'Preparatory' , 'University/Colleges']
 
 const TeacherForm = () => {
   const [teacher, setTeacher] = useState({

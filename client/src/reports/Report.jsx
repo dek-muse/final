@@ -314,11 +314,11 @@ const App = () => {
           Export to Excel
         </button>
         <div>
-          <span className="text-lg font-medium text-gray-600">Total Teachers: {totalTeachers}</span>
-          <span className="text-sm text-gray-600 ml-4">Male: {counts.sex.Male || 0}</span>
-          <span className="text-sm text-gray-600 ml-4">Female: {counts.sex.Female || 0}</span>
-          <span className="text-sm text-gray-600 ml-4">Native: {counts.nativeStatus.Native || 0}</span>
-          <span className="text-sm text-gray-600 ml-4">Non-native: {counts.nativeStatus['Non-native'] || 0}</span>
+          <span className="text-lg font-medium ">Total Teachers: {totalTeachers}</span>
+          <span className="text-sm  ml-4">Male: {counts.sex.Male || 0}</span>
+          <span className="text-sm  ml-4">Female: {counts.sex.Female || 0}</span>
+          <span className="text-sm  ml-4">Native: {counts.nativeStatus.Native || 0}</span>
+          <span className="text-sm  ml-4">Non-native: {counts.nativeStatus['Non-native'] || 0}</span>
         </div>
       </div>
       <TeacherList teachers={paginatedTeachers} onViewDetails={handleViewDetails} />
