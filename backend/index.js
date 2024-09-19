@@ -30,11 +30,11 @@ mongoose.connect(process.env.MONGO, {
 // Import Routes
 // const authRoutes = require('../routes/authRoutes');
 const teacherRoutes = require('./routes/teacherRoutes');
-// const userRouter = require('./routes/userRouter');
+const userRouter = require('./routes/userRouter');
 
 // Use Routes
 // app.use('/api/auth', authRoutes);
-// app.use('/', userRouter);
+app.use('/', userRouter);
 app.use('/', teacherRoutes);
 
 // Serve static files from the uploads directory

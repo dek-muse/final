@@ -4,10 +4,10 @@ const jwt = require('jsonwebtoken');
 
 // Sign Up
 const signup = async (req, res) => {
-  const { username, email, password, role, region } = req.body;
+  const { FullName, email, password, role, region } = req.body;
 
   // Validate required fields
-  if (!username || !email || !password || !role || !region) {
+  if (!FullName || !email || !password || !role || !region) {
     return res.status(400).json({ message: 'All fields are required' });
   }
 
@@ -16,7 +16,7 @@ const signup = async (req, res) => {
     const hashedPassword = await bcryptjs.hash(password, 10);
 
     const newUser = new User({
-      username: username.trim(),
+      FullName: FullName.trim(),
       email: email.trim(),
       password: hashedPassword,
       role: role.trim(),
@@ -28,7 +28,7 @@ const signup = async (req, res) => {
     res.status(201).json({ message: 'User registered successfully', _id: newUser._id });
   } catch (error) {
     if (error.code === 11000) {
-      return res.status(409).json({ message: 'Email or username already exists' });
+      return res.status(409).json({ message: 'Email or UserName already exists' });
     }
     res.status(500).json({ message: 'Error registering user', error });
   }
@@ -100,7 +100,7 @@ const getUser = async (req, res) => {
 
 // Update User by ID
 const updateUser = async (req, res) => {
-  const { username, email, password, role, region } = req.body;
+  const { FullName, email, password, role, region } = req.body;
 
   try {
     const user = await User.findById(req.params.id);
@@ -109,7 +109,7 @@ const updateUser = async (req, res) => {
     }
 
     // Update user fields if provided
-    user.username = username ? username.trim() : user.username;
+    user.FullName = FullName ? FullName.trim() : user.FullName;
     user.email = email ? email.trim() : user.email;
     user.role = role ? role.trim() : user.role;
     user.region = region ? region.trim() : user.region;
@@ -124,7 +124,7 @@ const updateUser = async (req, res) => {
     res.status(200).json(rest);
   } catch (error) {
     if (error.code === 11000) {
-      return res.status(409).json({ message: 'Email or username already exists' });
+      return res.status(409).json({ message: 'Email or FullName already exists' });
     }
     res.status(500).json({ message: 'Error updating user', error });
   }

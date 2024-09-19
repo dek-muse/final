@@ -33,7 +33,7 @@
         joiningDate: req.body.joiningDate,
         sex: req.body.sex,
         nativeStatus: req.body.nativeStatus,
-        pic: req.file ? req.file.path : null
+        picture: req.file ? req.file.path : null
       };
 
       const teacher = new Teacher(teacherData);

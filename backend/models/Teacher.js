@@ -1,7 +1,7 @@
 const mongoose = require('mongoose');
 
 const teacherSchema = new mongoose.Schema({
-  name: {
+  fullName: {
     type: String,
     required: true
   },
@@ -20,7 +20,6 @@ const teacherSchema = new mongoose.Schema({
     enum:['Kg','Primary', 'Secondary', 'Preparatory' , 'University/Colleges']
   },
   address: String,
-  // city: String,
   region: String,
   district: String,
   qualifications: String,
