@@ -19,6 +19,9 @@ const teacherSchema = new mongoose.Schema({
     type: String, 
     enum:['Kg','Primary', 'Secondary', 'Preparatory' , 'University/Colleges']
   },
+  educationLevel: [string],
+  salary: [Number],
+  birthDate: data.birthDate,
   address: String,
   region: String,
   district: String,
@@ -33,6 +36,7 @@ const teacherSchema = new mongoose.Schema({
     default: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
 
 },
+fileAttachment: null,
   sex: [String],
   nativeStatus: [String]
 }, {
