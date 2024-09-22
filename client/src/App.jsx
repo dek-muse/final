@@ -11,7 +11,8 @@ import NaveBare from './common/Navebare'; // Corrected component name
 import DashProfile from './Dashboard/DashProfile';
 import PrivateRoute from './context/PrivateRoute';
 import RoleBasedRoute from './context/RoleBasedRoute';
-import SigIn from './Dashboard/SigIn';
+// import SigIn from './Dashboard/SigIn';
+import SingIn from './Dashboard/SigIn';
 import Singup from './Dashboard/Singup';
 import ListUser from './Dashboard/ListUser';
 import Home from './Home/Home';
@@ -40,7 +41,9 @@ import NogobReport from "./zone/reportZone/NogobReport"
 import ShabelleReport from "./zone/reportZone/ShabelleReport"
 import SittiReport from "./zone/reportZone//SittiReport"
 import QoraxayReport from "./zone/reportZone/QoraxayReport"
-import Test from './test/test'
+// import Test from './pages/Test'
+// import TestList from './pages/TestList'
+import TeacherDetailsCard from './pages/TeacherDetailsCard';
 
 const App = () => {
   return (
@@ -53,10 +56,11 @@ const App = () => {
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/*" element={<NotFound />} />
-              <Route path="/signin" element={<SigIn />} />
+              <Route path="/signin" element={<SingIn/>} />
 
               {/* Protected routes */}
-              <Route path="/test" element={<PrivateRoute><Test /></PrivateRoute>} />
+              {/* <Route path="/testList" element={<PrivateRoute><TestList /></PrivateRoute>} />
+              <Route path="/test" element={<PrivateRoute><Test /></PrivateRoute>} /> */}
               <Route path="/profile" element={<PrivateRoute><DashProfile /></PrivateRoute>} />
 
               {/* Region-specific teacher forms */}
@@ -92,6 +96,7 @@ const App = () => {
               <Route path="/teachersList" element={<RoleBasedRoute requiredRole="SuperAdmin"><TeacherList /></RoleBasedRoute>} />
               <Route path="/signup" element={<RoleBasedRoute requiredRole="SuperAdmin"><Singup /></RoleBasedRoute>} />
               <Route path="/update-teacher/:id" element={<RoleBasedRoute requiredRole="SuperAdmin"><UpdateTeacherForm /></RoleBasedRoute>} />
+              <Route path="/teacher/details/:id" element={<RoleBasedRoute requiredRole="SuperAdmin"><TeacherDetailsCard /></RoleBasedRoute>} />
               <Route path="/listUsers" element={<RoleBasedRoute requiredRole="SuperAdmin"><ListUser /></RoleBasedRoute>} />
               <Route path="/report" element={<RoleBasedRoute requiredRole="SuperAdmin"><Report /></RoleBasedRoute>} />
             </Routes>
