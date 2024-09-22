@@ -1,7 +1,7 @@
 {
   "name": "client",
   "private": true,
-  "version": "0.0.0",
+  "version": "1.0.0",
   "type": "module",
   "scripts": {
     "dev": "vite",
@@ -34,6 +34,7 @@
     "react-tooltip": "^5.28.0",
     "recharts": "^2.12.7",
     "redux-persist": "^6.0.0",
+    "tailwind-scrollbar": "^3.1.0",
     "xlsx": "^0.18.5"
   },
   "devDependencies": {

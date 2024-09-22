@@ -106,6 +106,11 @@ const UserManagement = () => {
     }
   };
 
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    setSelectedUser({ ...selectedUser, profilePicture: file });
+  };
+
   const confirmUpdate = (e) => {
     e.preventDefault();
     setShowConfirmation(true);
@@ -116,10 +121,24 @@ const UserManagement = () => {
     setShowConfirmation(false);
     setIsLoading(true);
     try {
-      // Only update role and region
+      let profilePictureUrl = selectedUser.profilePicture;
+
+      // If a new file is selected, upload it and get the URL
+      if (profilePictureUrl instanceof File) {
+        const formData = new FormData();
+        formData.append('file', profilePictureUrl);
+        const uploadResponse = await axios.post('https://tuserapi.vercel.app/', formData, {
+          headers: {
+            'Content-Type': 'multipart/form-data',
+            Authorization: `Bearer ${localStorage.getItem('token')}`,
+          },
+        });
+        profilePictureUrl = uploadResponse.data.url;
+      }
+
       await axios.put(
         `https://tuserapi.vercel.app/${selectedUser._id}`,
-        { role: selectedUser.role, region: selectedUser.region },
+        { role: selectedUser.role, region: selectedUser.region, profilePicture: profilePictureUrl },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -127,9 +146,10 @@ const UserManagement = () => {
           },
         }
       );
+
       setMessage('User updated successfully');
-      setUsers(users.map((user) => (user._id === selectedUser._id ? selectedUser : user)));
-      setFilteredUsers(filteredUsers.map((user) => (user._id === selectedUser._id ? selectedUser : user)));
+      setUsers(users.map((user) => (user._id === selectedUser._id ? { ...selectedUser, profilePicture: profilePictureUrl } : user)));
+      setFilteredUsers(filteredUsers.map((user) => (user._id === selectedUser._id ? { ...selectedUser, profilePicture: profilePictureUrl } : user)));
       setSelectedUser(null);
     } catch (error) {
       console.error('Error updating user:', error);
@@ -169,6 +189,7 @@ const UserManagement = () => {
             <thead>
               <tr>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">No</th>
+                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Profile Picture</th>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Username</th>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
                 <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Role</th>
@@ -180,21 +201,22 @@ const UserManagement = () => {
               {filteredUsers.map((user, index) => (
                 <tr key={user._id}>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{index + 1}</td>
+                  <td className="px-6 py-4 whitespace-nowrap text-sm">
+                    <img
+                      src={user.profilePicture || 'default-profile.png'}
+                      alt={`${user.username}'s profile`}
+                      className="w-10 h-10 rounded-full"
+                    />
+                  </td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{user.username}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">{user.email}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">{user.role}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm">{user.region || 'N/A'}</td>
                   <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-2">
-                    <Button
-                      onClick={() => handleEdit(user)}
-                      className="bg-[#b19d60] hover:bg-blue-700 text-white"
-                    >
+                    <Button onClick={() => handleEdit(user)} className="bg-[#b19d60] hover:bg-blue-700 text-white">
                       <FaEdit className="mr-2" />
                     </Button>
-                    <Button
-                      onClick={() => confirmDelete(user._id)}
-                      className="bg-red-600 hover:bg-red-700 text-white"
-                    >
+                    <Button onClick={() => confirmDelete(user._id)} className="bg-red-600 hover:bg-red-700 text-white">
                       <FaTrashAlt className="mr-2" />
                     </Button>
                   </td>
@@ -203,103 +225,116 @@ const UserManagement = () => {
             </tbody>
           </table>
         </div>
+      </div>
 
-        <div className="mt-12">
-    
-          {isLoading && 
-          <div className="flex-col gap-4 w-full flex items-center justify-center">
-          <div className="w-20 h-20 border-4 border-transparent text-[#f27405] text-4xl animate-spin flex items-center justify-center border-t-[#f27405] rounded-full">
-            <div className="w-16 h-16 border-4 border-transparent text-gray-800 text-2xl animate-spin flex items-center justify-center border-t-gray-800 rounded-full" />
-            
-          </div>
-        </div>
-        }
-          {error && <p className="text-center text-red-600">:</p>}
-          {message && <p className="text-center text-green-600">{message}</p>}
-        </div>
+      {selectedUser && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
+          <div className="bg-white p-6 rounded-lg shadow-lg max-w-md w-full">
+            <h2 className="text-lg font-bold mb-4">Edit User</h2>
+            <form onSubmit={confirmUpdate}>
+              <div className="mb-4">
+                <label htmlFor="role" className="block text-sm font-medium text-gray-700">
+                  Role
+                </label>
+                <select
+                  id="role"
+                  value={selectedUser.role}
+                  onChange={(e) => setSelectedUser({ ...selectedUser, role: e.target.value })}
+                  className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm"
+                >
+                  {roles.map((role) => (
+                    <option key={role} value={role}>
+                      {role}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-        {/* Edit User Modal */}
-        {selectedUser && (
-          <div className="fixed inset-0 flex items-center justify-center  k bg-opacity-50 z-50">
-            <div className="bg-white dark:bg-slate-700 p-6 rounded-lg shadow-lg w-full max-w-md">
-              <h2 className="text-lg font-bold mb-4">Edit User</h2>
-              <form onSubmit={confirmUpdate}>
-                <div className="mb-4">
-                  <label htmlFor="role" className="block text-sm font-medium text-gray-700">
-                    Role
-                  </label>
-                  <select
-                    id="role"
-                    value={selectedUser.role}
-                    onChange={(e) => setSelectedUser({ ...selectedUser, role: e.target.value })}
-                    className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm"
-                  >
-                    {roles.map((role) => (
-                      <option key={role} value={role}>
-                        {role}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="mb-4">
-                  <label htmlFor="region" className="block text-sm font-medium text-gray-700">
-                    Region
-                  </label>
-                  <select
-                    id="region"
-                    value={selectedUser.region || ''}
-                    onChange={(e) => setSelectedUser({ ...selectedUser, region: e.target.value })}
-                    className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm"
-                  >
-                    {REGIONS.map((region) => (
-                      <option key={region} value={region}>
-                        {region}
-                      </option>
-                    ))}
-                  </select>
-                </div>
-                <div className="flex justify-end gap-2 mt-4">
-                  <Button
-                    type="button"
-                    onClick={() => setSelectedUser(null)}
-                    className="bg-gray-600 hover:bg-gray-700 text-white"
-                  >
-                    Cancel
-                  </Button>
-                  <Button type="submit" className="bg-[#b19d60] hover:bg-[#8e793f] text-white">
-                    Update
-                  </Button>
-                </div>
-              </form>
-            </div>
-          </div>
-        )}
+              <div className="mb-4">
+                <label htmlFor="region" className="block text-sm font-medium text-gray-700">
+                  Region
+                </label>
+                <select
+                  id="region"
+                  value={selectedUser.region}
+                  onChange={(e) => setSelectedUser({ ...selectedUser, region: e.target.value })}
+                  className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm"
+                >
+                  {REGIONS.map((region) => (
+                    <option key={region} value={region}>
+                      {region}
+                    </option>
+                  ))}
+                </select>
+              </div>
 
-        {/* Confirmation Modal */}
-        {showConfirmation && (
-          <div className="fixed inset-0 flex items-center justify-center  k bg-opacity-50 z-50">
-            <div className="  p-6 rounded-lg shadow-lg w-full max-w-md">
-              <h2 className="text-lg font-bold mb-4">
-                {actionType === 'delete' ? 'Confirm Delete' : 'Confirm Update'}
-              </h2>
-              <p className="mb-4">
-                Are you sure you want to {actionType === 'delete' ? 'delete' : 'update'} this user?
-              </p>
-              <div className="flex justify-end gap-2">
-                <Button onClick={() => setShowConfirmation(false)} className="bg-gray-600 hover:bg-gray-700 text-white">
-                  Cancel
+              <div className="mb-4">
+                <label htmlFor="profilePicture" className="block text-sm font-medium text-gray-700">
+                  Profile Picture
+                </label>
+                <input
+                  type="file"
+                  id="profilePicture"
+                  onChange={handleFileChange}
+                  className="mt-1 block w-full py-2 px-3 border border-gray-300 rounded-md shadow-sm"
+                />
+              </div>
+
+              <div className="flex justify-end">
+                <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white mr-2">
+                  Update
                 </Button>
                 <Button
-                  onClick={actionType === 'delete' ? handleConfirmDelete : handleConfirmUpdate}
-                  className="bg-[#b19d60] hover:bg-[#8e793f] text-white"
+                  onClick={() => setSelectedUser(null)}
+                  className="bg-gray-500 hover:bg-gray-600 text-white"
                 >
-                  Confirm
+                  Cancel
                 </Button>
               </div>
+            </form>
+          </div>
+        </div>
+      )}
+
+      {showConfirmation && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
+          <div className="bg-white p-6 rounded-lg shadow-lg">
+            <p>Are you sure you want to {actionType} this user?</p>
+            <div className="flex justify-end mt-4">
+              <Button
+                onClick={actionType === 'delete' ? handleConfirmDelete : handleConfirmUpdate}
+                className="bg-red-600 hover:bg-red-700 text-white mr-2"
+              >
+                Yes
+              </Button>
+              <Button
+                onClick={() => setShowConfirmation(false)}
+                className="bg-gray-500 hover:bg-gray-600 text-white"
+              >
+                No
+              </Button>
             </div>
           </div>
-        )}
-      </div>
+        </div>
+      )}
+
+      {isLoading && (
+        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
+          <div className="text-white text-lg">Loading...</div>
+        </div>
+      )}
+
+      {error && (
+        <div className="fixed bottom-4 right-4 bg-red-500 text-white p-4 rounded-md shadow-lg z-20">
+          {error}
+        </div>
+      )}
+
+      {message && (
+        <div className="fixed bottom-4 right-4 bg-green-500 text-white p-4 rounded-md shadow-lg z-20">
+          {message}
+        </div>
+      )}
     </div>
   );
 };

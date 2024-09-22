@@ -7,7 +7,7 @@ const REGIONS = ['c', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'N
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
-    username: '',
+    FullName: '',
     email: '',
     password: '',
     role: '',
@@ -26,7 +26,7 @@ const SignUp = () => {
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.username) newErrors.username = 'Username is required';
+    if (!formData.FullName) newErrors.FullName = 'FullName is required';
     if (!formData.email) newErrors.email = 'Email is required';
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
     if (!formData.password) newErrors.password = 'Password is required';
@@ -60,18 +60,18 @@ const SignUp = () => {
         <h2 className="text-xl font-bold mb-6 bg-[#b19d60] p-3 rounded-md uppercase">Create users</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-2">
-            <label htmlFor="username" className="block  text-xs font-medium mb-1">Username</label>
+            <label htmlFor="FullName" className="block  text-xs font-medium mb-1">Full Name</label>
             <input
-              id="username"
+              id="Full Name"
               type="text"
-              name="username"
-              value={formData.username}
+              name="Name"
+              value={formData.FullName}
               onChange={handleChange}
               required
-              placeholder="Enter your username"
-              className={`w-full px-4 py-2.5 transition duration-200 ease-in-out transform hover:scale-105    rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.username ? 'border-red-500' : 'border-gray-300'}`}
+              placeholder="Enter your Full Name"
+              className={`w-full px-4 py-2.5 transition duration-200 ease-in-out transform hover:scale-105    rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.FullName ? 'border-red-500' : 'border-gray-300'}`}
             />
-            {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username}</p>}
+            {errors.FullName && <p className="text-red-500 text-xs mt-1">{errors.FullName}</p>}
           </div>
           <div className="mb-2">
             <label htmlFor="email" className="block  text-xs font-medium mb-1">Email</label>

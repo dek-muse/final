@@ -40,6 +40,7 @@ import NogobReport from "./zone/reportZone/NogobReport"
 import ShabelleReport from "./zone/reportZone/ShabelleReport"
 import SittiReport from "./zone/reportZone//SittiReport"
 import QoraxayReport from "./zone/reportZone/QoraxayReport"
+import Test from './test/test'
 
 const App = () => {
   return (
@@ -55,6 +56,7 @@ const App = () => {
               <Route path="/signin" element={<SigIn />} />
 
               {/* Protected routes */}
+              <Route path="/test" element={<PrivateRoute><Test /></PrivateRoute>} />
               <Route path="/profile" element={<PrivateRoute><DashProfile /></PrivateRoute>} />
 
               {/* Region-specific teacher forms */}

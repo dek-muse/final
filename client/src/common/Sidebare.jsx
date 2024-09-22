@@ -3,6 +3,7 @@ import { NavLink, useNavigate } from 'react-router-dom';
 import {
   FaHome, FaChalkboardTeacher, FaUserPlus, FaUsers, FaBars, FaTimes,
   FaChevronDown, FaChevronUp, FaMapMarkerAlt, FaFlag, FaRegListAlt,
+  FaTable,
 } from 'react-icons/fa';
 import { MdAddModerator, MdReport } from 'react-icons/md';
 import { MdGroupAdd } from "react-icons/md";
@@ -56,6 +57,17 @@ const Sidebar = () => {
 
           {userRole === 'SuperAdmin' && (
             <div className="space-y-2">
+               <NavLink
+                to="/test"
+                className={({ isActive }) =>
+                  `flex items-center space-x-4 p-2 hover:bg-[#b19d60] transition-all rounded-md ${isActive ? 'bg-[#b19d60]' : 'bg-transparent'}`
+                }
+              >
+                <FaTable />
+                {isSidebarOpen && <span>Dashboard</span>}
+                {!isSidebarOpen && <Tooltip content="Dashboard" />}
+              </NavLink>
+
               <NavLink
                 to="/dashboard"
                 className={({ isActive }) =>
