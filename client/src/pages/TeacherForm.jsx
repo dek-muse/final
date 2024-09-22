@@ -527,7 +527,7 @@ const TeacherForm = () => {
                   required
                   className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.region ? 'border-red-500' : 'border-gray-300'}`}
                 >
-                  <option value="">Select Region</option>
+                  <option value="">Select Zone</option>
                   {ZONE.map(region => (
                     <option key={region} value={region}>{region}</option>
                   ))}
