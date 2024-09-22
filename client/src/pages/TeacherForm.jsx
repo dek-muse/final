@@ -1,6 +1,18 @@
-import React, { useState,  useEffect } from 'react';
+/* eslint-disable no-unused-vars */
+import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
+import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
+import {
+  getDownloadURL,
+  getStorage,
+  ref,
+  uploadBytesResumable,
+} from 'firebase/storage';
+import { app } from '../firebase';
+import { CircularProgressbar } from 'react-circular-progressbar';
+import 'react-circular-progressbar/dist/styles.css';
+import { Alert } from 'flowbite-react';
 // import { storage } from '../firebase'; // Adjust the path as necessary
   
 
@@ -13,10 +25,10 @@ const subjects = [
 ];
 
 
-const REGIONS = ['Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
+const ZONE = ['Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
 const DISTRICTS = {
   'Afdheer': [ 'Hargeelle', 'Dhaawac','Baarey', 'limey galbeed', 'Raaso','Dollow Bay','Ceelkari','Qooxle','Godgod'],
-  'Daawo': ['Qadhadhumo','Hudet','Mooyale','Mubarak',],
+  'Daawo': ['Qadhadhumo','Hudet','Mooyale','Mubarak'],
   'Doolo': [ 'Daraatole',    'Wardheer- Xarunta Gobalka','Danood','Galxumur','Galaadi','Bookh','Lehel-yucub'],
   'Erar': ['Fiiq','Xamaro','Waangay','Lagahida','Yoxob','Salaxaad','Mayu-Muluqo','Qubi'],
   'Faafan': ['Tuliguuled','Goljano','Harooreys','Shabeleey','Harawo','Mula','Qabribayax','Xarshin','Gursum','Babili','Awbare',  ],
@@ -28,6 +40,13 @@ const DISTRICTS = {
   'Sitti': ['Afdem','Ayshaca','Mieso','Dembel','Erar','Shiniile','Hadhagale','Biki','Geblalu','Dhuunya',],
 };
 
+const EDUCATION_LEVELS= ['High School',  'Master\'s Degree', 'Doctorate'];
+const SALARY_RANGES = {
+  'High School': [7000, 8000],
+  'Master\'s Degree': [ 9000, 10000, ],
+  'Doctorate': [ 1100, 1200],
+  };
+
 const subjectsList = [
   'Mathematics',
   'Science',
@@ -38,14 +57,14 @@ const subjectsList = [
 
 const sexOptions = ['Male', 'Female'];
 const nativeStatusOptions = ['Native', 'Non-native'];
-const teacherType = ['Kg','primary', 'secondary', 'preparatory' , 'university/colleges']
+const teacherType = ['Kg','Primary', 'Secondary', 'Preparatory' , 'University/Colleges']
 
 const TeacherForm = () => {
   const [teacher, setTeacher] = useState({
     name: '',
     email: '',
     mobile: '',
-    city: '',
+    // city: '',
     address: '',
     region: '',
     district: '',
@@ -56,7 +75,11 @@ const TeacherForm = () => {
     nativeStatus: '',  // Added field
     teacherType: '',
     picture: null,
-    joiningDate: ''
+    joiningDate: '',
+    educationLevel: '',
+    salary: '',
+    fileAttachment: null,
+    birthDate: ''
   });
 
   const [errors, setErrors] = useState({});
@@ -64,12 +87,84 @@ const TeacherForm = () => {
   const [isSubmitted, setIsSubmitted] = useState(false);
   const [picturePreview, setPicturePreview] = useState('');
   const [districts, setDistricts] = useState([]);
+  const { currentUser, error, loading } = useSelector((state) => state.user);
+  const [imageFile, setImageFile] = useState(null);
+  const [imageFileUrl, setImageFileUrl] = useState(null);
+  const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
+  const [imageFileUploadError, setImageFileUploadError] = useState(null);
+  const [imageFileUploading, setImageFileUploading] = useState(false);
+  const [formData, setFormData] = useState({});
+  const filePickerRef = useRef();
+  const [salaryRange, setSalaryRange] = useState([]);
+
+  const handleImageChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setImageFile(file);
+      setImageFileUrl(URL.createObjectURL(file));
+    }
+  };
+  useEffect(() => {
+    if (imageFile) {
+      uploadImage();
+    }
+  }, [imageFile]);
+
+  const uploadImage = async () => {
+    // service firebase.storage {
+      //   match /b/{bucket}/o {
+      //     match /{allPaths=**} {
+      //       allow read;
+      //       allow write: if
+      //       request.resource.size < 2 * 1024 * 1024 &&
+      //       request.resource.contentType.matches('image/.*')
+      //     }
+      //   }
+      // }
+      const storage = getStorage(app);
+      const fileName = new Date().getTime() + imageFile.name;
+      const storageRef = ref(storage, `teachers/${teacher.name}`);
+      const uploadTask = uploadBytesResumable(storageRef, imageFile);
+      uploadTask.on(
+        'state_changed',
+        (snapshot) => {
+          const progress =
+            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+  
+          setImageFileUploadProgress(progress.toFixed(0));
+        },
+        (error) => {
+          setImageFileUploadError(
+            'Could not upload image (File must be less than 2MB)'
+          );
+          setImageFileUploadProgress(null);
+          setImageFile(null);
+          setImageFileUrl(null);
+          setImageFileUploading(false);
+        },
+        () => {
+          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+            setImageFileUrl(downloadURL);
+            setFormData({ ...formData, profilePicture: downloadURL });
+            setImageFileUploading(false);
+          });
+        }
+      );
+  }
+
 
   useEffect(() => {
     if (teacher.region) {
       setDistricts(DISTRICTS[teacher.region] || []);
     }
   }, [teacher.region])
+  
+  useEffect(() => {
+    if (teacher.EDUCATION_LEVEL) {
+      setSalaryRange(SALARY_RANGES[teacher.EDUCATION_LEVEL] || []);
+    }
+  }, [teacher.EDUCATION_LEVEL]);
+
   const navigate = useNavigate();
 
   const handleChange = (e) => {
@@ -81,9 +176,10 @@ const TeacherForm = () => {
       setTeacher({ ...teacher, [name]: value });
     }
     setErrors({ ...errors, [name]: '' });
+    setFormData({ ...formData, [e.target.id]: e.target.value });
   };
   
-
+  // birthDate: '',
     const validate = () => {
       const newErrors = {};
       if (!teacher.name) newErrors.name = 'Name is required';
@@ -101,6 +197,10 @@ const TeacherForm = () => {
     if (!teacher.sex) newErrors.sex = 'Sex is required';  // Validation for new field
     if (!teacher.nativeStatus) newErrors.nativeStatus = 'Native Status is required';  // Validation for new field
     // if (!teacher.picture) newErrors.picture = 'Picture is required';  // Validation for new field
+    if (!teacher.salary) newErrors.salary = 'salary is required';  // Validation for new field
+    if (!teacher.fileAttachment) newErrors.fileAttachment = 'fileAttachment is required';  // Validation for new field
+    if (!teacher.educationLevel) newErrors.educationLevel = 'educationLevel is required';  // Validation for new field
+    if (!teacher.birthDate) newErrors.birthDate = 'birthDate is required';  // Validation for new field
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -125,7 +225,7 @@ const TeacherForm = () => {
       // Exclude picture field in the form submission if it's not needed
       const { picture, ...dataToSend } = teacherData;
   
-      const response = await axios.post('http://localhost:5000/api/teachers', dataToSend);
+      const response = await axios.post('https://finalbakend.vercel.app/', dataToSend);
       console.log(response.data);
   
       setIsSubmitted(true);
@@ -133,7 +233,7 @@ const TeacherForm = () => {
         name: '',
         email: '',
         mobile: '',
-        city: '',
+        // city: '',
         address: '',
         region: '',
         district: '',
@@ -144,7 +244,11 @@ const TeacherForm = () => {
         nativeStatus: '',
         teacherType: '',
         picture: null,
-        joiningDate: ''
+        joiningDate: '',
+        educationLevel: '',
+        salary: '',
+        fileAttachment: null,
+        birthDate: ''
       });
       navigate('/teachersList');
     } catch (error) {
@@ -162,7 +266,7 @@ const TeacherForm = () => {
       name: '',
       email: '',
       mobile: '',
-      city: '',
+      // city: '',
       address: '',
       region: '',
       district: '',
@@ -172,11 +276,16 @@ const TeacherForm = () => {
       sex: '',  // Reset new field
       nativeStatus: '',  // Reset new field
       teacherType: '',
-      picture: null
+      picture: null,
+      educationLevel: '',
+      salary: '',
+      fileAttachment: null,
+      birthDate: '',
     });
     setErrors({});
     setIsSubmitted(false); // Reset the submitted status
   };
+  
 
   return (
     <div className="max-w-4xl mx-auto p-8  rounded-lg   shadow-2xl border shadow-[#b19d60] border-[#b19d60]">
@@ -208,6 +317,20 @@ const TeacherForm = () => {
                 {errors.name && <p className="text-red-600 text-xs mt-1">{errors.name}</p>}
               </div>
               <div className="mb-5">
+                <label htmlFor="birthDate" className="block   text-sm font-medium mb-2">Teacher birthDate</label>
+                <input
+                  id="birthDate"
+                  type="date"
+                  // name="birthDate"
+                  // value={teacher.birthDate}
+                  onChange={handleChange}
+                  required
+                  // placeholder='Enter Full birthDate'
+                  className={`w-full px-4 py-3 border rounded-lg shadow-sm  dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
+                />
+                {errors.birthDate && <p className="text-red-600 text-xs mt-1">{errors.birthDate}</p>}
+              </div>
+              <div className="mb-5">
                 <label htmlFor="email" className="block  text-sm font-medium mb-2">Teacher Email ID</label>
                 <input
                   id="email"
@@ -225,7 +348,7 @@ const TeacherForm = () => {
                 <label htmlFor="mobile" className="block  text-sm font-medium mb-2">Teacher Mobile Number</label>
                 <input
                   id="mobile"
-                  type="text"
+                  type="tel"
                   name="mobile"
                   value={teacher.mobile}
                   onChange={handleChange}
@@ -284,18 +407,52 @@ const TeacherForm = () => {
                 ))}
                 {errors.nativeStatus && <p className="text-red-600 text-xs mt-1">{errors.nativeStatus}</p>}
               </div>
-             
+             {/*  */}
               <div>
-              <label className="block text-gray-700">Picture</label>
               <input
-                type="file"
-                name="picture"
-                onChange={handleChange}
-                className={`w-full p-3 border ${errors.picture ? 'border-red-500' : 'border-gray-300'} rounded`}
-              />
-              {picturePreview && <img src={picturePreview} alt="Preview" className="mt-2 w-32 h-32 object-cover" />}
-              {errors.picture && <p className="text-red-500 text-sm">{errors.picture}</p>}
+               type='file'
+               accept='image/*'
+               onChange={handleImageChange}
+               ref={filePickerRef}
+               
+      />
+      <div className="relative w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full"
+      onClick={() => filePickerRef.current.click()}>
+        {imageFileUploadProgress && (
+          <CircularProgressbar
+          value={imageFileUploadProgress || 0}
+          text={`${imageFileUploadProgress}%`}
+          strokeWidth={5}
+          styles={{
+            root: {
+              width: '100%',
+              height: '100%',
+              position: 'absolute',
+              top: 0,
+              left: 0,
+            },
+            path: {
+              stroke: `rgba(62, 152, 199, ${
+                imageFileUploadProgress / 100
+              })`,
+            },
+          }}
+        />
+        )}
+        <img
+          src={imageFileUrl || currentUser.profilePicture}
+          alt='user'
+          className={`rounded-full w-full h-full object-cover border-8 border-[lightgray] ${
+            imageFileUploadProgress &&
+            imageFileUploadProgress < 100 &&
+            'opacity-60'
+          }`}
+        />
+      </div>
             </div>
+            {imageFileUploadError && (
+              <Alert color='failure'>{imageFileUploadError}</Alert>
+            )}
 
              
             </div>
@@ -305,7 +462,8 @@ const TeacherForm = () => {
               <h3 className="text-xl font-medium mb-4">
                 {/* Teacher Professional Details */}
                 </h3>
-
+ 
+              {/* type of  */}
               <div className="mb-5">
                 <label htmlFor="region" className="block  text-sm font-medium mb-2">Select Teacher Type</label>
                 <select
@@ -323,10 +481,44 @@ const TeacherForm = () => {
                 </select>
                 {errors.teacherType && <p className="text-red-600 text-xs mt-1">{errors.teacherType}</p>}
               </div>
-
+                  {/* salary and level teacher */}
+              <div className="mb-5">
+      <label htmlFor="educationLevel" className="block text-sm font-medium mb-2">Teacher Education Levels</label>
+      <select
+        id="educationLevel"
+        name="EDUCATION_LEVEL"
+        value={teacher.EDUCATION_LEVEL}
+        onChange={handleChange}
+        required
+        className={`w-full px-4 py-3 border rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.EDUCATION_LEVEL ? 'border-red-500' : 'border-gray-300'}`}
+      >
+        <option value="">Select Education Level</option>
+        {EDUCATION_LEVELS.map(level => (
+          <option key={level} value={level}>{level}</option>
+        ))}
+      </select>
+      {errors.EDUCATION_LEVEL && <p className="text-red-600 text-xs mt-1">{errors.EDUCATION_LEVEL}</p>}
+    </div>
+    <div className="mb-5">
+      <label htmlFor="salaryRange" className="block text-sm font-medium mb-2">Teacher Salary Ranges</label>
+      <select
+        id="salaryRange"
+        name="SALARY_RANGE"
+        value={teacher.SALARY_RANGE}
+        onChange={handleChange}
+        required
+        className={`w-full px-4 py-3 border rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.SALARY_RANGE ? 'border-red-500' : 'border-gray-300'}`}
+      >
+        <option value="">Select Salary Range</option>
+        {teacher.EDUCATION_LEVEL && SALARY_RANGES[teacher.EDUCATION_LEVEL].map((salary, index) => (
+          <option key={index} value={salary}>{salary}</option>
+        ))}
+      </select>
+      {errors.SALARY_RANGE && <p className="text-red-600 text-xs mt-1">{errors.SALARY_RANGE}</p>}
+    </div>
 
               <div className="mb-5">
-                <label htmlFor="region" className="block  text-sm font-medium mb-2">Teacher Region</label>
+                <label htmlFor="region" className="block  text-sm font-medium mb-2">Teacher Zone</label>
                 <select
                   id="region"
                   name="region"
@@ -336,7 +528,7 @@ const TeacherForm = () => {
                   className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.region ? 'border-red-500' : 'border-gray-300'}`}
                 >
                   <option value="">Select Region</option>
-                  {REGIONS.map(region => (
+                  {ZONE.map(region => (
                     <option key={region} value={region}>{region}</option>
                   ))}
                 </select>
@@ -360,6 +552,7 @@ const TeacherForm = () => {
                 </select>
                 {errors.district && <p className="text-red-600 text-xs mt-1">{errors.district}</p>}
               </div>
+
               <div className="mb-5">
                 <label htmlFor="subjectsLearned" className="block  text-sm font-medium mb-2">Subjects Learned</label>
                 <select
@@ -436,7 +629,7 @@ const TeacherForm = () => {
             <button
               type="button"
               onClick={handleReset}
-              className="px-4 py-2   text-white rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
+              className="px-4 py-2 bg-gray-600 text-white rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
             >
               Reset
             </button>

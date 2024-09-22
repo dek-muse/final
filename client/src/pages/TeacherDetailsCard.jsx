@@ -1,95 +1,161 @@
-  import React, { useState } from 'react';
-  import { useNavigate } from 'react-router-dom';
+import React, { useState, useEffect } from 'react';
+import { useParams } from 'react-router-dom';
+import axios from 'axios';
+import { getStorage, ref, getDownloadURL } from 'firebase/storage';
+import { IoMail, IoCall, IoLocation, IoLogoLinkedin, IoLogoFacebook, IoCheckmark } from 'react-icons/io5';
 
-  const TeacherDetailsCard = ({ teacher, onClose }) => {
-    const [isExpanded, setIsExpanded] = useState(false);
-    const navigate = useNavigate();
+const TeacherDetailsCV = () => {
+  const { id } = useParams();
+  const [teacher, setTeacher] = useState(null);
+  const [isLoading, setIsLoading] = useState(true);
+  const [error, setError] = useState(null);
+  const storage = getStorage();
 
-    if (!teacher) return null;
+  useEffect(() => {
+    const fetchTeacher = async () => {
+      try {
+        const response = await axios.get(`https://finalbakend.vercel.app/${id}`);
+        const teacherData = response.data;
 
-    const toggleDetails = () => setIsExpanded(!isExpanded);
+        if (teacherData.picture) {
+          try {
+            const imageRef = ref(storage, teacherData.picture);
+            const imageUrl = await getDownloadURL(imageRef);
+            teacherData.picture = imageUrl;
+          } catch (err) {
+            console.error('Error fetching teacher image:', err);
+          }
+        }
 
-    return (
-      <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-70 z-50 transition-opacity duration-300 ease-in-out ">
-        <div className="relative w-[900px] max-w-128 h-[580px] bg-white rounded-lg shadow-lg p-8 mx-4 sm:mx-6 lg:mx-8 transition-transform transform scale-100 hover:scale-105 hover:bg-[#b19d60]  hover:text-white ">
-          <button
-            onClick={onClose}
-            className="absolute top-4 right-4 text-gray-500 hover:text-gray-700 transition-colors duration-200 text-2xl "
-          >
-            &times;
-          </button>
-          <div className="flex flex-col md:flex-row items-start md:items-center space-y-4 md:space-y-0 md:space-x-6  ">
-            <div className="flex-shrink-0">
-              {teacher.picture ? (
-                <img
-                  src={teacher.picture}
-                  alt={teacher.name}
-                  className="w-32 h-32 object-cover rounded-full border-4 border-gray-200 shadow-md transition-transform duration-300 transform hover:scale-110"
-                />
-              ) : (
-                <div className="w-32 h-32 bg-gray-300 rounded-full border-4 border-gray-200"></div>
-              )}
-            </div>
-            <div className="flex-1">
-              <h2 className="text-3xl font-bold text-primary mb-2">{teacher.name}</h2>
-              <p className="text-lg mb-1">Email: <span className="font-semibold">{teacher.email || 'N/A'}</span></p>
-              <p className="text-lg mb-1">Mobile: <span className="font-semibold">{teacher.mobile || 'N/A'}</span></p>
-              <p className="text-lg mb-1">City: <span className="font-semibold">{teacher.city || 'N/A'}</span></p>
-              <p className="text-lg mb-1">Address: <span className="font-semibold">{teacher.address || 'N/A'}</span></p>
-              <p className="text-lg mb-1">Region: <span className="font-semibold">{teacher.region || 'N/A'}</span></p>
-              <p className="text-lg mb-1">District: <span className="font-semibold">{teacher.district || 'N/A'}</span></p>
-              <p className="text-lg mb-1">Subjects Learned: <span className="font-semibold">{teacher.subjectsLearned || 'N/A'}</span></p>
-              <p className="text-lg mb-1">Subjects Taught: <span className="font-semibold">{teacher.subjectsTech || 'N/A'}</span></p>
-              <p className="text-lg mb-1">Description: <span className="font-semibold">{teacher.description || 'N/A'}</span></p>
-              <p className="text-lg mb-1">Sex: <span className="font-semibold">{teacher.sex || 'N/A'}</span></p>
-              <p className="text-lg mb-1">Native Status: <span className="font-semibold">{teacher.nativeStatus || 'N/A'}</span></p>
-              <p className="text-lg mb-1">Teacher Type: <span className="font-semibold">{teacher.teacherType || 'N/A'}</span></p>
-              {isExpanded ? (
-                <>
-                  <p className="text-lg text-gray-600 mb-1">Joining Date: <span className="font-semibold">{teacher.joiningDate ? new Date(teacher.joiningDate).toLocaleDateString() : 'N/A'}</span></p>
-                </>
-              ) : (
-                <button
-                  onClick={toggleDetails}
-                  className="text-blue-600 hover:text-blue-700 mt-2 transition-colors duration-200"
-                >
-                  Show More
-                </button>
-              )}
-              <div className="mt-4 flex flex-wrap gap-4">
-                {teacher.resume && (
-                  <a
-                    href={teacher.resume}
-                    download
-                    className="inline-flex items-center py-2 px-4 rounded-md text-white bg-secondary hover:bg-yellow-700 transition-colors duration-200"
-                  >
-                    Download Resume
-                  </a>
-                )}
-                 
-              </div>
-              <p className="text-sm text-gray-500 mt-2">
-                Last Updated: <span className="font-semibold">{teacher.joiningDate ? new Date(teacher.joiningDate).toLocaleDateString() : 'N/A'}</span>
-              </p>
-            </div>
+        setTeacher(teacherData);
+      } catch (err) {
+        setError('Failed to fetch teacher details');
+      } finally {
+        setIsLoading(false);
+      }
+    };
+
+    fetchTeacher();
+  }, [id, storage]);
+
+  if (isLoading) return <p className="text-center">Loading...</p>;
+  if (error) return <p className="text-center text-red-500">{error}</p>;
+
+  return (
+    <div className="bg-gradient-to-r from-blue-200 to-white max-w-[210mm] mx-auto my-10 p-8 shadow-xl rounded-lg transition-transform transform hover:scale-105">
+      <div className="flex justify-between items-start mb-10">
+        <div className="flex items-center gap-6">
+          <div className="w-32 h-32 rounded-full overflow-hidden border-4 border-blue-300 shadow-lg">
+            {teacher.picture ? (
+              <img src={teacher.picture} alt={teacher.name} className="w-full h-full object-cover" />
+            ) : (
+              <div className="w-full h-full bg-gray-300"></div>
+            )}
           </div>
-          <div className="-mt-[90px] ml-[600px] flex gap-4 ">
-            <button
-              onClick={() => navigate(`/update-teacher/${teacher._id}`)}
-              className="py-2 px-4 rounded-md text-white bg-blue-600 hover:bg-blue-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50"
-            >
-              Edit
-            </button>
-            <button
-              onClick={onClose}
-              className="py-2 px-4 rounded-md text-white bg-gray-600 hover:bg-gray-700 transition-colors duration-200 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
-            >
-              Close
-            </button>
+          <div>
+            <h1 className="text-4xl font-bold text-blue-800">{teacher.name}</h1>
+            <p className="text-lg text-gray-700">{teacher.teacherType}</p>
+          </div>
+        </div>
+        <div className="text-right">
+          <p className="flex items-center gap-2 text-gray-600">
+            <IoMail size={20} />
+            {teacher.email}
+          </p>
+          <p className="flex items-center gap-2 text-gray-600">
+            <IoCall size={20} />
+            {teacher.mobile}
+          </p>
+          <p className="flex items-center gap-2 text-gray-600">
+            <IoLocation size={20} />
+            {teacher.address}, {teacher.region}, {teacher.district}
+          </p>
+          <div className="flex gap-2 mt-2">
+            {teacher.linkedin && (
+              <a href={teacher.linkedin} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 transition duration-300">
+                <IoLogoLinkedin size={20} />
+              </a>
+            )}
+            {teacher.facebook && (
+              <a href={teacher.facebook} target="_blank" rel="noopener noreferrer" className="text-blue-600 hover:text-blue-800 transition duration-300">
+                <IoLogoFacebook size={20} />
+              </a>
+            )}
           </div>
         </div>
       </div>
-    );
-  };
 
-  export default TeacherDetailsCard;
+      {/* Personal Information */}
+      <section className="mb-8">
+        <h2 className="text-2xl font-semibold mb-4 text-blue-700">Personal Information</h2>
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+          <div>
+            <p><strong>Birth Date:</strong> {teacher.birthDate ? new Date(teacher.birthDate).toLocaleDateString() : 'N/A'}</p>
+            <p><strong>Sex:</strong> {teacher.sex ? teacher.sex.join(', ') : 'N/A'}</p>
+          </div>
+          <div>
+            <p><strong>Native Status:</strong> {teacher.nativeStatus ? teacher.nativeStatus.join(', ') : 'N/A'}</p>
+          </div>
+        </div>
+      </section>
+
+      {/* Education */}
+      <section className="mb-8">
+        <h2 className="text-2xl font-semibold mb-4 text-blue-700">Education</h2>
+        <p><strong>Highest Education Level:</strong> {teacher.educationLevel || 'N/A'}</p>
+        <p><strong>Qualifications:</strong> {teacher.qualifications || 'N/A'}</p>
+      </section>
+
+      {/* Experience */}
+      <section className="mb-8">
+        <h2 className="text-2xl font-semibold mb-4 text-blue-700">Experience</h2>
+        <p><strong>Years of Experience:</strong> {teacher.experience || 'N/A'}</p>
+        <p><strong>Joining Date:</strong> {teacher.joiningDate ? new Date(teacher.joiningDate).toLocaleDateString() : 'N/A'}</p>
+        <p><strong>Subjects Taught:</strong> {teacher.subjectsTech && teacher.subjectsTech.length > 0 ? teacher.subjectsTech.join(', ') : 'N/A'}</p>
+        <p><strong>Subjects Learned:</strong> {teacher.subjectsLearned && teacher.subjectsLearned.length > 0 ? teacher.subjectsLearned.join(', ') : 'N/A'}</p>
+      </section>
+
+      {/* Skills */}
+      <section className="mb-8">
+        <h2 className="text-2xl font-semibold mb-4 text-blue-700">Skills</h2>
+        <ul className="list-disc pl-5">
+          {teacher.skills && teacher.skills.length > 0 ? (
+            teacher.skills.map((skill, index) => (
+              <li key={index} className="flex items-center gap-2">
+                <IoCheckmark size={16} className="text-green-600" /> {skill}
+              </li>
+            ))
+          ) : (
+            <p>No skills listed</p>
+          )}
+        </ul>
+      </section>
+
+      {/* Additional Information */}
+      <section className="mb-8">
+        <h2 className="text-2xl font-semibold mb-4 text-blue-700">Additional Information</h2>
+        <p><strong>Description:</strong> {teacher.description || 'N/A'}</p>
+        <p><strong>Salary:</strong> {teacher.salary ? `$${teacher.salary}` : 'N/A'}</p>
+      </section>
+
+      {/* Attachments */}
+      <section className="mb-8">
+        <h2 className="text-2xl font-semibold mb-4 text-blue-700">Attachments</h2>
+        {teacher.fileAttachment ? (
+          <a
+            href={teacher.fileAttachment}
+            target="_blank"
+            rel="noopener noreferrer"
+            className="inline-block bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300 shadow-md"
+          >
+            View Attachment
+          </a>
+        ) : (
+          <p>No file attached</p>
+        )}
+      </section>
+    </div>
+  );
+};
+
+export default TeacherDetailsCV;
