@@ -53,7 +53,7 @@ const subjectsList = [
   'Science',
   'English',
   'History',
-  // Add more subjects as needed  dfjafj
+  // Add more subjects as needed   
 ];
 
 const sexOptions = ['Male', 'Female'];
