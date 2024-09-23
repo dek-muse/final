@@ -107,12 +107,13 @@ const TeacherList = () => {
   if (isLoading)
     return (
       <div className="min-h-screen flex items-center justify-center -mt-6">
-        <div className="flex-col gap-4 w-full flex items-center justify-center">
-          <div className="w-20 h-20 border-4 border-transparent text-[#f27405] text-4xl animate-spin flex items-center justify-center border-t-[#f27405] rounded-full">
-            <div className="w-16 h-16 border-4 border-transparent  text-2xl animate-spin flex items-center justify-center border-t-gray-800 rounded-full" />
-          </div>
+      <div className="flex-col gap-4 w-full flex items-center justify-center">
+        <div className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 border-4 border-transparent text-[#f27405] text-4xl md:text-5xl lg:text-6xl animate-spin flex items-center justify-center border-t-[#f27405] rounded-full">
+          <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 border-4 border-transparent text-2xl md:text-3xl lg:text-4xl animate-spin flex items-center justify-center border-t-gray-800 rounded-full" />
         </div>
       </div>
+    </div>
+    
     );
 
   if (error)
@@ -123,148 +124,148 @@ const TeacherList = () => {
     );
 
   return (
-    <div className="max-w-6xl mx-auto p-6 rounded-lg shadow-2xl border shadow-[#b19d60] border-[#b19d60]">
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0 bg-[#b19d60] p-6 rounded-md">
-        <h2 className="text-3xl font-bold dark:text-white uppercase">Teachers List</h2>
-        <div className="flex flex-col sm:flex-row gap-4">
-          <button
-            onClick={() => navigate('/teacher/form')}
-            className="py-2 px-4 rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center gap-2 transition duration-150"
-          >
-            <IoPersonAdd size={20} />
-            Add Teacher
-          </button>
-          <button
-            onClick={exportToExcel}
-            className="py-2 px-4 rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center gap-2 transition duration-150"
-          >
-            <IoDownload size={20} />
-            Export to Excel
-          </button>
-        </div>
-      </div>
-      <div className="flex flex-col sm:flex-row justify-between items-center mb-4 space-y-4 sm:space-y-0">
-        <div className="flex items-center gap-2">
-          <label>Show</label>
-          <select
-            value={entriesPerPage}
-            onChange={(e) => setEntriesPerPage(Number(e.target.value))}
-            className="border rounded p-2 dark:text-white bg-white text-black dark:bg-gray-800"
-          >
-            <option value="30">30</option>
-            <option value="90">90</option>
-            <option value="120">120</option>
-          </select>
-          <label>entries</label>
-        </div>
-        <div className="flex flex-col sm:flex-row items-center gap-4">
-          <div className="relative">
-            <IoSearch className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 dark:text-gray-400" size={20} />
-            <input
-              type="text"
-              placeholder="Search by name..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-              className="border rounded pl-10 pr-4 py-2 w-full sm:w-64 dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 transition duration-150"
-            />
+      <div className="max-w-6xl mx-auto p-6 rounded-lg shadow-2xl border shadow-[#b19d60] border-[#b19d60]">
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0 bg-[#b19d60] p-6 rounded-md">
+          <h2 className="text-3xl font-bold dark:text-white uppercase">Teachers List</h2>
+          <div className="flex flex-col sm:flex-row gap-4">
+            <button
+              onClick={() => navigate('/teacher/form')}
+              className="py-2 px-4 rounded-md text-white bg-green-600 hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 flex items-center gap-2 transition duration-150"
+            >
+              <IoPersonAdd size={20} />
+              Add Teacher
+            </button>
+            <button
+              onClick={exportToExcel}
+              className="py-2 px-4 rounded-md text-white bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 flex items-center gap-2 transition duration-150"
+            >
+              <IoDownload size={20} />
+              Export to Excel
+            </button>
           </div>
         </div>
-      </div>
-      <div className="overflow-x-auto">
-        <table className="min-w-full border border-gray-300">
-          <thead className="border-b border-gray-300">
-            <tr>
-              <th className="py-3 px-4 text-left">#</th>
-              <th className="py-3 px-4 text-left">Profile</th>
-              <th className="py-3 px-4 text-left hidden md:table-cell">Name</th>
-              <th className="py-3 px-4 text-left hidden md:table-cell">Email</th>
-              <th className="py-3 px-4 text-left hidden md:table-cell">Mobile</th>
-              <th className="py-3 px-4 text-left">Actions</th>
-            </tr>
-          </thead>
-          <tbody>
-            {currentTeachers.length > 0 ? (
-              currentTeachers.map((teacher, index) => (
-                <tr key={teacher._id} className="border-b border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                  <td className="py-4 px-4">{indexOfFirstEntry + index + 1}</td>
-                  <td className="py-4 px-4 flex items-center">
-                    {teacher.picture ? (
-                      <img
-                        src={teacher.picture}
-                        alt={teacher.name}
-                        className="w-12 h-12 object-cover rounded-full border border-gray-200"
-                      />
-                    ) : (
-                      <div className="w-12 h-12 bg-gray-300 rounded-full border border-gray-200 dark:bg-gray-600"></div>
-                    )}
-                  </td>
-                  <td className="py-4 px-4 hidden md:table-cell">
-                    <button
-                      onClick={() => navigate(`/teacher/details/${teacher._id}`)} // Navigate to teacher details
-                      className="text-blue-600 hover:text-blue-700 text-sm font-semibold"
-                    >
-                      {teacher.name}
-                    </button>
-                  </td>
-                  <td className="py-4 px-4 hidden md:table-cell">{teacher.email}</td>
-                  <td className="py-4 px-4 hidden md:table-cell">{teacher.mobile}</td>
-                  <td className="py-4 px-4 flex gap-2">
-                    <button
-                      onClick={() => handleUpdate(teacher._id)}
-                      className="text-white bg-[#b19d60] hover:bg-[#9a7d4e] text-sm py-1 px-2 border rounded flex items-center gap-1 transition duration-150"
-                      title="Update"
-                    >
-                      <IoPencil size={16} />
-                    </button>
-                    <button
-                      onClick={() => handleDelete(teacher._id)}
-                      className="text-red-600 hover:text-red-700 text-sm py-1 px-2 border rounded flex items-center gap-1 transition duration-150"
-                      title="Delete"
-                    >
-                      <IoTrash size={16} />
-                    </button>
-                    <button
-                      onClick={() => navigate(`/teacher/details/${teacher._id}`)}
-                      className="text-blue-600 hover:text-blue-700 text-sm py-1 px-2 border rounded flex items-center gap-1 transition duration-150"
-                      title="View Details"
-                    >
-                      <IoSearch size={16} />
-                    </button>
+        <div className="flex flex-col sm:flex-row justify-between items-center mb-4 space-y-4 sm:space-y-0">
+          <div className="flex items-center gap-2">
+            <label>Show</label>
+            <select
+              value={entriesPerPage}
+              onChange={(e) => setEntriesPerPage(Number(e.target.value))}
+              className="border rounded p-2 dark:text-white bg-white text-black dark:bg-gray-800"
+            >
+              <option value="30">30</option>
+              <option value="90">90</option>
+              <option value="120">120</option>
+            </select>
+            <label>entries</label>
+          </div>
+          <div className="flex flex-col sm:flex-row items-center gap-4">
+            <div className="relative">
+              <IoSearch className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 dark:text-gray-400" size={20} />
+              <input
+                type="text"
+                placeholder="Search by name..."
+                value={searchTerm}
+                onChange={handleSearchChange}
+                className="border rounded pl-10 pr-4 py-2 w-full sm:w-64 dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 transition duration-150"
+              />
+            </div>
+          </div>
+        </div>
+        <div className="overflow-x-auto">
+          <table className="min-w-full border border-gray-300">
+            <thead className="border-b border-gray-300">
+              <tr>
+                <th className="py-3 px-4 text-left">#</th>
+                <th className="py-3 px-4 text-left">Profile</th>
+                <th className="py-3 px-4 text-left hidden md:table-cell">Name</th>
+                <th className="py-3 px-4 text-left hidden md:table-cell">Email</th>
+                <th className="py-3 px-4 text-left hidden md:table-cell">Mobile</th>
+                <th className="py-3 px-4 text-left">Actions</th>
+              </tr>
+            </thead>
+            <tbody>
+              {currentTeachers.length > 0 ? (
+                currentTeachers.map((teacher, index) => (
+                  <tr key={teacher._id} className="border-b border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
+                    <td className="py-4 px-4">{indexOfFirstEntry + index + 1}</td>
+                    <td className="py-4 px-4 flex items-center">
+                      {teacher.picture ? (
+                        <img
+                          src={teacher.picture}
+                          alt={teacher.name}
+                          className="w-12 h-12 object-cover rounded-full border border-gray-200"
+                        />
+                      ) : (
+                        <div className="w-12 h-12 bg-gray-300 rounded-full border border-gray-200 dark:bg-gray-600"></div>
+                      )}
+                    </td>
+                    <td className="py-4 px-4 hidden md:table-cell">
+                      <button
+                        onClick={() => navigate(`/teacher/details/${teacher._id}`)} // Navigate to teacher details
+                        className="text-blue-600 hover:text-blue-700 text-sm font-semibold"
+                      >
+                        {teacher.name}
+                      </button>
+                    </td>
+                    <td className="py-4 px-4 hidden md:table-cell">{teacher.email}</td>
+                    <td className="py-4 px-4 hidden md:table-cell">{teacher.mobile}</td>
+                    <td className="py-4 px-4 flex gap-2">
+                      <button
+                        onClick={() => handleUpdate(teacher._id)}
+                        className="text-white bg-[#b19d60] hover:bg-[#9a7d4e] text-sm py-1 px-2 border rounded flex items-center gap-1 transition duration-150"
+                        title="Update"
+                      >
+                        <IoPencil size={16} />
+                      </button>
+                      <button
+                        onClick={() => handleDelete(teacher._id)}
+                        className="text-red-600 hover:text-red-700 text-sm py-1 px-2 border rounded flex items-center gap-1 transition duration-150"
+                        title="Delete"
+                      >
+                        <IoTrash size={16} />
+                      </button>
+                      <button
+                        onClick={() => navigate(`/teacher/details/${teacher._id}`)}
+                        className="text-blue-600 hover:text-blue-700 text-sm py-1 px-2 border rounded flex items-center gap-1 transition duration-150"
+                        title="View Details"
+                      >
+                        <IoSearch size={16} />
+                      </button>
+                    </td>
+                  </tr>
+                ))
+              ) : (
+                <tr>
+                  <td colSpan="6" className="text-center py-4">
+                    No teachers found.
                   </td>
                 </tr>
-              ))
-            ) : (
-              <tr>
-                <td colSpan="6" className="text-center py-4">
-                  No teachers found.
-                </td>
-              </tr>
-            )}
-          </tbody>
-        </table>
-      </div>
-      
-      {/* Pagination controls */}
-      <div className="flex justify-between items-center my-4">
-        <button
-          onClick={() => paginate(currentPage - 1)}
-          disabled={currentPage === 1}
-          className="bg-gray-300 hover:bg-gray-400 px-3 py-1 rounded"
-        >
-          Previous
-        </button>
+              )}
+            </tbody>
+          </table>
+        </div>
         
-        <span>Page {currentPage} of {totalPages}</span>
+        {/* Pagination controls */}
+        <div className="flex justify-between items-center my-4">
+          <button
+            onClick={() => paginate(currentPage - 1)}
+            disabled={currentPage === 1}
+            className="bg-gray-300 hover:bg-gray-400 px-3 py-1 rounded"
+          >
+            Previous
+          </button>
+          
+          <span>Page {currentPage} of {totalPages}</span>
 
-        <button
-          onClick={() => paginate(currentPage + 1)}
-          disabled={currentPage === totalPages}
-          className="bg-gray-300 hover:bg-gray-400 px-3 py-1 rounded"
-        >
-          Next
-        </button>
+          <button
+            onClick={() => paginate(currentPage + 1)}
+            disabled={currentPage === totalPages}
+            className="bg-gray-300 hover:bg-gray-400 px-3 py-1 rounded"
+          >
+            Next
+          </button>
+        </div>
       </div>
-    </div>
   );
 };
 

@@ -55,6 +55,8 @@ const subjectsList = [
   'History',
   // Add more subjects as needed
 ];
+const EXPERIENCE_LEVELS = Array.from({ length: 47 }, (_, index) => index + 1);
+
 
 
 
@@ -83,7 +85,8 @@ const TeacherForm = () => {
       joiningDate: '',
       educationLevel: '', // New field
       salary: '', // New field
-      birthDate: ''
+      birthDate: '',
+      experience: '', 
     });
   
 
@@ -198,6 +201,7 @@ const TeacherForm = () => {
     if (!teacher.educationLevel) newErrors.educationLevel = 'Education Level is required'; // Validation for new field
     if (!teacher.salary) newErrors.salary = 'Salary Range is required'; // Validation for new field
     if (!teacher.birthDate) newErrors.birthDate = 'Birth Date is required';
+    if (!teacher.experience) newErrors.experience = 'Eprerience is required';
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -242,7 +246,8 @@ const TeacherForm = () => {
         nativeStatus: '',
         teacherType: '',
         picture: null,
-        joiningDate: ''
+        joiningDate: '',
+        experience: ''
       });
       navigate('/teachersList');
     } catch (error) {
@@ -270,7 +275,11 @@ const TeacherForm = () => {
       sex: '',  // Reset new field
       nativeStatus: '',  // Reset new field
       teacherType: '',
-      picture: null
+      picture: null,
+      joiningDate: '',
+      experience: '',
+      birthDate: '',
+
     });
     setErrors({});
     setIsSubmitted(false); // Reset the submitted status
@@ -306,48 +315,21 @@ const TeacherForm = () => {
                 />
                 {errors.name && <p className="text-red-600 text-xs mt-1">{errors.name}</p>}
               </div>
-              <div className="mb-5">
-                <label htmlFor="email" className="block  text-sm font-medium mb-2">Teacher Email ID</label>
-                <input
-                  id="email"
-                  type="email"
-                  name="email"
-                  value={teacher.email}
-                  onChange={handleChange}
-                  required
-                  placeholder='Enter Email'
-                  className={`w-full px-4 py-3 border rounded-lg shadow-sm  dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
-                />
-                {errors.email && <p className="text-red-600  text-xs mt-1">{errors.email}</p>}
-              </div>
-              <div className="mb-5">
-                <label htmlFor="mobile" className="block  text-sm font-medium mb-2">Teacher Mobile Number</label>
-                <input
-                  id="mobile"
-                  type=" "
-                  name="mobile"
-                  value={teacher.mobile}
-                  onChange={handleChange}
-                  required
-                  placeholder='Entry Mobile Number'
-                  className={`w-full px-4 py-3 border rounded-lg shadow-sm  dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
-                />
-                {errors.mobile && <p className="text-red-600 text-xs mt-1">{errors.mobile}</p>}
-              </div>
-              <div className="mb-5">
-                <label htmlFor="address" className="block  text-sm font-medium mb-2">Teacher Address</label>
-                <input
-                  id="address"
-                  name="address"
-                  value={teacher.address}
-                  onChange={handleChange}
-                  required
-                  placeholder='Entry Address'
-                  className={`w-full px-4 py-3 border rounded-lg shadow-sm  dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
-                />
-                {errors.address && <p className="text-red-600 text-xs mt-1">{errors.address}</p>}
-              </div>
-              <div className="mb-5">
+                         {/* date birth */}
+            <div className="mb-5">
+  <label htmlFor="birthDate" className="block text-sm font-medium mb-2">Teacher Birth Date</label>
+  <input
+    type="date"
+    id="birthDate"
+    name="birthDate"
+    value={teacher.birthDate}
+    onChange={handleChange}
+    required
+    className={`w-full px-4 py-3 border rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.birthDate ? 'border-red-500' : 'border-gray-300'}`}
+  />
+  {errors.birthDate && <p className="text-red-600 text-xs mt-1">{errors.birthDate}</p>}
+</div>
+<div className="mb-5">
                 <label className="block  text-sm font-medium mb-2">Sex</label>
                 {sexOptions.map(option => (
                   <div key={option} className="flex items-center mb-2">
@@ -383,20 +365,74 @@ const TeacherForm = () => {
                 ))}
                 {errors.nativeStatus && <p className="text-red-600 text-xs mt-1">{errors.nativeStatus}</p>}
               </div>
-                      {/* date birth */}
-            <div className="mb-5">
-  <label htmlFor="birthDate" className="block text-sm font-medium mb-2">Teacher Birth Date</label>
-  <input
-    type="date"
-    id="birthDate"
-    name="birthDate"
-    value={teacher.birthDate}
-    onChange={handleChange}
-    required
-    className={`w-full px-4 py-3 border rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.birthDate ? 'border-red-500' : 'border-gray-300'}`}
-  />
-  {errors.birthDate && <p className="text-red-600 text-xs mt-1">{errors.birthDate}</p>}
-</div>
+            
+              <div className="mb-5">
+                <label htmlFor="mobile" className="block  text-sm font-medium mb-2">Teacher Mobile Number</label>
+                <input
+                  id="mobile"
+                  type=" "
+                  name="mobile"
+                  value={teacher.mobile}
+                  onChange={handleChange}
+                  required
+                  placeholder='Entry Mobile Number'
+                  className={`w-full px-4 py-3 border rounded-lg shadow-sm  dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
+                />
+                {errors.mobile && <p className="text-red-600 text-xs mt-1">{errors.mobile}</p>}
+              </div>
+
+              <div className="mb-5">
+                <label htmlFor="email" className="block  text-sm font-medium mb-2">Teacher Email </label>
+                <input
+                  id="email"
+                  type="email"
+                  name="email"
+                  value={teacher.email}
+                  onChange={handleChange}
+                  required
+                  placeholder='Enter Email'
+                  className={`w-full px-4 py-3 border rounded-lg shadow-sm  dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
+                />
+                {errors.email && <p className="text-red-600  text-xs mt-1">{errors.email}</p>}
+              </div>
+              <div className="mb-5">
+                <label htmlFor="region" className="block  text-sm font-medium mb-2">Teacher Region</label>
+                <select
+                  id="region"
+                  name="region"
+                  value={teacher.region}
+                  onChange={handleChange}
+                  required
+                  className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.region ? 'border-red-500' : 'border-gray-300'}`}
+                >
+                  <option value="">Select Region</option>
+                  {REGIONS.map(region => (
+                    <option key={region} value={region}>{region}</option>
+                  ))}
+                </select>
+                {errors.region && <p className="text-red-600 text-xs mt-1">{errors.region}</p>}
+              </div>
+              <div className="mb-5">
+                <label htmlFor="district" className="block  text-sm font-medium mb-2">Teacher District</label>
+                <select
+                  id="district"
+                  name="district"
+                  value={teacher.district}
+                  onChange={handleChange}
+                  required
+                  className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.district ? 'border-red-500' : 'border-gray-300'}`}
+
+                >
+                  <option value="">Select District</option>
+                  {districts.map(district => (
+                    <option key={district} value={district}>{district}</option>
+                  ))}
+                </select>
+                {errors.district && <p className="text-red-600 text-xs mt-1">{errors.district}</p>}
+              </div>
+              
+              
+           
              {/*  */}
               <div>
               <input
@@ -464,8 +500,8 @@ const TeacherForm = () => {
           value={teacher.educationLevel}
           onChange={handleChange}
           required
-          className={`w-full px-4 py-3 border rounded-lg shadow-sm ${errors.educationLevel ? 'border-red-500' : 'border-gray-300'}`}
-        >
+          className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.educationLevel ? 'border-red-500' : 'border-gray-300'}`}
+          >
           <option value="">Select Education Level</option>
           {EDUCATION_LEVELS.map(level => (
             <option key={level} value={level}>{level}</option>
@@ -483,8 +519,8 @@ const TeacherForm = () => {
           value={teacher.salary}
           onChange={handleChange}
           required
-          className={`w-full px-4 py-3 border rounded-lg ${errors.salary ? 'border-red-500' : 'border-gray-300'}`}
-        >
+          className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.salary ? 'border-red-500' : 'border-gray-300'}`}
+          >
           <option value="">Select Salary Range</option>
           {teacher.educationLevel && SALARY_RANGES[teacher.educationLevel]?.map((salary, index) => (
             <option key={index} value={salary}>{salary}</option>
@@ -512,41 +548,7 @@ const TeacherForm = () => {
               </div>
 
 
-              <div className="mb-5">
-                <label htmlFor="region" className="block  text-sm font-medium mb-2">Teacher Region</label>
-                <select
-                  id="region"
-                  name="region"
-                  value={teacher.region}
-                  onChange={handleChange}
-                  required
-                  className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.region ? 'border-red-500' : 'border-gray-300'}`}
-                >
-                  <option value="">Select Region</option>
-                  {REGIONS.map(region => (
-                    <option key={region} value={region}>{region}</option>
-                  ))}
-                </select>
-                {errors.region && <p className="text-red-600 text-xs mt-1">{errors.region}</p>}
-              </div>
-              <div className="mb-5">
-                <label htmlFor="district" className="block  text-sm font-medium mb-2">Teacher District</label>
-                <select
-                  id="district"
-                  name="district"
-                  value={teacher.district}
-                  onChange={handleChange}
-                  required
-                  className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.district ? 'border-red-500' : 'border-gray-300'}`}
-
-                >
-                  <option value="">Select District</option>
-                  {districts.map(district => (
-                    <option key={district} value={district}>{district}</option>
-                  ))}
-                </select>
-                {errors.district && <p className="text-red-600 text-xs mt-1">{errors.district}</p>}
-              </div>
+        
               <div className="mb-5">
                 <label htmlFor="subjectsLearned" className="block  text-sm font-medium mb-2">Subjects Learned</label>
                 <select
@@ -582,6 +584,24 @@ const TeacherForm = () => {
                 </select>
                 {errors.subjectsTech && <p className="text-red-600 text-xs mt-1">{errors.subjectsTech}</p>}
               </div>
+              <div className="mb-5">
+  <label htmlFor="experience" className="block text-sm font-medium mb-2">Years of Experience</label>
+  <select
+    id="experience"
+    name="experience"
+    value={teacher.experience}
+    onChange={handleChange}
+    required
+    className={`w-full px-4 py-3 border rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.experience ? 'border-red-500' : 'border-gray-300'}`}
+  >
+    <option value="">Select Years of Experience</option>
+    {EXPERIENCE_LEVELS.map(level => (
+      <option key={level} value={level}>{level}</option>
+    ))}
+  </select>
+  {errors.experience && <p className="text-red-600 text-xs mt-1">{errors.experience}</p>}
+</div>
+
               <div className="mb-5">
                 <label htmlFor="description" className="block  text-sm font-medium mb-2">Description</label>
                 <textarea

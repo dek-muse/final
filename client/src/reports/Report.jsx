@@ -47,88 +47,88 @@
     };
 
     return (
-      <div className="  p-6 rounded-lg shadow-lg border   mb-6 bg-[#b19d60] shadow-gray-700 border-gray-900">
-        <h2 className="text-2xl font-bold mb-6 text-gray-800">Filters</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6 ">
-          <div>
-            <label className="block text-sm font-medium ">Region</label>
-            <select
-              name="region"
-              value={filters.region}
-              onChange={handleFilterChange}
-              className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            >
-              <option value="">All Regions</option>
-              {REGIONS.map(region => (
-                <option key={region} value={region}>{region}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium ">District</label>
-            <select
-              name="district"
-              value={filters.district}
-              onChange={handleFilterChange}
-              className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-              disabled={!filters.region}
-            >
-              <option value="">All Districts</option>
-              {filters.region && DISTRICTS[filters.region]?.map(district => (
-                <option key={district} value={district}>{district}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-    <label className="block text-sm font-medium">Education Level</label>
-    <select
-      name="educationLevel"
-      value={filters.educationLevel}
-      onChange={handleFilterChange}
-      className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-    >
-      <option value="">All Education Levels</option>
-      {educationLevels.map(level => (
-        <option key={level} value={level}>{level}</option>
-      ))}
-    </select>
+      <div className="p-6 max-w-[2200px] mx-auto rounded-lg shadow-lg border mb-6 bg-[#b19d60] shadow-gray-700 border-gray-900">
+  <h2 className="text-2xl font-bold mb-6 text-gray-800 text-start">Filters</h2>
+  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+    <div className="flex flex-col">
+      <label className="block text-sm font-medium">Region</label>
+      <select
+        name="region"
+        value={filters.region}
+        onChange={handleFilterChange}
+        className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+      >
+        <option value="">All Regions</option>
+        {REGIONS.map(region => (
+          <option key={region} value={region}>{region}</option>
+        ))}
+      </select>
+    </div>
+    <div className="flex flex-col">
+      <label className="block text-sm font-medium">District</label>
+      <select
+        name="district"
+        value={filters.district}
+        onChange={handleFilterChange}
+        className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+        disabled={!filters.region}
+      >
+        <option value="">All Districts</option>
+        {filters.region && DISTRICTS[filters.region]?.map(district => (
+          <option key={district} value={district}>{district}</option>
+        ))}
+      </select>
+    </div>
+    <div className="flex flex-col">
+      <label className="block text-sm font-medium">Education Level</label>
+      <select
+        name="educationLevel"
+        value={filters.educationLevel}
+        onChange={handleFilterChange}
+        className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+      >
+        <option value="">All Education Levels</option>
+        {educationLevels.map(level => (
+          <option key={level} value={level}>{level}</option>
+        ))}
+      </select>
+    </div>
+    <div className="flex flex-col">
+      <label className="block text-sm font-medium">Teacher Type</label>
+      <select
+        name="teacherType"
+        value={filters.teacherType}
+        onChange={handleFilterChange}
+        className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+      >
+        <option value="">All Teacher Types</option>
+        {teacherType.map(type => (
+          <option key={type} value={type}>{type}</option>
+        ))}
+      </select>
+    </div>
+    <div className="flex flex-col">
+      <label className="block text-sm font-medium">Year Joined</label>
+      <input
+        type="number"
+        name="yearJoined"
+        value={filters.yearJoined}
+        onChange={handleFilterChange}
+        placeholder="Enter Year 1960"
+        className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+      />
+    </div>
+    <div className="col-span-1 md:col-span-2 lg:col-span-5 flex justify-end mt-4">
+      <button
+        onClick={handleResetFilters}
+        className="bg-red-600 text-white px-6 py-2 rounded-md shadow-sm hover:bg-red-700 transition duration-200"
+      >
+        Reset Filters
+      </button>
+    </div>
   </div>
+</div>
 
-          <div>
-            <label className="block text-sm font-medium ">Teacher Type</label>
-            <select
-              name="teacherType"
-              value={filters.teacherType}
-              onChange={handleFilterChange}
-              className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            >
-              <option value="">All Teacher Types</option>
-              {teacherType.map(type => (
-                <option key={type} value={type}>{type}</option>
-              ))}
-            </select>
-          </div>
-          <div>
-            <label className="block text-sm font-medium ">Year Joined</label>
-            <input
-              type="number"
-              name="yearJoined"
-              value={filters.yearJoined}
-              onChange={handleFilterChange}
-              placeholder="Enter Year 1960"
-              className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            />
-          </div>
-          <div className="col-span-1 md:col-span-2 lg:col-span-5 flex justify-end space-x-4">
-            <button
-              onClick={handleResetFilters}
-              className="bg-red-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-red-700"
-            >
-              Reset Filters
-            </button>
-          </div>
-        </div>
-      </div>
     );
   };
  
@@ -191,52 +191,54 @@
 
   const TeacherDetailsModal = ({ teacher, onClose }) => {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75">
-        <div className="bg-white rounded-lg shadow-lg max-w-md w-full p-6 flex flex-col">
-          <div className="flex items-center mb-4">
-            <img
-              src={teacher.photoUrl || 'default-photo-url.jpg'}
-              alt={teacher.name}
-              className="w-24 h-24 rounded-full border-2 border-gray-300 mr-4 shadow-md"
-            />
-            <div className="flex flex-col">
-              <h2 className="text-xl font-semibold text-gray-800">{teacher.name}</h2>
-              <span className="flex items-center text-gray-600">
-                <FaEnvelope className="mr-1" /> {teacher.email}
-              </span>
-              <span className="flex items-center text-gray-600">
-                <FaPhone className="mr-1" /> {teacher.mobile}
-              </span>
-              <span className="flex items-center text-gray-600">
-                <FaMapMarkerAlt className="mr-1" /> {teacher.region}, {teacher.district}
-              </span>
-            </div>
-          </div>
-  
-          <h3 className="text-lg font-semibold text-gray-700 mt-4">Subjects</h3>
-          <p className="text-gray-600 flex items-center">
-            <FaBookOpen className="mr-1" /> {teacher.subjectsLearned.join(', ')}
-          </p>
-  
-          <h3 className="text-lg font-semibold text-gray-700 mt-4">Details</h3>
-          <p className="text-gray-600 flex items-center">
-            <FaUser className="mr-1" /> Age: {teacher.age}
-          </p>
-          <p className="text-gray-600">Description: {teacher.description}</p>
-          <p className="text-gray-600">
-            Retirement Status: {teacher.isRetired ? 'Retired' : 'Active'}
-          </p>
-  
-          <div className="flex justify-end mt-6">
-            <button
-              onClick={onClose}
-              className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200"
-            >
-              Close
-            </button>
+      <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 p-4">
+      <div className="bg-white rounded-lg shadow-lg w-full max-w-md mx-auto sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 flex flex-col">
+        <div className="flex items-center mb-4">
+          <img
+            src={teacher.photoUrl || 'default-photo-url.jpg'}
+            alt={teacher.name}
+            className="w-24 h-24 rounded-full border-2 border-gray-300 mr-4 shadow-md"
+          />
+          <div className="flex flex-col">
+            <h2 className="text-2xl font-semibold text-gray-800">{teacher.name}</h2>
+            <span className="flex items-center text-gray-600 text-sm md:text-base">
+              <FaEnvelope className="mr-1" /> {teacher.email}
+            </span>
+            <span className="flex items-center text-gray-600 text-sm md:text-base">
+              <FaPhone className="mr-1" /> {teacher.mobile}
+            </span>
+            <span className="flex items-center text-gray-600 text-sm md:text-base">
+              <FaMapMarkerAlt className="mr-1" /> {teacher.region}, {teacher.district}
+            </span>
           </div>
         </div>
+    
+        <h3 className="text-lg font-semibold text-gray-700 mt-4">Subjects</h3>
+        <p className="text-gray-600 flex items-center text-sm md:text-base">
+          <FaBookOpen className="mr-1" /> {teacher.subjectsLearned.join(', ')}
+        </p>
+    
+        <h3 className="text-lg font-semibold text-gray-700 mt-4">Details</h3>
+        <p className="text-gray-600 flex items-center text-sm md:text-base">
+          <FaUser className="mr-1" /> Age: {teacher.age}
+        </p>
+        <p className="text-gray-600 text-sm md:text-base">Description: {teacher.description}</p>
+        <p className="text-gray-600 text-sm md:text-base">
+          Retirement Status: {teacher.isRetired ? 'Retired' : 'Active'}
+        </p>
+    
+        <div className="flex justify-end mt-6">
+          <button
+            onClick={onClose}
+            className="bg-blue-600 text-white px-4 py-2 rounded-md hover:bg-blue-700 transition duration-200 text-sm md:text-base"
+          >
+            Close
+          </button>
+        </div>
       </div>
+    </div>
+    
+
     );
   };
   
@@ -391,45 +393,53 @@
 
     return (
       <div className="container mx-auto p-6">
-    <Filters filters={filters} onFilterChange={handleFilterChange} onResetFilters={handleResetFilters} />
-    <div className="flex justify-between items-center mb-4">
-      <button
-        onClick={handleExport}
-        className="bg-blue-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-700"
-      >
-        Export to Excel
-      </button>
-      <div>
-        <span className="text-lg font-medium">Total Teachers: {totalTeachers}</span>
-        <span className="text-sm ml-4">Active: {retirementCounts.active}</span>
-        <span className="text-sm ml-4">Retired: {retirementCounts.retired}</span>
-        <span className="text-sm ml-4">Male: {counts.sex.Male || 0}</span>
-        <span className="text-sm ml-4">Female: {counts.sex.Female || 0}</span>
-        <span className="text-sm ml-4">Native: {counts.nativeStatus.Native || 0}</span>
-        <span className="text-sm ml-4">Non-native: {counts.nativeStatus['Non-native'] || 0}</span>
+  <Filters filters={filters} onFilterChange={handleFilterChange} onResetFilters={handleResetFilters} />
+  
+  <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
+    <button
+      onClick={handleExport}
+      className="bg-blue-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-700 transition duration-200 mb-2 md:mb-0"
+    >
+      Export to Excel
+    </button>
+    
+    <div className="flex flex-col md:flex-row md:space-x-4 mt-2">
+      <span className="text-lg font-medium">Total Teachers: {totalTeachers}</span>
+      <div className="flex flex-wrap space-x-2 mt-2">
+        <span className="text-sm">Active: {retirementCounts.active}</span>
+        <span className="text-sm">Retired: {retirementCounts.retired}</span>
+        <span className="text-sm">Male: {counts.sex.Male || 0}</span>
+        <span className="text-sm">Female: {counts.sex.Female || 0}</span>
+        <span className="text-sm">Native: {counts.nativeStatus.Native || 0}</span>
+        <span className="text-sm">Non-native: {counts.nativeStatus['Non-native'] || 0}</span>
       </div>
     </div>
-    <TeacherList teachers={paginatedTeachers} onViewDetails={handleViewDetails} />
-    {selectedTeacher && (
-      <TeacherDetailsModal teacher={selectedTeacher} onClose={handleCloseModal} />
-    )}
-    <div className="flex justify-between items-center mt-4">
-      <button
-        onClick={() => setPage(page - 1)}
-        disabled={page === 1}
-        className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md shadow-sm hover:bg-gray-400"
-      >
-        Previous
-      </button>
-      <button
-        onClick={() => setPage(page + 1)}
-        disabled={page * pageSize >= filteredTeachers.length}
-        className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md shadow-sm hover:bg-gray-400"
-      >
-        Next
-      </button>
-    </div>
   </div>
+  
+  <TeacherList teachers={paginatedTeachers} onViewDetails={handleViewDetails} />
+
+  {selectedTeacher && (
+    <TeacherDetailsModal teacher={selectedTeacher} onClose={handleCloseModal} />
+  )}
+  
+  <div className="flex flex-col md:flex-row justify-between items-center mt-4">
+    <button
+      onClick={() => setPage(page - 1)}
+      disabled={page === 1}
+      className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md shadow-sm hover:bg-gray-400 transition duration-200 mb-2 md:mb-0"
+    >
+      Previous
+    </button>
+    <button
+      onClick={() => setPage(page + 1)}
+      disabled={page * pageSize >= filteredTeachers.length}
+      className="bg-gray-300 text-gray-700 px-4 py-2 rounded-md shadow-sm hover:bg-gray-400 transition duration-200"
+    >
+      Next
+    </button>
+  </div>
+</div>
+
     );
   };
 
