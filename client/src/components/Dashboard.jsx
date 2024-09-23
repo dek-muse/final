@@ -57,9 +57,6 @@ const Dashboard = () => {
   const [selectedEducationLevel, setSelectedEducationLevel] = useState('');
   //  const retiredTeachersCount = teachers.length - activeTeachersCount;
 
- 
-
-
   // States for chart data
   const [dailyChartData, setDailyChartData] = useState([]);
   const [weeklyChartData, setWeeklyChartData] = useState([]);
