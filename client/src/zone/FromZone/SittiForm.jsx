@@ -56,9 +56,6 @@ const subjectsList = [
   // Add more subjects as needed
 ];
 
-
-
-
 const sexOptions = ['Male', 'Female'];
 const nativeStatusOptions = ['Native', 'Non-native'];
 const teacherType = ['Kg','Primary', 'Secondary', 'Preparatory' , 'University/Colleges']
