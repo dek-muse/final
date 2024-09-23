@@ -4,6 +4,9 @@ import { LineChart, Line, XAxis, YAxis, CartesianGrid, Tooltip, ResponsiveContai
 import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'; // Import CSS for DatePicker
 
+
+const educationLevels = ['High School', "Master's Degree", 'Doctorate'];
+
 // Helper function to get week number of the year
 const getWeekNumber = (date) => {
   const firstDayOfYear = new Date(date.getFullYear(), 0, 1);
@@ -30,7 +33,16 @@ const LineChartComponent = ({ data, title }) => (
 const REGIONS = ['Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
 const DISTRICTS = {
   'Afdheer': ['Hargeelle', 'Dhaawac', 'Baarey', 'limey galbeed', 'Raaso', 'Dollow Bay', 'Ceelkari', 'Qooxle', 'Godgod'],
-  // ... other regions and their districts
+  'Daawo': ['Qadhadhumo', 'Hudet', 'Mooyale', 'Mubarak'],
+  'Doolo': ['Daraatole', 'Wardheer- Xarunta Gobalka', 'Danood', 'Galxumur', 'Galaadi', 'Bookh', 'Lehel-yucub'],
+  'Erar': ['Fiiq', 'Xamaro', 'Waangay', 'Lagahida', 'Yoxob', 'Salaxaad', 'Mayu-Muluqo', 'Qubi'],
+  'Faafan': ['Tuliguuled', 'Goljano', 'Harooreys', 'Shabeleey', 'Harawo', 'Mula', 'Qabribayax', 'Xarshin', 'Gursum', 'Babili', 'Awbare'],
+  'Jarar': ['Daroor', 'Aware', 'Dhagax-buur', 'Dhagax-madow', 'Gunagado', 'Gashamo', 'Birqod', 'Dig', 'Bilcil buur', 'Araarso', 'Yoocaale'],
+  'Liibaan': ['Filtu', 'Dollo Adow', 'Qarsadula', 'Gura-dhamoole', 'Goora-Baqaqsa', 'Boqol maayo', 'Dekasuftu'],
+  'Nogob': ['Dhuxun', 'Gerbo', 'Xaraarey', 'Ayun', 'Hor-shagah', 'Segeg', 'Ceelweyne'],
+  'Qoraxay': ['Qabridahar', 'Shilaabo', 'Dhobaweyn', 'Shaygoosh', 'Marsin', 'Ceel-ogaden', 'Las-dharkeynle', 'Boodaley', 'Higlooley', 'Goglo/kudunbuur'],
+  'Shabelle': ['Dhanan', 'Godey', 'Qalafe', 'Beer caano', 'Feerfer', 'Iimey bari', 'Mustaxiil', 'Elele', 'Cadaadle', 'Abaqarow'],
+  'Sitti': ['Afdem', 'Ayshaca', 'Mieso', 'Dembel', 'Erar', 'Shiniile', 'Hadhagale', 'Biki', 'Geblalu', 'Dhuunya'],
 };
 
 // Dashboard Component
@@ -42,6 +54,11 @@ const Dashboard = () => {
   const [selectedTeacherType, setSelectedTeacherType] = useState('');
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState('');
+  const [selectedEducationLevel, setSelectedEducationLevel] = useState('');
+  //  const retiredTeachersCount = teachers.length - activeTeachersCount;
+
+ 
+
 
   // States for chart data
   const [dailyChartData, setDailyChartData] = useState([]);
@@ -168,26 +185,56 @@ const Dashboard = () => {
       return teachers.filter(teacher =>
         (!selectedRegion || teacher.region === selectedRegion) &&
         (!selectedDistrict || teacher.district === selectedDistrict) &&
-        (!selectedTeacherType || teacher.teacherType === selectedTeacherType)
+        (!selectedTeacherType || teacher.teacherType === selectedTeacherType) &&
+        (!selectedEducationLevel || teacher.educationLevel === selectedEducationLevel) // Add this line
+
       );
     };
 
     setFilteredTeachers(filterByRegionAndDistrict());
-  }, [selectedRegion, selectedDistrict, selectedTeacherType, teachers]);
+  }, [selectedRegion, selectedDistrict, selectedTeacherType, selectedEducationLevel,  teachers]);
 
   const getCounts = () => {
     const counts = {
       sex: { Male: 0, Female: 0 },
       nativeStatus: { Native: 0, 'Non-native': 0 },
-      teacherType: { Kg: 0, Primary: 0, Secondary: 0, Preparatory: 0, 'University/Colleges': 0 }
+      teacherType: { Kg: 0, Primary: 0, Secondary: 0, Preparatory: 0, 'University/Colleges': 0 },
+      retirementStatus: { active: 0, retired: 0 }
     };
     filteredTeachers.forEach(teacher => {
       if (teacher.sex) counts.sex[teacher.sex] = (counts.sex[teacher.sex] || 0) + 1;
       if (teacher.nativeStatus) counts.nativeStatus[teacher.nativeStatus] = (counts.nativeStatus[teacher.nativeStatus] || 0) + 1;
       if (teacher.teacherType) counts.teacherType[teacher.teacherType] = (counts.teacherType[teacher.teacherType] || 0) + 1;
+      if (teacher.activeTeachersCount) counts.activeTeachersCount[teacher.activeTeachersCount] = (counts.activeTeachersCount[teacher.activeTeachersCount] || 0) + 1;
+
+      const { status } = getRetirementStatus(teacher.birthDate);
+      counts.retirementStatus[status] = (counts.retirementStatus[status] || 0) + 1; // Count retirement status
+     
     });
     return counts;
   };
+
+  const currentYear = new Date().getFullYear();
+
+const getRetirementStatus = (birthDate) => {
+  const birthYear = new Date(birthDate).getFullYear();
+  const age = currentYear - birthYear;
+
+  if (age >= 60) {
+    return { status: "Retired", yearsLeft: 0 };
+  } else {
+    return { status: "Active", yearsLeft: 60 - age };
+  }
+};
+
+// Move these declarations after the getRetirementStatus function
+const activeTeachersCount = teachers.filter(teacher => {
+  const { status } = getRetirementStatus(teacher.birthDate);
+  return status === "Active";
+}).length;
+
+const retiredTeachersCount = teachers.length - activeTeachersCount;
+
 
   const counts = getCounts();
   const totalTeachers = filteredTeachers.length;
@@ -294,6 +341,22 @@ const Dashboard = () => {
             </select>
           </div>
         )}
+        {/* Education Level Filter */}
+<div className="sm:w-full lg:w-1/6">
+  <label htmlFor="educationLevel" className="block mb-2 text-sm font-semibold">Education Level:</label>
+  <select
+    id="educationLevel"
+    value={selectedEducationLevel}
+    onChange={(e) => setSelectedEducationLevel(e.target.value)}
+    className="block dark:text-black w-full p-2 border rounded-md shadow-sm focus:ring-gray-800 focus:border-gray-800 sm:text-sm"
+  >
+    <option value="">All Education Levels</option>
+    {educationLevels.map(level => (
+      <option key={level} value={level}>{level}</option>
+    ))}
+  </select>
+</div>
+
 
         {/* Teacher Type Filter */}
         <div className="sm:w-full lg:w-1/6">
@@ -317,60 +380,74 @@ const Dashboard = () => {
 
 
 
-      {/* Summary Section */}
-      <div className="mb-6 grid gap-4 grid-cols-1 md:grid-cols-2 lg:grid-cols-3">
-        <div className="p-4   rounded-lg  shadow-md dark:shadow-md dark:rounded-md dark:shadow-gray-700 dark:p-4">
-          <h3 className="text-[14px] font-semibold  mb-2">Total Teachers</h3>
-          <p className="  text-xl font-bold">{totalTeachers}</p>
-        </div>
+     {/* Summary Section */}
+<div className="mb-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md dark:shadow-gray-700 dark:p-4">
+    <h3 className="text-[14px] font-semibold mb-2">Total Teachers</h3>
+    <p className="text-xl font-bold">{totalTeachers}</p>
+  </div>
 
-        <div className="p-4  rounded-lg  shadow-md dark:shadow-md dark:rounded-md dark:shadow-gray-700 dark:p-4  ">
-          <h3 className="text-[14px] font-semibold  mb-2">Gender Breakdown</h3>
-          <div className="flex flex-col gap-2">
-            <div className="flex justify-between">
-              <span className="">Male</span>
-              <span className="  text-xl font-bold">{counts.sex.Male || 0}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="">Female</span>
-              <span className="  text-xl font-bold">{counts.sex.Female || 0}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="p-4  rounded-lg  shadow-md dark:shadow-md dark:rounded-md dark:shadow-gray-700 dark:p-4">
-          <h3 className="text-[14px] font-semibold  mb-2">Native Status</h3>
-          <div className="flex flex-col gap-2">
-            <div className="flex justify-between">
-              <span className="">Native</span>
-              <span className="  text-xl font-bold">{counts.nativeStatus.Native || 0}</span>
-            </div>
-            <div className="flex justify-between">
-              <span className="">Non-native</span>
-              <span className="  text-xl font-bold">{counts.nativeStatus['Non-native'] || 0}</span>
-            </div>
-          </div>
-        </div>
-
-        <div className="p-4 rounded-lg     ">
-          <h3 className="text-[16px] font-semibold  mb-4">Teacher Types</h3>
-          <div className="flex   gap-4">
-            {[
-              { type: 'KG', count: counts.teacherType.Kg || 0 },
-              { type: 'Primary', count: counts.teacherType.Primary || 0 },
-              { type: 'Secondary', count: counts.teacherType.Secondary || 0 },
-              { type: 'Preparatory', count: counts.teacherType.Preparatory || 0 },
-              { type: 'University/Colleges', count: counts.teacherType['University/Colleges'] || 0 }
-            ].map(({ type, count }) => (
-              <div key={type} className="flex-1 min-w-[200px] flex justify-between items-center p-4 rounded-lg border    ">
-                <span className="  font-medium">{type}</span>
-                <span className="  text-lg font-bold">{count}</span>
-              </div>
-            ))}
-          </div>
-        </div>
-
+  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md dark:shadow-gray-700 dark:p-4">
+    <h3 className="text-[14px] font-semibold mb-2">Sex Breakdown</h3>
+    <div className="flex flex-col gap-2">
+      <div className="flex justify-between">
+        <span>Male</span>
+        <span className="text-xl font-bold">{counts.sex.Male || 0}</span>
       </div>
+      <div className="flex justify-between">
+        <span>Female</span>
+        <span className="text-xl font-bold">{counts.sex.Female || 0}</span>
+      </div>
+    </div>
+  </div>
+
+  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md dark:shadow-gray-700 dark:p-4">
+    <h3 className="text-[14px] font-semibold mb-2">Native Status</h3>
+    <div className="flex flex-col gap-2">
+      <div className="flex justify-between">
+        <span>Native</span>
+        <span className="text-xl font-bold">{counts.nativeStatus.Native || 0}</span>
+      </div>
+      <div className="flex justify-between">
+        <span>Non-native</span>
+        <span className="text-xl font-bold">{counts.nativeStatus['Non-native'] || 0}</span>
+      </div>
+    </div>
+  </div>
+
+  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md dark:shadow-gray-700 dark:p-4">
+    <h3 className="text-[14px] font-semibold mb-2">Retirement Status</h3>
+    <div className="flex flex-col gap-2">
+      <div className="flex justify-between">
+        <p>Active Teachers</p>
+        <span className="text-xl font-bold">{counts.retirementStatus.Active || 0}</span>
+      </div>
+      <div className="flex justify-between">
+        <p>Retired Teachers</p>
+        <span className="text-xl font-bold">{counts.retirementStatus.Retired || 0}</span>
+      </div>
+    </div>
+  </div>
+
+  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md dark:shadow-gray-700 dark:p-4 col-span-1 sm:col-span-2 lg:col-span-3">
+    <h3 className="text-[16px] font-semibold mb-4">Teacher Types</h3>
+    <div className="flex flex-wrap gap-4">
+      {[
+        { type: 'KG', count: counts.teacherType.Kg || 0 },
+        { type: 'Primary', count: counts.teacherType.Primary || 0 },
+        { type: 'Secondary', count: counts.teacherType.Secondary || 0 },
+        { type: 'Preparatory', count: counts.teacherType.Preparatory || 0 },
+        { type: 'University/Colleges', count: counts.teacherType['University/Colleges'] || 0 }
+      ].map(({ type, count }) => (
+        <div key={type} className="flex-1 min-w-[150px] sm:min-w-[200px] flex justify-between items-center p-4 rounded-lg border transition-transform duration-300 hover:shadow-lg">
+          <span className="font-medium">{type}</span>
+          <span className="text-lg font-bold">{count}</span>
+        </div>
+      ))}
+    </div>
+  </div>
+</div>
+
 
       {/* Chart Selector */}
       <div className="mb-6  p-4 rounded-lg shadow-md">
@@ -424,6 +501,7 @@ const Dashboard = () => {
           {selectedChart === 'Yearly' && <LineChartComponent data={yearlyChartData} title="Yearly Teacher Counts" />}
         </div>
       </div>
+    
 
 
     </div>

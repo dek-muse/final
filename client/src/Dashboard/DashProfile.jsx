@@ -248,10 +248,10 @@ const DashProfile = () => {
     </form>
     <div className='text-red-500 flex justify-between mt-5'>
       <span onClick={() => setShowModal(true)} className='cursor-pointer'>
-        Delete Account
+      
       </span>
       <Link to='/'> <span onClick={handleSignout} className='cursor-pointer'>
-        Sign Out
+        
       </span></Link>
     </div>
     {updateUserSuccess && (

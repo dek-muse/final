@@ -57,7 +57,7 @@ const Sidebar = () => {
 
           {userRole === 'SuperAdmin' && (
             <div className="space-y-2">
-               <NavLink
+               {/* <NavLink
                 to="/test"
                 className={({ isActive }) =>
                   `flex items-center space-x-4 p-2 hover:bg-[#b19d60] transition-all rounded-md ${isActive ? 'bg-[#b19d60]' : 'bg-transparent'}`
@@ -66,7 +66,7 @@ const Sidebar = () => {
                 <FaTable />
                 {isSidebarOpen && <span>Dashboard</span>}
                 {!isSidebarOpen && <Tooltip content="Dashboard" />}
-              </NavLink>
+              </NavLink> */}
 
               <NavLink
                 to="/dashboard"

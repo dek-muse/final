@@ -79,11 +79,16 @@ const TeacherList = () => {
       return teacher.status === filterStatus;
     });
 
+  // Pagination logic
+  const totalPages = Math.ceil(filteredTeachers.length / entriesPerPage);
   const indexOfLastEntry = currentPage * entriesPerPage;
   const indexOfFirstEntry = indexOfLastEntry - entriesPerPage;
   const currentTeachers = filteredTeachers.slice(indexOfFirstEntry, indexOfLastEntry);
 
-  const paginate = (pageNumber) => setCurrentPage(pageNumber);
+  const paginate = (pageNumber) => {
+    if (pageNumber < 1 || pageNumber > totalPages) return; // Prevent out-of-bounds
+    setCurrentPage(pageNumber);
+  };
 
   const exportToExcel = () => {
     const data = filteredTeachers.map((teacher, index) => ({
@@ -219,7 +224,7 @@ const TeacherList = () => {
                       <IoTrash size={16} />
                     </button>
                     <button
-                      onClick={() => navigate(`/teacher/details/${teacher._id}`)} // Navigate to details page
+                      onClick={() => navigate(`/teacher/details/${teacher._id}`)}
                       className="text-blue-600 hover:text-blue-700 text-sm py-1 px-2 border rounded flex items-center gap-1 transition duration-150"
                       title="View Details"
                     >
@@ -238,7 +243,27 @@ const TeacherList = () => {
           </tbody>
         </table>
       </div>
-      {/* Pagination and other components can go here */}
+      
+      {/* Pagination controls */}
+      <div className="flex justify-between items-center my-4">
+        <button
+          onClick={() => paginate(currentPage - 1)}
+          disabled={currentPage === 1}
+          className="bg-gray-300 hover:bg-gray-400 px-3 py-1 rounded"
+        >
+          Previous
+        </button>
+        
+        <span>Page {currentPage} of {totalPages}</span>
+
+        <button
+          onClick={() => paginate(currentPage + 1)}
+          disabled={currentPage === totalPages}
+          className="bg-gray-300 hover:bg-gray-400 px-3 py-1 rounded"
+        >
+          Next
+        </button>
+      </div>
     </div>
   );
 };

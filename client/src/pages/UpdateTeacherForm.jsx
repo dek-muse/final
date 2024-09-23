@@ -1,9 +1,7 @@
-import React, { useEffect, useState } from 'react';
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { useParams, useNavigate } from 'react-router-dom';
-import SkeletonLoader from './SkeletonLoader';
 
-// Regions and Districts Constants
 const REGIONS = ['Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
 const DISTRICTS = {
   'Afdheer': ['Hargeelle', 'Dhaawac', 'Baarey', 'limey galbeed', 'Raaso', 'Dollow Bay', 'Ceelkari', 'Qooxle', 'Godgod'],
@@ -18,59 +16,49 @@ const DISTRICTS = {
   'Shabelle': ['Dhanan', 'Godey', 'Qalafe', 'Beer caano', 'Feerfer', 'Iimey bari', 'Mustaxiil', 'Elele', 'Cadaadle', 'Abaqarow'],
   'Sitti': ['Afdem', 'Ayshaca', 'Mieso', 'Dembel', 'Erar', 'Shiniile', 'Hadhagale', 'Biki', 'Geblalu', 'Dhuunya'],
 };
+const subjects = ['Math', 'Science', 'History', 'English']; // Replace with actual subjects
+const EDUCATION_LEVELS = ['High School', 'Master\'s Degree', 'Doctorate'];
+const SALARY_RANGES = {
+  'High School': [7000, 8000],
+  'Master\'s Degree': [9000, 10000],
+  'Doctorate': [11000, 12000],
+};
 
-// Subjects Constants
-const subjectsList = [
-  'Mathematics',
-  'Science',
-  'English',
-  'History',
-  // Add more subjects as needed
-];
-
-// Description Options Example
-const descriptionOptions = [
-  'Experienced teacher with over 10 years of teaching.',
-  'Newly certified teacher specializing in Science.',
-  'Expert in integrating technology into the classroom.',
-  // Add more descriptions as needed
-];
-
-const UpdateTeacherForm = () => {
+const UpdateTeacher = () => {
   const { id } = useParams();
   const navigate = useNavigate();
-
   const [teacher, setTeacher] = useState({
     name: '',
     email: '',
     mobile: '',
-    city: '',
     address: '',
+    sex: '',
+    nativeStatus: '',
     region: '',
     district: '',
     subjectsLearned: '',
     subjectsTech: '',
     description: '',
-    sex: '',
-    nativeStatus: '',
-    picture: null,
     joiningDate: '',
+    birthDate: '',
+    salary: '',
+    educationLevel: ''
   });
-
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [loading, setLoading] = useState(true);
-  const [successMessage, setSuccessMessage] = useState('');
   const [districts, setDistricts] = useState([]);
+  const [errors, setErrors] = useState({});
+  const [loading, setLoading] = useState(true);
 
   useEffect(() => {
     const fetchTeacher = async () => {
       try {
         const response = await axios.get(`https://finalbakend.vercel.app/${id}`);
-        setTeacher(response.data);
-      } catch (err) {
-        console.error('Error fetching teacher data:', err);
-        alert('Error fetching teacher data');
+        setTeacher(response.data); // Set initial state with fetched data
+        if (response.data.region) {
+          setDistricts(DISTRICTS[response.data.region] || []);
+        }
+      } catch (error) {
+        console.error('Error fetching teacher:', error);
+        setErrors({ fetch: 'Could not fetch teacher data.' });
       } finally {
         setLoading(false);
       }
@@ -79,396 +67,208 @@ const UpdateTeacherForm = () => {
     fetchTeacher();
   }, [id]);
 
-  useEffect(() => {
-    if (teacher.region) {
-      setDistricts(DISTRICTS[teacher.region] || []);
-    }
-  }, [teacher.region]);
-
   const handleChange = (e) => {
-    const { name, value, type, files } = e.target;
-    if (type === 'file') {
-      setTeacher({ ...teacher, [name]: files[0] });
-    } else {
-      setTeacher({ ...teacher, [name]: value });
+    const { name, value } = e.target;
+    setTeacher((prevTeacher) => ({
+      ...prevTeacher,
+      [name]: value,
+    }));
+
+    // Handle region change and reset districts
+    if (name === 'region') {
+      setDistricts(DISTRICTS[value] || []);
+      setTeacher((prevTeacher) => ({
+        ...prevTeacher,
+        district: '', // Reset district when region changes
+      }));
     }
-    setErrors({ ...errors, [name]: '' });
+
+    // Handle education level change and reset salary
+    if (name === 'educationLevel') {
+      setTeacher((prevTeacher) => ({
+        ...prevTeacher,
+        salary: '', // Reset salary when education level changes
+      }));
+    }
   };
 
-  const validate = () => {
+  const validateForm = () => {
     const newErrors = {};
     if (!teacher.name) newErrors.name = 'Name is required';
     if (!teacher.email) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(teacher.email)) newErrors.email = 'Email is invalid';
     if (!teacher.mobile) newErrors.mobile = 'Mobile is required';
-    if (!teacher.city) newErrors.city = 'City is required';
-    if (!teacher.address) newErrors.address = 'Address is required';
-    if (!teacher.region) newErrors.region = 'Region is required';
-    if (!teacher.district) newErrors.district = 'District is required';
-    if (!teacher.subjectsLearned) newErrors.subjectsLearned = 'Subjects Learned is required';
-    if (!teacher.subjectsTech) newErrors.subjectsTech = 'Subjects Taught is required';
-    if (!teacher.description) newErrors.description = 'Description is required';
-    if (!teacher.sex) newErrors.sex = 'Sex is required';
-    if (!teacher.nativeStatus) newErrors.nativeStatus = 'Native Status is required';
-    if (!teacher.joiningDate) newErrors.joiningDate = 'Joining Date is required';
+    if (!teacher.educationLevel) newErrors.educationLevel = 'Education Level is required';
+    if (!teacher.salary) newErrors.salary = 'Salary is required';
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    if (!validate()) return;
+    setErrors({});
 
-    setIsLoading(true);
-
-    const formData = new FormData();
-    Object.keys(teacher).forEach((key) => {
-      formData.append(key, teacher[key]);
-    });
+    if (!validateForm()) {
+      return;
+    }
 
     try {
-      const response = await axios.put(`https://finalbakend.vercel.app/${id}`, formData, {
-        headers: {
-          'Content-Type': 'multipart/form-data',
-        },
-      });
-      console.log('Update response:', response.data); // Debugging information
-      setSuccessMessage('Teacher updated successfully!');
-      setTimeout(() => {
-        navigate('/teachersList');
-      }, 2000);
+      await axios.put(`https://finalbakend.vercel.app/${id}`, teacher);
+      navigate('/teachers');
     } catch (error) {
-      console.error('Update error:', error); // Debugging information
-      alert('Error updating teacher');
-    } finally {
-      setIsLoading(false);
+      console.error('Error updating teacher:', error);
+      setErrors({ submit: 'Could not update teacher. Please try again.' });
     }
   };
 
-  const handleCancel = () => {
-    navigate('/teachersList');
-  };
+  if (loading) return <p>Loading...</p>;
 
   return (
-    <div className="max-w-4xl mx-auto p-8 rounded-lg shadow-2xl border shadow-[#b19d60] border-[#b19d60]">
-      {loading ? (
-        <SkeletonLoader />
-      ) : (
-        <>
-          <h2 className="text-2xl font-semibold mb-6 text-center bg-[#b19d60] rounded-lg p-3 uppercase">Update Teacher</h2>
-          {successMessage && <p className="text-green-500 text-center mb-4">{successMessage}</p>}
-          <form onSubmit={handleSubmit} className="space-y-6">
-            <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-              {/* Left Column */}
-              <div className="space-y-4">
-                {/* Name */}
-                <div>
-                  <label htmlFor="name" className="block text-sm font-medium mb-1">
-                    Name:
-                  </label>
-                  <input
-                    id="name"
-                    type="text"
-                    name="name"
-                    value={teacher.name}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 border ${
-                      errors.name ? 'border-red-500' : 'border-[#b19d60]'
-                    } rounded-md shadow-sm focus:outline-none dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:ring-[#b19d60]`}
-                  /> 
-                  {errors.name && <p className="text-red-500 text-sm mt-1">{errors.name}</p>}
-                </div>
+    <div className="max-w-[210mm] mx-auto p-6 bg-gradient-to-r from-blue-100 to-blue-300 rounded-lg shadow-lg">
+      <h2 className="text-3xl font-bold text-center text-gray-800 mb-6">Update Teacher</h2>
+      {errors.fetch && <p className="text-red-500 text-center mb-4">{errors.fetch}</p>}
+      {errors.submit && <p className="text-red-500 text-center mb-4">{errors.submit}</p>}
+      
+      <form onSubmit={handleSubmit} className="space-y-4">
+        {/* Name */}
+        <div>
+          <label htmlFor="name" className="block text-gray-700 mb-1">Name</label>
+          <input type="text" name="name" id="name" value={teacher.name} onChange={handleChange} placeholder="Name" required className="w-full p-3 border rounded-lg bg-white shadow-sm text-gray-800" />
+          {errors.name && <p className="text-red-600 text-xs mt-1">{errors.name}</p>}
+        </div>
 
-                {/* Email */}
-                <div>
-                  <label htmlFor="email" className="block text-sm font-medium mb-1">
-                    Email:
-                  </label>
-                  <input
-                    id="email"
-                    type="email"
-                    name="email"
-                    value={teacher.email}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 border ${
-                      errors.email ? 'border-red-500' : 'border-[#b19d60]'
-                    } rounded-md shadow-sm focus:outline-none dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:ring-[#b19d60]`}
-                  />
-                  {errors.email && <p className="text-red-500 text-sm mt-1">{errors.email}</p>}
-                </div>
+        {/* Birth Date */}
+        <div>
+          <label htmlFor="birthDate" className="block text-gray-700 mb-1">Birth Date</label>
+          <input type="date" name="birthDate" id="birthDate" value={teacher.birthDate} onChange={handleChange} required className="w-full p-3 border rounded-lg bg-white shadow-sm text-gray-800" />
+        </div>
 
-                {/* Mobile */}
-                <div>
-                  <label htmlFor="mobile" className="block text-sm font-medium mb-1">
-                    Mobile:
-                  </label>
-                  <input
-                    id="mobile"
-                    type="text"
-                    name="mobile"
-                    value={teacher.mobile}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 border ${
-                      errors.mobile ? 'border-red-500' : 'border-[#b19d60]'
-                    } rounded-md shadow-sm focus:outline-none dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:ring-[#b19d60]`}
-                  />
-                  {errors.mobile && <p className="text-red-500 text-sm mt-1">{errors.mobile}</p>}
-                </div>
+        {/* Email */}
+        <div>
+          <label htmlFor="email" className="block text-gray-700 mb-1">Email</label>
+          <input type="email" name="email" id="email" value={teacher.email} onChange={handleChange} placeholder="Email" required className="w-full p-3 border rounded-lg bg-white shadow-sm text-gray-800" />
+          {errors.email && <p className="text-red-600 text-xs mt-1">{errors.email}</p>}
+        </div>
 
-                {/* Region */}
-                <div>
-                  <label htmlFor="region" className="block text-sm font-medium mb-1">
-                    Region:
-                  </label>
-                  <select
-                    id="region"
-                    name="region"
-                    value={teacher.region}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 border ${
-                      errors.region ? 'border-red-500' : 'border-[#b19d60]'
-                    } rounded-md shadow-sm focus:outline-none dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:ring-[#b19d60]`}
-                  >
-                    <option value="">Select Region</option>
-                    {REGIONS.map((region) => (
-                      <option key={region} value={region}>
-                        {region}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.region && <p className="text-red-500 text-sm mt-1">{errors.region}</p>}
-                </div>
+        {/* Mobile */}
+        <div>
+          <label htmlFor="mobile" className="block text-gray-700 mb-1">Mobile</label>
+          <input type="tel" name="mobile" id="mobile" value={teacher.mobile} onChange={handleChange} placeholder="Mobile" required className="w-full p-3 border rounded-lg bg-white shadow-sm text-gray-800" />
+          {errors.mobile && <p className="text-red-600 text-xs mt-1">{errors.mobile}</p>}
+        </div>
 
-                {/* District */}
-                <div>
-                  <label htmlFor="district" className="block text-sm font-medium mb-1">
-                    District:
-                  </label>
-                  <select
-                    id="district"
-                    name="district"
-                    value={teacher.district}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 border ${
-                      errors.district ? 'border-red-500' : 'border-[#b19d60]'
-                    } rounded-md shadow-sm focus:outline-none dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:ring-[#b19d60]`}
-                  >
-                    <option value="">Select District</option>
-                    {districts.map((district) => (
-                      <option key={district} value={district}>
-                        {district}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.district && <p className="text-red-500 text-sm mt-1">{errors.district}</p>}
-                </div>
+        {/* Address */}
+        <div>
+          <label htmlFor="address" className="block text-gray-700 mb-1">Address</label>
+          <input type="text" name="address" id="address" value={teacher.address} onChange={handleChange} placeholder="Address" required className="w-full p-3 border rounded-lg bg-white shadow-sm text-gray-800" />
+        </div>
 
-                {/* Picture */}
-                <div>
-                  <label htmlFor="picture" className="block text-sm font-medium mb-1">
-                    Picture:
-                  </label>
-                  <input
-                    id="picture"
-                    type="file"
-                    name="picture"
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 border ${
-                      errors.picture ? 'border-red-500' : 'border-[#b19d60]'
-                    } rounded-md shadow-sm focus:outline-none dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:ring-[#b19d60]`}
-                  />
-                  {errors.picture && <p className="text-red-500 text-sm mt-1">{errors.picture}</p>}
-                </div>
-              </div>
+        {/* Sex */}
+        <div>
+          <label htmlFor="sex" className="block text-gray-700 mb-1">Sex</label>
+          <select name="sex" id="sex" value={teacher.sex} onChange={handleChange} className="w-full p-3 border rounded-lg bg-white shadow-sm text-gray-800">
+            <option value="">Select Gender</option>
+            <option value="Male">Male</option>
+            <option value="Female">Female</option>
+          </select>
+        </div>
 
-              {/* Right Column */}
-              <div className="space-y-4">
-                {/* City */}
-                <div>
-                  <label htmlFor="city" className="block text-sm font-medium mb-1">
-                    City:
-                  </label>
-                  <input
-                    id="city"
-                    type="text"
-                    name="city"
-                    value={teacher.city}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 border ${
-                      errors.city ? 'border-red-500' : 'border-[#b19d60]'
-                    } rounded-md shadow-sm focus:outline-none dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:ring-[#b19d60]`}
-                  />
-                  {errors.city && <p className="text-red-500 text-sm mt-1">{errors.city}</p>}
-                </div>
+        {/* Native Status */}
+        <div>
+          <label htmlFor="nativeStatus" className="block text-gray-700 mb-1">Native Status</label>
+          <select name="nativeStatus" id="nativeStatus" value={teacher.nativeStatus} onChange={handleChange} className="w-full p-3 border rounded-lg bg-white shadow-sm text-gray-800">
+            <option value="">Select Native Status</option>
+            <option value="Native">Native</option>
+            <option value="Non-Native">Non-Native</option>
+          </select>
+        </div>
 
-                {/* Address */}
-                <div>
-                  <label htmlFor="address" className="block text-sm font-medium mb-1">
-                    Address:
-                  </label>
-                  <input
-                    id="address"
-                    type="text"
-                    name="address"
-                    value={teacher.address}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 border ${
-                      errors.address ? 'border-red-500' : 'border-[#b19d60]'
-                    } rounded-md shadow-sm focus:outline-none dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:ring-[#b19d60]`}
-                  />
-                  {errors.address && <p className="text-red-500 text-sm mt-1">{errors.address}</p>}
-                </div>
+        {/* Region */}
+        <div>
+          <label htmlFor="region" className="block text-gray-700 mb-1">Region</label>
+          <select name="region" id="region" value={teacher.region} onChange={handleChange} className="w-full p-3 border rounded-lg bg-white shadow-sm text-gray-800">
+            <option value="">Select Region</option>
+            {REGIONS.map((region) => (
+              <option key={region} value={region}>{region}</option>
+            ))}
+          </select>
+        </div>
 
-                {/* Subjects Learned */}
-                <div>
-                  <label htmlFor="subjectsLearned" className="block text-sm font-medium mb-1">
-                    Subjects Learned:
-                  </label>
-                  <select
-                    id="subjectsLearned"
-                    name="subjectsLearned"
-                    value={teacher.subjectsLearned}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 border ${
-                      errors.subjectsLearned ? 'border-red-500' : 'border-[#b19d60]'
-                    } rounded-md shadow-sm focus:outline-none dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:ring-[#b19d60]`}
-                  >
-                    <option value="">Select Subjects Learned</option>
-                    {subjectsList.map((subject) => (
-                      <option key={subject} value={subject}>
-                        {subject}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.subjectsLearned && <p className="text-red-500 text-sm mt-1">{errors.subjectsLearned}</p>}
-                </div>
+        {/* District */}
+        <div>
+          <label htmlFor="district" className="block text-gray-700 mb-1">District</label>
+          <select name="district" id="district" value={teacher.district} onChange={handleChange} className="w-full p-3 border rounded-lg bg-white shadow-sm text-gray-800">
+            <option value="">Select District</option>
+            {districts.map((district) => (
+              <option key={district} value={district}>{district}</option>
+            ))}
+          </select>
+        </div>
 
-                {/* Subjects Taught */}
-                <div>
-                  <label htmlFor="subjectsTech" className="block text-sm font-medium mb-1">
-                    Subjects Taught:
-                  </label>
-                  <select
-                    id="subjectsTech"
-                    name="subjectsTech"
-                    value={teacher.subjectsTech}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 border ${
-                      errors.subjectsTech ? 'border-red-500' : 'border-[#b19d60]'
-                    } rounded-md shadow-sm focus:outline-none dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:ring-[#b19d60]`}
-                  >
-                    <option value="">Select Subjects Taught</option>
-                    {subjectsList.map((subject) => (
-                      <option key={subject} value={subject}>
-                        {subject}
-                      </option>
-                    ))}
-                  </select>
-                  {errors.subjectsTech && <p className="text-red-500 text-sm mt-1">{errors.subjectsTech}</p>}
-                </div>
+        {/* Subjects Learned */}
+        <div>
+          <label htmlFor="subjectsLearned" className="block text-gray-700 mb-1">Subjects Learned</label>
+          <select name="subjectsLearned" id="subjectsLearned" value={teacher.subjectsLearned} onChange={handleChange} className="w-full p-3 border rounded-lg bg-white shadow-sm text-gray-800">
+            <option value="">Select Subject</option>
+            {subjects.map((subject) => (
+              <option key={subject} value={subject}>{subject}</option>
+            ))}
+          </select>
+        </div>
 
-                {/* Description */}
-                <div>
-                  <label htmlFor="description" className="block text-sm font-medium mb-1">
-                    Description:
-                  </label>
-                  <textarea
-                    id="description"
-                    name="description"
-                    value={teacher.description}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 border ${
-                      errors.description ? 'border-red-500' : 'border-[#b19d60]'
-                    } rounded-md shadow-sm focus:outline-none dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:ring-[#b19d60]`}
-                    rows="4"
-                  />
-                  {errors.description && <p className="text-red-500 text-sm mt-1">{errors.description}</p>}
-                </div>
+        {/* Subjects Taught */}
+        <div>
+          <label htmlFor="subjectsTech" className="block text-gray-700 mb-1">Subjects Taught</label>
+          <input type="text" name="subjectsTech" id="subjectsTech" value={teacher.subjectsTech} onChange={handleChange} placeholder="Subjects Taught" className="w-full p-3 border rounded-lg bg-white shadow-sm text-gray-800" />
+        </div>
 
-                {/* Sex */}
-                <div>
-                  <label htmlFor="sex" className="block text-sm font-medium mb-1">
-                    Sex:
-                  </label>
-                  <select
-                    id="sex"
-                    name="sex"
-                    value={teacher.sex}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 border ${
-                      errors.sex ? 'border-red-500' : 'border-[#b19d60]'
-                    } rounded-md shadow-sm focus:outline-none dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:ring-[#b19d60]`}
-                  >
-                    <option value="">Select Sex</option>
-                    <option value="Male">Male</option>
-                    <option value="Female">Female</option>
-                  </select>
-                  {errors.sex && <p className="text-red-500 text-sm mt-1">{errors.sex}</p>}
-                </div>
+        {/* Education Level */}
+        <div>
+          <label htmlFor="educationLevel" className="block text-gray-700 mb-1">Education Level</label>
+          <select name="educationLevel" id="educationLevel" value={teacher.educationLevel} onChange={handleChange} className="w-full p-3 border rounded-lg bg-white shadow-sm text-gray-800">
+            <option value="">Select Education Level</option>
+            {EDUCATION_LEVELS.map((level) => (
+              <option key={level} value={level}>{level}</option>
+            ))}
+          </select>
+          {errors.educationLevel && <p className="text-red-600 text-xs mt-1">{errors.educationLevel}</p>}
+        </div>
 
-                {/* Native Status */}
-                <div>
-                  <label htmlFor="nativeStatus" className="block text-sm font-medium mb-1">
-                    Native Status:
-                  </label>
-                  <select
-                    id="nativeStatus"
-                    name="nativeStatus"
-                    value={teacher.nativeStatus}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 border ${
-                      errors.nativeStatus ? 'border-red-500' : 'border-[#b19d60]'
-                    } rounded-md shadow-sm focus:outline-none dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:ring-[#b19d60]`}
-                  >
-                    <option value="">Select Native Status</option>
-                    <option value="Native">Native</option>
-                    <option value="Non-native">Non-native</option>
-                  </select>
-                  {errors.nativeStatus && <p className="text-red-500 text-sm mt-1">{errors.nativeStatus}</p>}
-                </div>
+        {/* Salary */}
+        {teacher.educationLevel && (
+          <div>
+            <label htmlFor="salary" className="block text-gray-700 mb-1">Salary</label>
+            <select name="salary" id="salary" value={teacher.salary} onChange={handleChange} className="w-full p-3 border rounded-lg bg-white shadow-sm text-gray-800">
+              <option value="">Select Salary</option>
+              {SALARY_RANGES[teacher.educationLevel].map((range, index) => (
+                <option key={index} value={range}>{range}</option>
+              ))}
+            </select>
+            {errors.salary && <p className="text-red-600 text-xs mt-1">{errors.salary}</p>}
+          </div>
+        )}
 
-                {/* Joining Date */}
-                <div>
-                  <label htmlFor="joiningDate" className="block text-sm font-medium mb-1">
-                    Joining Date:
-                  </label>
-                  <input
-                    id="joiningDate"
-                    type="date"
-                    name="joiningDate"
-                    value={teacher.joiningDate}
-                    onChange={handleChange}
-                    className={`w-full px-4 py-2 border ${
-                      errors.joiningDate ? 'border-red-500' : 'border-[#b19d60]'
-                    } rounded-md shadow-sm focus:outline-none dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:ring-[#b19d60]`}
-                  />
-                  {errors.joiningDate && <p className="text-red-500 text-sm mt-1">{errors.joiningDate}</p>}
-                </div>
-              </div>
-            </div>
+        {/* Joining Date */}
+        <div>
+          <label htmlFor="joiningDate" className="block text-gray-700 mb-1">Joining Date</label>
+          <input type="date" name="joiningDate" id="joiningDate" value={teacher.joiningDate} onChange={handleChange} required className="w-full p-3 border rounded-lg bg-white shadow-sm text-gray-800" />
+        </div>
 
-            {/* Buttons */}
-            <div className="flex justify-end gap-4">
-              <button
-                type="button"
-                onClick={handleCancel}
-                className="px-6 py-2 border border-red-500 text-red-500 rounded-md bg-transparent hover:bg-red-500 hover:text-white focus:outline-none"
-              >
-                Cancel
-              </button>
-              <button
-                type="submit"
-                disabled={isLoading}
-                className="px-6 py-2 bg-[#b19d60] text-white rounded-md hover:bg-[#8a7f51] focus:outline-none"
-              >
-                {isLoading ? 'Updating...' : 'Update'}
-              </button>
-            </div>
-          </form>
-        </>
-      )}
+        {/* Description */}
+        <div>
+          <label htmlFor="description" className="block text-gray-700 mb-1">Description</label>
+          <textarea name="description" id="description" value={teacher.description} onChange={handleChange} placeholder="Description" className="w-full p-3 border rounded-lg bg-white shadow-sm text-gray-800"></textarea>
+        </div>
+
+        {/* Submit Button */}
+        <div className="flex justify-center">
+          <button type="submit" className="px-6 py-3 bg-blue-500 text-white rounded-lg shadow-md hover:bg-blue-600 focus:outline-none focus:bg-blue-600">
+            Update Teacher
+          </button>
+        </div>
+      </form>
     </div>
   );
 };
 
-export default UpdateTeacherForm;
+export default UpdateTeacher;

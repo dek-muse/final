@@ -4,7 +4,7 @@ import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
 import Sidebare from './common/Sidebare'; // Ensure component name is correct
 import Dashboard from './components/Dashboard';
-import TeacherForm from './pages/TeacherForm';
+import TeacherForm from './pages/TeacherForm.jsx';
 import TeacherList from './pages/TeacherList';
 import UpdateTeacherForm from './pages/UpdateTeacherForm';
 import NaveBare from './common/Navebare'; // Corrected component name
