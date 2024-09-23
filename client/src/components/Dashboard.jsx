@@ -30,7 +30,7 @@ const LineChartComponent = ({ data, title }) => (
   </div>
 );
 
-const REGIONS = ['Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
+const REGIONS = ['Afdheer', 'Daawo', 'Doolo', \'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
 const DISTRICTS = {
   'Afdheer': ['Hargeelle', 'Dhaawac', 'Baarey', 'limey galbeed', 'Raaso', 'Dollow Bay', 'Ceelkari', 'Qooxle', 'Godgod'],
   'Daawo': ['Qadhadhumo', 'Hudet', 'Mooyale', 'Mubarak'],

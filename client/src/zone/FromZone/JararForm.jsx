@@ -1,3 +1,4 @@
+/* eslint-disable no-unused-vars */
 import { useEffect, useRef, useState } from 'react';
 import axios from 'axios';
 import { useSelector } from 'react-redux';
@@ -8,7 +9,7 @@ import {
   ref,
   uploadBytesResumable,
 } from 'firebase/storage';
-import { app } from '../../firebase';
+import { app } from '../firebase';
 import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { Alert } from 'flowbite-react';
@@ -23,20 +24,28 @@ const subjects = [
   // Add more subjects as needed
 ];
 
+// Constants for education levels and salary ranges
+const EDUCATION_LEVELS = ['High School', 'Master\'s Degree', 'Doctorate'];
+const SALARY_RANGES = {
+  'High School': [7000, 8000],
+  'Master\'s Degree': [9000, 10000],
+  'Doctorate': [11000, 12000],
+};
 
-const REGIONS = [ 'Jarar'];
+
+const REGIONS = ["Jarar"];
 const DISTRICTS = {
-  'Afdheer': [ 'Hargeelle', 'Dhaawac','Baarey', 'limey galbeed', 'Raaso','Dollow Bay','Ceelkari','Qooxle','Godgod'],
-  'Daawo': ['Qadhadhumo','Hudet','Mooyale','Mubarak',],
-  'Doolo': [ 'Daraatole',    'Wardheer- Xarunta Gobalka','Danood','Galxumur','Galaadi','Bookh','Lehel-yucub'],
-  'Erar': ['Fiiq','Xamaro','Waangay','Lagahida','Yoxob','Salaxaad','Mayu-Muluqo','Qubi'],
-  'Faafan': ['Tuliguuled','Goljano','Harooreys','Shabeleey','Harawo','Mula','Qabribayax','Xarshin','Gursum','Babili','Awbare',  ],
-  'Jarar': ['Daroor','Aware','Dhagax-buur','Dhagax-madow','Gunagado','Gashamo','Birqod','Dig','Bilcil buur','Araarso','Yoocaale',  ],
-  'Liibaan': ['Filtu','Dollo Adow','Qarsadula','Gura-dhamoole','Goora-Baqaqsa','Boqol maayo','Dekasuftu',  ],
-  'Nogob': ['Dhuxun','Gerbo','Xaraarey','Ayun','Hor-shagah','Segeg','Ceelweyne', ],
-  'Qoraxay': ['Qabridahar','Shilaabo','Dhobaweyn','Shaygoosh','Marsin','Ceel-ogaden','Las-dharkeynle','Boodaley','Higlooley','Goglo/kudunbuur',  ],
-  'Shabelle': ['Dhanan','Godey','Qalafe','Beer caano','Feerfer','Iimey bari','Mustaxiil','Elele','Cadaadle','Abaqarow',],
-  'Sitti': ['Afdem','Ayshaca','Mieso','Dembel','Erar','Shiniile','Hadhagale','Biki','Geblalu','Dhuunya',],
+  'Afdheer': ['Hargeelle', 'Dhaawac', 'Baarey', 'limey galbeed', 'Raaso', 'Dollow Bay', 'Ceelkari', 'Qooxle', 'Godgod'],
+  'Daawo': ['Qadhadhumo', 'Hudet', 'Mooyale', 'Mubarak'],
+  'Doolo': ['Daraatole', 'Wardheer- Xarunta Gobalka', 'Danood', 'Galxumur', 'Galaadi', 'Bookh', 'Lehel-yucub'],
+  'Erar': ['Fiiq', 'Xamaro', 'Waangay', 'Lagahida', 'Yoxob', 'Salaxaad', 'Mayu-Muluqo', 'Qubi'],
+  'Faafan': ['Tuliguuled', 'Goljano', 'Harooreys', 'Shabeleey', 'Harawo', 'Mula', 'Qabribayax', 'Xarshin', 'Gursum', 'Babili', 'Awbare'],
+  'Jarar': ['Daroor', 'Aware', 'Dhagax-buur', 'Dhagax-madow', 'Gunagado', 'Gashamo', 'Birqod', 'Dig', 'Bilcil buur', 'Araarso', 'Yoocaale'],
+  'Liibaan': ['Filtu', 'Dollo Adow', 'Qarsadula', 'Gura-dhamoole', 'Goora-Baqaqsa', 'Boqol maayo', 'Dekasuftu'],
+  'Nogob': ['Dhuxun', 'Gerbo', 'Xaraarey', 'Ayun', 'Hor-shagah', 'Segeg', 'Ceelweyne'],
+  'Qoraxay': ['Qabridahar', 'Shilaabo', 'Dhobaweyn', 'Shaygoosh', 'Marsin', 'Ceel-ogaden', 'Las-dharkeynle', 'Boodaley', 'Higlooley', 'Goglo/kudunbuur'],
+  'Shabelle': ['Dhanan', 'Godey', 'Qalafe', 'Beer caano', 'Feerfer', 'Iimey bari', 'Mustaxiil', 'Elele', 'Cadaadle', 'Abaqarow'],
+  'Sitti': ['Afdem', 'Ayshaca', 'Mieso', 'Dembel', 'Erar', 'Shiniile', 'Hadhagale', 'Biki', 'Geblalu', 'Dhuunya'],
 };
 
 const subjectsList = [
@@ -47,28 +56,36 @@ const subjectsList = [
   // Add more subjects as needed
 ];
 
+
+
+
 const sexOptions = ['Male', 'Female'];
 const nativeStatusOptions = ['Native', 'Non-native'];
 const teacherType = ['Kg','Primary', 'Secondary', 'Preparatory' , 'University/Colleges']
 
 const TeacherForm = () => {
-  const [teacher, setTeacher] = useState({
-    name: '',
-    email: '',
-    mobile: '',
-    city: '',
-    address: '',
-    region: '',
-    district: '',
-    subjectsLearned: '',
-    subjectsTech: '',
-    description: '',
-    sex: '',  // Added field
-    nativeStatus: '',  // Added field
-    teacherType: '',
-    picture: null,
-    joiningDate: ''
-  });
+  
+    const [teacher, setTeacher] = useState({
+      name: '',
+      email: '',
+      mobile: '',
+      city: '',
+      address: '',
+      region: '',
+      district: '',
+      subjectsLearned: '',
+      subjectsTech: '',
+      description: '',
+      sex: '',
+      nativeStatus: '',
+      teacherType: '',
+      picture: null,
+      joiningDate: '',
+      educationLevel: '', // New field
+      salary: '', // New field
+      birthDate: ''
+    });
+  
 
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -138,6 +155,7 @@ const TeacherForm = () => {
         }
       );
   }
+  
 
 
   useEffect(() => {
@@ -177,6 +195,10 @@ const TeacherForm = () => {
     if (!teacher.sex) newErrors.sex = 'Sex is required';  // Validation for new field
     if (!teacher.nativeStatus) newErrors.nativeStatus = 'Native Status is required';  // Validation for new field
     // if (!teacher.picture) newErrors.picture = 'Picture is required';  // Validation for new field
+    if (!teacher.educationLevel) newErrors.educationLevel = 'Education Level is required'; // Validation for new field
+    if (!teacher.salary) newErrors.salary = 'Salary Range is required'; // Validation for new field
+    if (!teacher.birthDate) newErrors.birthDate = 'Birth Date is required';
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -222,7 +244,7 @@ const TeacherForm = () => {
         picture: null,
         joiningDate: ''
       });
-      navigate('/teacher/form/jarar');
+      navigate('/teachersList');
     } catch (error) {
       console.error('There was an error creating the teacher!', error);
       alert(`Error: ${error.response.data.error}`);
@@ -361,6 +383,20 @@ const TeacherForm = () => {
                 ))}
                 {errors.nativeStatus && <p className="text-red-600 text-xs mt-1">{errors.nativeStatus}</p>}
               </div>
+                      {/* date birth */}
+            <div className="mb-5">
+  <label htmlFor="birthDate" className="block text-sm font-medium mb-2">Teacher Birth Date</label>
+  <input
+    type="date"
+    id="birthDate"
+    name="birthDate"
+    value={teacher.birthDate}
+    onChange={handleChange}
+    required
+    className={`w-full px-4 py-3 border rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.birthDate ? 'border-red-500' : 'border-gray-300'}`}
+  />
+  {errors.birthDate && <p className="text-red-600 text-xs mt-1">{errors.birthDate}</p>}
+</div>
              {/*  */}
               <div>
               <input
@@ -408,16 +444,56 @@ const TeacherForm = () => {
               <Alert color='failure'>{imageFileUploadError}</Alert>
             )}
 
-             
+     
             </div>
+
+
 
             {/* Professional Details */}
             <div>
+
               <h3 className="text-xl font-medium mb-4">
                 {/* Teacher Professional Details */}
                 </h3>
+                   {/* Education Level Field */}
+      <div className="mb-5">
+        <label htmlFor="educationLevel" className="block text-sm font-medium mb-2">Teacher Education Levels</label>
+        <select
+          id="educationLevel"
+          name="educationLevel"
+          value={teacher.educationLevel}
+          onChange={handleChange}
+          required
+          className={`w-full px-4 py-3 border rounded-lg shadow-sm ${errors.educationLevel ? 'border-red-500' : 'border-gray-300'}`}
+        >
+          <option value="">Select Education Level</option>
+          {EDUCATION_LEVELS.map(level => (
+            <option key={level} value={level}>{level}</option>
+          ))}
+        </select>
+        {errors.educationLevel && <p className="text-red-600 text-xs mt-1">{errors.educationLevel}</p>}
+      </div>
 
+      {/* Salary Range Field */}
+      <div className="mb-5">
+        <label htmlFor="salaryRange" className="block text-sm font-medium mb-2">Teacher Salary Ranges</label>
+        <select
+          id="salaryRange"
+          name="salary"
+          value={teacher.salary}
+          onChange={handleChange}
+          required
+          className={`w-full px-4 py-3 border rounded-lg ${errors.salary ? 'border-red-500' : 'border-gray-300'}`}
+        >
+          <option value="">Select Salary Range</option>
+          {teacher.educationLevel && SALARY_RANGES[teacher.educationLevel]?.map((salary, index) => (
+            <option key={index} value={salary}>{salary}</option>
+          ))}
+        </select>
+        {errors.salary && <p className="text-red-600 text-xs mt-1">{errors.salary}</p>}
+      </div>
               <div className="mb-5">
+
                 <label htmlFor="region" className="block  text-sm font-medium mb-2">Select Teacher Type</label>
                 <select
                   id="teacherType"
