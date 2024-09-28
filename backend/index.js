@@ -14,7 +14,9 @@ app.use(cors()); // Enable CORS
 
 // Connect to Database
 mongoose.connect(process.env.MONGO, {
-  
+  // Removed deprecated options
+  serverSelectionTimeoutMS: 5000, // Adjust as needed
+  socketTimeoutMS: 45000, // Adjust as needed
 })
   .then(() => {
     console.log('Database connection successful 🤞');
@@ -25,36 +27,30 @@ mongoose.connect(process.env.MONGO, {
   });
 
 // Import Routes
-// const authRoutes = require('../routes/authRoutes');
 const teacherRoutes = require('./routes/teacherRoutes');
-// const userRouter = require('./routes/userRouter');
 
 // Use Routes
-// app.use('/api/auth', authRoutes);
-// app.use('/', userRouter);
 app.use('/', teacherRoutes);
+
 
 // Error Handling Middleware
 app.use(errorHandler);
-app.use('/uploads', express.static('uploads')); // Serve static files from the uploads directory
 
-
-
-
-
+// Custom error handling middleware
 app.use((err, req, res, next) => {
-const statusCode = err.statusCode || 500;
-const message = err.message || 'Internal Server Error';
-res.status(statusCode).json({
-  success: false,
-  statusCode,
-  message,
+  const statusCode = err.statusCode || 500;
+  const message = err.message || 'Internal Server Error';
+  res.status(statusCode).json({
+    success: false,
+    statusCode,
+    message,
+  });
 });
-});
+
 // Define the port
 const PORT = process.env.PORT || 8000;
 
 // Start the server
 app.listen(PORT, () => {
-console.log(`Server is running on port ${PORT} 🚀`);
+  console.log(`Server is running on port ${PORT} 🚀`);
 });
