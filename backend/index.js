@@ -15,8 +15,8 @@ app.use(cors()); // Enable CORS
 // Connect to Database
 mongoose.connect(process.env.MONGO, {
   // Removed deprecated options
-  serverSelectionTimeoutMS: 5000, // Adjust as needed
-  socketTimeoutMS: 45000, // Adjust as needed
+  // serverSelectionTimeoutMS: 5000, // Adjust as needed
+  // socketTimeoutMS: 45000, // Adjust as needed
 })
   .then(() => {
     console.log('Database connection successful 🤞');
