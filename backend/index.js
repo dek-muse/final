@@ -37,31 +37,27 @@ const teacherRoutes = require('./routes/teacherRoutes');
 // app.use('/', userRouter);
 app.use('/', teacherRoutes);
 
-// Serve static files from the uploads directory
-app.use('/uploads', express.static('uploads'));
-
-// Add Hello World Route
-app.get('/', (req, res) => {
-  res.send('Hello World 🌍');
-});
-
 // Error Handling Middleware
 app.use(errorHandler);
+app.use('/uploads', express.static('uploads')); // Serve static files from the uploads directory
+
+
+
+
 
 app.use((err, req, res, next) => {
-  const statusCode = err.statusCode || 5000;
-  const message = err.message || 'Internal Server Error';
-  res.status(statusCode).json({
-    success: false,
-    statusCode,
-    message,
-  });
+const statusCode = err.statusCode || 500;
+const message = err.message || 'Internal Server Error';
+res.status(statusCode).json({
+  success: false,
+  statusCode,
+  message,
 });
-
+});
 // Define the port
-const PORT = process.env.PORT || 5000;
+const PORT = process.env.PORT || 7000;
 
 // Start the server
 app.listen(PORT, () => {
-  console.log(`Server is running on port ${PORT} 🚀`);
+console.log(`Server is running on port ${PORT} 🚀`);
 });

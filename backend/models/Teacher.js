@@ -15,17 +15,12 @@ const teacherSchema = new mongoose.Schema({
     required: true,
     unique: true
   },
-  teacherType: {
-    type: String,
-    enum: ['Kg', 'Primary', 'Secondary', 'Preparatory', 'University/Colleges']
-  },
-  educationLevel: { 
+  teacherType:{
     type: String, 
-    required: true 
+    enum:['Kg', 'secondary', 'primary', 'elementary']
   },
-  salary: Number,
-  birthDate: Date,
   address: String,
+  city: String,
   region: String,
   district: String,
   qualifications: String,
@@ -37,23 +32,12 @@ const teacherSchema = new mongoose.Schema({
   picture: {
     type: String,
     default: 'https://cdn.pixabay.com/photo/2015/10/05/22/37/blank-profile-picture-973460_960_720.png',
-  },
-  fileAttachment: { 
-    type: String, 
-    default: null 
-  },
+
+},
   sex: [String],
-  nativeStatus: [String],
-
-  // Kani waa meesha aan ku darayno `createdBy`
-  createdBy: {
-    type: mongoose.Schema.Types.ObjectId,
-    ref: 'User', // Tani waxa ay tixraaceysaa sharciga `User`
-    required: true // Waa in la buuxiyaa mar walba
-  }
-
+  nativeStatus: [String]
 }, {
-  timestamps: true // Waxay si toos ah u abuureysaa taariikhaha la abuuray (createdAt) iyo la cusbooneysiiyay (updatedAt)
+  timestamps: true
 });
 
 module.exports = mongoose.model('Teacher', teacherSchema);

@@ -11,12 +11,7 @@ const storage = multer.diskStorage({
     cb(null, Date.now() + path.extname(file.originalname));
   }
 });
-
-// Handle file uploads for profile picture and attachment
-const upload = multer({ storage: storage }).fields([
-  { name: 'picture', maxCount: 1 },
-  { name: 'fileAttachment', maxCount: 1 }
-]);
+const upload = multer({ storage: storage });
 
 // Create a new teacher
 exports.createTeacher = async (req, res) => {
@@ -38,12 +33,7 @@ exports.createTeacher = async (req, res) => {
       joiningDate: req.body.joiningDate,
       sex: req.body.sex,
       nativeStatus: req.body.nativeStatus,
-      picture: req.files['picture'] ? req.files['picture'][0].path : null,
-      fileAttachment: req.files['fileAttachment'] ? req.files['fileAttachment'][0].path : null,
-      birthDate: req.body.birthDate,
-      educationLevel: req.body.educationLevel,
-      salary: req.body.salary,
-      createdBy: req.user._id // Set the ID of the user who created the teacher
+      pic: req.file ? req.file.path : null
     };
 
     const teacher = new Teacher(teacherData);
@@ -51,6 +41,7 @@ exports.createTeacher = async (req, res) => {
     res.status(201).json(teacher);
   } catch (error) {
     if (error.code === 11000) {
+      // Duplicate key error
       const duplicateKey = Object.keys(error.keyValue)[0];
       res.status(400).json({ error: `${duplicateKey} must be unique` });
     } else {
@@ -63,7 +54,7 @@ exports.createTeacher = async (req, res) => {
 // Get all teachers
 exports.getAllTeachers = async (req, res) => {
   try {
-    const teachers = await Teacher.find().populate('createdBy', 'name email'); // Populate createdBy with user info
+    const teachers = await Teacher.find();
     res.status(200).json(teachers);
   } catch (error) {
     console.error('Error fetching teachers:', error);
@@ -75,7 +66,7 @@ exports.getAllTeachers = async (req, res) => {
 exports.getTeacherById = async (req, res) => {
   const { id } = req.params;
   try {
-    const teacher = await Teacher.findById(id).populate('createdBy', 'name email');
+    const teacher = await Teacher.findById(id);
     if (teacher) {
       res.status(200).json(teacher);
     } else {
