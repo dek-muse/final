@@ -14,8 +14,8 @@ app.use(cors()); // Enable CORS
 
 // Connect to Database
 mongoose.connect(process.env.MONGO, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+  // useNewUrlParser: true,
+  // useUnifiedTopology: true,
   serverSelectionTimeoutMS: 5000, // Adjust as needed
   socketTimeoutMS: 45000, // Adjust as needed
 })
