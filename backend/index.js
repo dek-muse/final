@@ -14,8 +14,8 @@ app.use(cors()); // Enable CORS
 
 // Connect to Database
 mongoose.connect(process.env.MONGO, {
-  useNewUrlParser: true,
-  useUnifiedTopology: true,
+  // useNewUrlParser: true,
+  // useUnifiedTopology: true,
   serverSelectionTimeoutMS: 5000, // Adjust as needed
   socketTimeoutMS: 45000, // Adjust as needed
 })
@@ -55,7 +55,7 @@ res.status(statusCode).json({
 });
 });
 // Define the port
-const PORT = process.env.PORT || 7000;
+const PORT = process.env.PORT || 8000;
 
 // Start the server
 app.listen(PORT, () => {
