@@ -42,7 +42,7 @@ const UserManagement = () => {
         setFilteredUsers(response.data);
         setUserCount(response.data.length);
       } catch (error) {
-        console.error('Error fetching users:', error);
+        // console.error('Error fetching users:', error);
         setError('Failed to fetch users. Please try again later.');
       } finally {
         setIsLoading(false);
@@ -98,7 +98,7 @@ const UserManagement = () => {
       setMessage('User deleted successfully');
       setUserCount(userCount - 1);
     } catch (error) {
-      console.error('Error deleting user:', error);
+      // console.error('Error deleting user:', error);
       setError('Failed to delete user. Please try again later.');
     } finally {
       setIsLoading(false);
@@ -136,7 +136,7 @@ const UserManagement = () => {
 
       setSelectedUser(null); // Clear the selected user
     } catch (error) {
-      console.error('Error updating user:', error);
+      // console.error('Error updating user:', error);
       setError('Failed to update user. Please try again later.');
     } finally {
       setIsLoading(false);
@@ -144,9 +144,9 @@ const UserManagement = () => {
   };
 
   return (
-    <div className="flex flex-col items-center min-h-screen p-4 sm:p-8 bg-gray-100">
-      <div className="p-6 rounded-lg shadow-lg w-full max-w-6xl bg-white">
-        <h2 className="text-2xl font-bold mb-4 text-gray-800">User Management</h2>
+    <div className="flex flex-col items-center min-h-screen p-4 sm:p-8 ">
+      <div className="p-6 rounded-lg shadow-lg w-full max-w-6xl ">
+        <h2 className="text-2xl font-bold mb-4 ">User Management</h2>
 
         <div className="mb-4 flex flex-col sm:flex-row gap-4">
           <input
@@ -179,7 +179,7 @@ const UserManagement = () => {
         </div>
 
         <div className="mb-4">
-          <p className="text-gray-700">Total Users: <span className="font-bold">{userCount}</span></p>
+          <p className="">Total Users: <span className="font-bold">{userCount}</span></p>
         </div>
 
         <div className="overflow-x-auto">
@@ -220,10 +220,10 @@ const UserManagement = () => {
       {selectedUser && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
           <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full transition-transform transform hover:scale-105">
-            <h3 className="text-2xl font-semibold text-gray-800 mb-6">Edit User</h3>
+            <h3 className="text-2xl font-semibold  mb-6">Edit User</h3>
             <form onSubmit={confirmUpdate} className="space-y-4">
               <div>
-                <label htmlFor="role" className="block text-sm font-medium text-gray-700">Role</label>
+                <label htmlFor="role" className="block text-sm font-medium ">Role</label>
                 <select
                   id="role"
                   value={selectedUser.role}
@@ -237,7 +237,7 @@ const UserManagement = () => {
               </div>
 
               <div>
-                <label htmlFor="region" className="block text-sm font-medium text-gray-700">Region</label>
+                <label htmlFor="region" className="block text-sm font-medium ">Region</label>
                 <select
                   id="region"
                   value={selectedUser.region}
@@ -252,7 +252,7 @@ const UserManagement = () => {
 
               <div className="flex justify-end mt-6 space-x-2">
                 <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">Update</Button>
-                <Button onClick={() => setSelectedUser(null)} className="bg-gray-300 hover:bg-gray-400 text-gray-800">Cancel</Button>
+                <Button onClick={() => setSelectedUser(null)} className="bg-gray-300 hover:bg-gray-400 ">Cancel</Button>
               </div>
             </form>
           </div>

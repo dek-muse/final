@@ -57,8 +57,8 @@ const Signin = () => {
   };
 
   return (
-    <div className="flex flex-col lg:flex-row justify-center items-center min-h-screen p-4">
-      <img src={sigin} alt="Login" className="w-64 sm:w-80 md:w-[400px] mb-8 lg:mb-0" />
+    <div className="flex flex-col lg:flex-row justify-around items-center min-h-screen p-4">
+      <img src={sigin} alt="Login" className="w-64 sm:w-80 md:w-[420px] mb-8 lg:mb-0 " />
       <div className="p-6 w-full max-w-md lg:max-w-lg     rounded-lg transition-transform duration-300 ease-in-out">
         <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-center">Login</h2>
         <form onSubmit={handleSubmit}>

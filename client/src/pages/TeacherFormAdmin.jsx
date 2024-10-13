@@ -14,7 +14,7 @@ import { CircularProgressbar } from 'react-circular-progressbar';
 import 'react-circular-progressbar/dist/styles.css';
 import { Alert } from 'flowbite-react';
 // import { storage } from '../firebase'; // Adjust the path as necessary
-  
+
 
 const subjects = [
   { id: 1, name: 'Mathematics' },
@@ -33,19 +33,19 @@ const SALARY_RANGES = {
 };
 
 
-const REGIONS = [ 'Afdheer'];
+const REGIONS = ['Afdheer'];
 const DISTRICTS = {
-  'Afdheer': [ 'Hargeelle', 'Dhaawac','Baarey', 'limey galbeed', 'Raaso','Dollow Bay','Ceelkari','Qooxle','Godgod'],
-  'Daawo': ['Qadhadhumo','Hudet','Mooyale','Mubarak',],
-  'Doolo': [ 'Daraatole',    'Wardheer- Xarunta Gobalka','Danood','Galxumur','Galaadi','Bookh','Lehel-yucub'],
-  'Erar': ['Fiiq','Xamaro','Waangay','Lagahida','Yoxob','Salaxaad','Mayu-Muluqo','Qubi'],
-  'Faafan': ['Tuliguuled','Goljano','Harooreys','Shabeleey','Harawo','Mula','Qabribayax','Xarshin','Gursum','Babili','Awbare',  ],
-  'Jarar': ['Daroor','Aware','Dhagax-buur','Dhagax-madow','Gunagado','Gashamo','Birqod','Dig','Bilcil buur','Araarso','Yoocaale',  ],
-  'Liibaan': ['Filtu','Dollo Adow','Qarsadula','Gura-dhamoole','Goora-Baqaqsa','Boqol maayo','Dekasuftu',  ],
-  'Nogob': ['Dhuxun','Gerbo','Xaraarey','Ayun','Hor-shagah','Segeg','Ceelweyne', ],
-  'Qoraxay': ['Qabridahar','Shilaabo','Dhobaweyn','Shaygoosh','Marsin','Ceel-ogaden','Las-dharkeynle','Boodaley','Higlooley','Goglo/kudunbuur',  ],
-  'Shabelle': ['Dhanan','Godey','Qalafe','Beer caano','Feerfer','Iimey bari','Mustaxiil','Elele','Cadaadle','Abaqarow',],
-  'Sitti': ['Afdem','Ayshaca','Mieso','Dembel','Erar','Shiniile','Hadhagale','Biki','Geblalu','Dhuunya',],
+  'Afdheer': ['Hargeelle', 'Dhaawac', 'Baarey', 'limey galbeed', 'Raaso', 'Dollow Bay', 'Ceelkari', 'Qooxle', 'Godgod'],
+  'Daawo': ['Qadhadhumo', 'Hudet', 'Mooyale', 'Mubarak',],
+  'Doolo': ['Daraatole', 'Wardheer- Xarunta Gobalka', 'Danood', 'Galxumur', 'Galaadi', 'Bookh', 'Lehel-yucub'],
+  'Erar': ['Fiiq', 'Xamaro', 'Waangay', 'Lagahida', 'Yoxob', 'Salaxaad', 'Mayu-Muluqo', 'Qubi'],
+  'Faafan': ['Tuliguuled', 'Goljano', 'Harooreys', 'Shabeleey', 'Harawo', 'Mula', 'Qabribayax', 'Xarshin', 'Gursum', 'Babili', 'Awbare',],
+  'Jarar': ['Daroor', 'Aware', 'Dhagax-buur', 'Dhagax-madow', 'Gunagado', 'Gashamo', 'Birqod', 'Dig', 'Bilcil buur', 'Araarso', 'Yoocaale',],
+  'Liibaan': ['Filtu', 'Dollo Adow', 'Qarsadula', 'Gura-dhamoole', 'Goora-Baqaqsa', 'Boqol maayo', 'Dekasuftu',],
+  'Nogob': ['Dhuxun', 'Gerbo', 'Xaraarey', 'Ayun', 'Hor-shagah', 'Segeg', 'Ceelweyne',],
+  'Qoraxay': ['Qabridahar', 'Shilaabo', 'Dhobaweyn', 'Shaygoosh', 'Marsin', 'Ceel-ogaden', 'Las-dharkeynle', 'Boodaley', 'Higlooley', 'Goglo/kudunbuur',],
+  'Shabelle': ['Dhanan', 'Godey', 'Qalafe', 'Beer caano', 'Feerfer', 'Iimey bari', 'Mustaxiil', 'Elele', 'Cadaadle', 'Abaqarow',],
+  'Sitti': ['Afdem', 'Ayshaca', 'Mieso', 'Dembel', 'Erar', 'Shiniile', 'Hadhagale', 'Biki', 'Geblalu', 'Dhuunya',],
 };
 
 const subjectsList = [
@@ -55,36 +55,31 @@ const subjectsList = [
   'History',
   // Add more subjects as needed
 ];
-
-
-
 const sexOptions = ['Male', 'Female'];
 const nativeStatusOptions = ['Native', 'Non-native'];
-const teacherType = ['Kg','Primary', 'Secondary', 'Preparatory' , 'University/Colleges']
+const teacherType = ['Kg', 'Primary', 'Secondary', 'Preparatory', 'University/Colleges']
 
 const TeacherForm = () => {
-  
-    const [teacher, setTeacher] = useState({
-      name: '',
-      email: '',
-      mobile: '',
-      city: '',
-      address: '',
-      region: '',
-      district: '',
-      subjectsLearned: '',
-      subjectsTech: '',
-      description: '',
-      sex: '',
-      nativeStatus: '',
-      teacherType: '',
-      picture: null,
-      joiningDate: '',
-      educationLevel: '', // New field
-      salary: '', // New field
-      birthDate: ''
-    });
-  
+
+  const [teacher, setTeacher] = useState({
+    name: '',
+    email: '',
+    mobile: '',
+    region: '',
+    district: '',
+    subjectsLearned: '',
+    subjectsTech: '',
+    description: '',
+    sex: '',
+    nativeStatus: '',
+    teacherType: '',
+    picture: null,
+    joiningDate: '',
+    educationLevel: '', // New field
+    salary: '', // New field
+    birthDate: ''
+  });
+
 
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
@@ -115,46 +110,46 @@ const TeacherForm = () => {
 
   const uploadImage = async () => {
     // service firebase.storage {
-      //   match /b/{bucket}/o {
-      //     match /{allPaths=**} {
-      //       allow read;
-      //       allow write: if
-      //       request.resource.size < 2 * 1024 * 1024 &&
-      //       request.resource.contentType.matches('image/.*')
-      //     }
-      //   }
-      // }
-      const storage = getStorage(app);
-      const fileName = new Date().getTime() + imageFile.name;
-      const storageRef = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(storageRef, imageFile);
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-  
-          setImageFileUploadProgress(progress.toFixed(0));
-        },
-        (error) => {
-          setImageFileUploadError(
-            'Could not upload image (File must be less than 2MB)'
-          );
-          setImageFileUploadProgress(null);
-          setImageFile(null);
-          setImageFileUrl(null);
+    //   match /b/{bucket}/o {
+    //     match /{allPaths=**} {
+    //       allow read;
+    //       allow write: if
+    //       request.resource.size < 2 * 1024 * 1024 &&
+    //       request.resource.contentType.matches('image/.*')
+    //     }
+    //   }
+    // }
+    const storage = getStorage(app);
+    const fileName = new Date().getTime() + imageFile.name;
+    const storageRef = ref(storage, fileName);
+    const uploadTask = uploadBytesResumable(storageRef, imageFile);
+    uploadTask.on(
+      'state_changed',
+      (snapshot) => {
+        const progress =
+          (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
+
+        setImageFileUploadProgress(progress.toFixed(0));
+      },
+      (error) => {
+        setImageFileUploadError(
+          'Could not upload image (File must be less than 2MB)'
+        );
+        setImageFileUploadProgress(null);
+        setImageFile(null);
+        setImageFileUrl(null);
+        setImageFileUploading(false);
+      },
+      () => {
+        getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
+          setImageFileUrl(downloadURL);
+          setFormData({ ...formData, profilePicture: downloadURL });
           setImageFileUploading(false);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setImageFileUrl(downloadURL);
-            setFormData({ ...formData, profilePicture: downloadURL });
-            setImageFileUploading(false);
-          });
-        }
-      );
+        });
+      }
+    );
   }
-  
+
 
 
   useEffect(() => {
@@ -175,11 +170,11 @@ const TeacherForm = () => {
     setErrors({ ...errors, [name]: '' });
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
-  
 
-    const validate = () => {
-      const newErrors = {};
-      if (!teacher.name) newErrors.name = 'Name is required';
+
+  const validate = () => {
+    const newErrors = {};
+    if (!teacher.name) newErrors.name = 'Name is required';
     if (!teacher.email) newErrors.email = 'Email is required';
     else if (!/\S+@\S+\.\S+/.test(teacher.email)) newErrors.email = 'Email is invalid';
     if (!teacher.mobile) newErrors.mobile = 'Mobile is required';
@@ -205,26 +200,26 @@ const TeacherForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     if (!validate()) return;
-  
+
     setIsLoading(true);
-  
+
     try {
       let pictureURL = '';
-  
+
       if (teacher.picture) {
         const pictureRef = storage.ref(`pictures/${teacher.picture.name}`);
         await pictureRef.put(teacher.picture);
         pictureURL = await pictureRef.getDownloadURL();
       }
-  
+
       const teacherData = { ...teacher, picture: pictureURL };
-  
+
       // Exclude picture field in the form submission if it's not needed
       const { picture, ...dataToSend } = teacherData;
-  
+
       const response = await axios.post('https://finalbakend.vercel.app/', dataToSend);
       console.log(response.data);
-  
+
       setIsSubmitted(true);
       setTeacher({
         name: '',
@@ -251,8 +246,8 @@ const TeacherForm = () => {
       setIsLoading(false);
     }
   };
-  
-  
+
+
 
   const handleReset = () => {
     setTeacher({
@@ -274,7 +269,7 @@ const TeacherForm = () => {
     setErrors({});
     setIsSubmitted(false); // Reset the submitted status
   };
-  
+
 
   return (
     <div className="max-w-4xl mx-auto p-8  rounded-lg   shadow-2xl border shadow-[#b19d60] border-[#b19d60]">
@@ -282,7 +277,7 @@ const TeacherForm = () => {
       {isSubmitted ? (
         <div className="text-green-600 text-center mb-6 text-lg font-medium">
           Teacher has been created successfully!
-          </div>
+        </div>
       ) : (
         <form onSubmit={handleSubmit}>
           <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
@@ -382,53 +377,52 @@ const TeacherForm = () => {
                 ))}
                 {errors.nativeStatus && <p className="text-red-600 text-xs mt-1">{errors.nativeStatus}</p>}
               </div>
-                      {/* date birth */}
-            <div className="mb-5">
-  <label htmlFor="birthDate" className="block text-sm font-medium mb-2">Teacher Birth Date</label>
-  <input
-    type="date"
-    id="birthDate"
-    name="birthDate"
-    value={teacher.birthDate}
-    onChange={handleChange}
-    required
-    className={`w-full px-4 py-3 border rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.birthDate ? 'border-red-500' : 'border-gray-300'}`}
-  />
-  {errors.birthDate && <p className="text-red-600 text-xs mt-1">{errors.birthDate}</p>}
-</div>
-             {/*  */}
+              {/* date birth */}
+              <div className="mb-5">
+                <label htmlFor="birthDate" className="block text-sm font-medium mb-2">Teacher Birth Date</label>
+                <input
+                  type="date"
+                  id="birthDate"
+                  name="birthDate"
+                  value={teacher.birthDate}
+                  onChange={handleChange}
+                  required
+                  className={`w-full px-4 py-3 border rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.birthDate ? 'border-red-500' : 'border-gray-300'}`}
+                />
+                {errors.birthDate && <p className="text-red-600 text-xs mt-1">{errors.birthDate}</p>}
+              </div>
+              {/*  */}
               <div>
-              <input
-               type='file'
-               accept='image/*'
-               onChange={handleImageChange}
-               ref={filePickerRef}
-              //  hidden
-      />
-      <div className="relative w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full"
-      onClick={() => filePickerRef.current.click()}>
-        {imageFileUploadProgress && (
-          <CircularProgressbar
-          value={imageFileUploadProgress || 0}
-          text={`${imageFileUploadProgress}%`}
-          strokeWidth={5}
-          styles={{
-            root: {
-              width: '100%',
-              height: '100%',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-            },
-            path: {
-              stroke: `rgba(62, 152, 199, ${
-                imageFileUploadProgress / 100
-              })`,
-            },
-          }}
-        />
-        )}
-        {/* <img
+                <input
+                  type='file'
+                  accept='image/*'
+                  onChange={handleImageChange}
+                  ref={filePickerRef}
+                //  hidden
+                />
+                <div className="relative w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full"
+                  onClick={() => filePickerRef.current.click()}>
+                  {imageFileUploadProgress && (
+                    <CircularProgressbar
+                      value={imageFileUploadProgress || 0}
+                      text={`${imageFileUploadProgress}%`}
+                      strokeWidth={5}
+                      styles={{
+                        root: {
+                          width: '100%',
+                          height: '100%',
+                          position: 'absolute',
+                          top: 0,
+                          left: 0,
+                        },
+                        path: {
+                          stroke: `rgba(62, 152, 199, ${imageFileUploadProgress / 100
+                            })`,
+                        },
+                      }}
+                    />
+                  )}
+                  {/* <img
           src={imageFileUrl || currentUser.profilePicture}
           alt='user'
           className={`rounded-full w-full h-full object-cover border-8 border-[lightgray] ${
@@ -437,13 +431,13 @@ const TeacherForm = () => {
             'opacity-60'
           }`}
         /> */}
-      </div>
-            </div>
-            {imageFileUploadError && (
-              <Alert color='failure'>{imageFileUploadError}</Alert>
-            )}
+                </div>
+              </div>
+              {imageFileUploadError && (
+                <Alert color='failure'>{imageFileUploadError}</Alert>
+              )}
 
-     
+
             </div>
 
 
@@ -453,44 +447,44 @@ const TeacherForm = () => {
 
               <h3 className="text-xl font-medium mb-4">
                 {/* Teacher Professional Details */}
-                </h3>
-                   {/* Education Level Field */}
-      <div className="mb-5">
-        <label htmlFor="educationLevel" className="block text-sm font-medium mb-2">Teacher Education Levels</label>
-        <select
-          id="educationLevel"
-          name="educationLevel"
-          value={teacher.educationLevel}
-          onChange={handleChange}
-          required
-          className={`w-full px-4 py-3 border rounded-lg shadow-sm ${errors.educationLevel ? 'border-red-500' : 'border-gray-300'}`}
-        >
-          <option value="">Select Education Level</option>
-          {EDUCATION_LEVELS.map(level => (
-            <option key={level} value={level}>{level}</option>
-          ))}
-        </select>
-        {errors.educationLevel && <p className="text-red-600 text-xs mt-1">{errors.educationLevel}</p>}
-      </div>
+              </h3>
+              {/* Education Level Field */}
+              <div className="mb-5">
+                <label htmlFor="educationLevel" className="block text-sm font-medium mb-2">Teacher Education Levels</label>
+                <select
+                  id="educationLevel"
+                  name="educationLevel"
+                  value={teacher.educationLevel}
+                  onChange={handleChange}
+                  required
+                  className={`w-full px-4 py-3 border rounded-lg shadow-sm ${errors.educationLevel ? 'border-red-500' : 'border-gray-300'}`}
+                >
+                  <option value="">Select Education Level</option>
+                  {EDUCATION_LEVELS.map(level => (
+                    <option key={level} value={level}>{level}</option>
+                  ))}
+                </select>
+                {errors.educationLevel && <p className="text-red-600 text-xs mt-1">{errors.educationLevel}</p>}
+              </div>
 
-      {/* Salary Range Field */}
-      <div className="mb-5">
-        <label htmlFor="salaryRange" className="block text-sm font-medium mb-2">Teacher Salary Ranges</label>
-        <select
-          id="salaryRange"
-          name="salary"
-          value={teacher.salary}
-          onChange={handleChange}
-          required
-          className={`w-full px-4 py-3 border rounded-lg ${errors.salary ? 'border-red-500' : 'border-gray-300'}`}
-        >
-          <option value="">Select Salary Range</option>
-          {teacher.educationLevel && SALARY_RANGES[teacher.educationLevel]?.map((salary, index) => (
-            <option key={index} value={salary}>{salary}</option>
-          ))}
-        </select>
-        {errors.salary && <p className="text-red-600 text-xs mt-1">{errors.salary}</p>}
-      </div>
+              {/* Salary Range Field */}
+              <div className="mb-5">
+                <label htmlFor="salaryRange" className="block text-sm font-medium mb-2">Teacher Salary Ranges</label>
+                <select
+                  id="salaryRange"
+                  name="salary"
+                  value={teacher.salary}
+                  onChange={handleChange}
+                  required
+                  className={`w-full px-4 py-3 border rounded-lg ${errors.salary ? 'border-red-500' : 'border-gray-300'}`}
+                >
+                  <option value="">Select Salary Range</option>
+                  {teacher.educationLevel && SALARY_RANGES[teacher.educationLevel]?.map((salary, index) => (
+                    <option key={index} value={salary}>{salary}</option>
+                  ))}
+                </select>
+                {errors.salary && <p className="text-red-600 text-xs mt-1">{errors.salary}</p>}
+              </div>
               <div className="mb-5">
 
                 <label htmlFor="region" className="block  text-sm font-medium mb-2">Select Teacher Type</label>
@@ -571,7 +565,7 @@ const TeacherForm = () => {
                   value={teacher.subjectsTech}
                   onChange={handleChange}
                   required
-              className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.subjectsTech ? 'border-red-500' : 'border-gray-300'}`}
+                  className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.subjectsTech ? 'border-red-500' : 'border-gray-300'}`}
 
                 >
                   <option value="">Select Subjects</option>
@@ -591,7 +585,7 @@ const TeacherForm = () => {
                   required
                   placeholder='Entry Description'
                   className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
-            
+
                 />
                 {errors.description && <p className="text-red-600 text-xs mt-1">{errors.description}</p>}
               </div>
@@ -604,12 +598,12 @@ const TeacherForm = () => {
                   value={teacher.joiningDate}
                   onChange={handleChange}
                   required
-                  className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.joiningDate ? 'border-red-500' : 'border-gray-300'}`}
-                   />
+                  className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
+                />
                 {errors.joiningDate && <p className="text-red-600 text-xs mt-1">{errors.joiningDate}</p>}
               </div>
             </div>
-            
+
           </div>
           <div className="flex justify-end gap-4 mt-8">
             <button
