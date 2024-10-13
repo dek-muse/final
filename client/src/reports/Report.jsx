@@ -175,7 +175,7 @@
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.experience}</td> {/* Display experience */}
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.age}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.isRetired ? 'Retired' : 'Active'}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.isRetired ? 'N/A' : teacher.yearsToRetirement}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.isRetired ? '0' : teacher.yearsToRetirement}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{new Date(teacher.joiningDate).getFullYear()}</td>
                 
               </tr>
@@ -191,42 +191,43 @@
 
   const TeacherDetailsModal = ({ teacher, onClose }) => {
     return (
-      <div className="fixed inset-0 flex items-center justify-center bg-gray-800 bg-opacity-75 p-4">
-      <div className="bg-white rounded-lg shadow-lg w-full max-w-md mx-auto sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 flex flex-col">
-        <div className="flex items-center mb-4">
+      <div className="fixed inset-0 flex items-center justify-center   bg-opacity-75 p-4">
+      <div className=" dark:bg-gray-800 rounded-lg shadow-lg w-full max-w-md mx-auto sm:max-w-lg md:max-w-xl lg:max-w-2xl p-6 flex flex-col">
+        <div className="flex  items-center mb-4">
           <img
             src={teacher.photoUrl || 'default-photo-url.jpg'}
             alt={teacher.name}
             className="w-24 h-24 rounded-full border-2 border-gray-300 mr-4 shadow-md"
           />
-          <div className="flex flex-col">
-            <h2 className="text-2xl font-semibold text-gray-800">{teacher.name}</h2>
-            <span className="flex items-center text-gray-600 text-sm md:text-base">
+          <div className="flex mt-9 flex-col">
+            <h2 className="text-4xl font-semibold  0">{teacher.name}</h2>
+            <span className="flex items-center  text-md md:text-base">
               <FaEnvelope className="mr-1" /> {teacher.email}
             </span>
-            <span className="flex items-center text-gray-600 text-sm md:text-base">
+            <span className="flex items-center  text-md md:text-base">
               <FaPhone className="mr-1" /> {teacher.mobile}
             </span>
-            <span className="flex items-center text-gray-600 text-sm md:text-base">
+            <span className="flex items-center  text-md md:text-base">
               <FaMapMarkerAlt className="mr-1" /> {teacher.region}, {teacher.district}
             </span>
           </div>
         </div>
     
-        <h3 className="text-lg font-semibold text-gray-700 mt-4">Subjects</h3>
-        <p className="text-gray-600 flex items-center text-sm md:text-base">
-          <FaBookOpen className="mr-1" /> {teacher.subjectsLearned.join(', ')}
-        </p>
+       
     
-        <h3 className="text-lg font-semibold text-gray-700 mt-4">Details</h3>
-        <p className="text-gray-600 flex items-center text-sm md:text-base">
+        <h3 className="text-lg font-semibold mt-4">Details</h3>
+        <p className=" flex items-center text-sm md:text-base">
           <FaUser className="mr-1" /> Age: {teacher.age}
         </p>
-        <p className="text-gray-600 text-sm md:text-base">Description: {teacher.description}</p>
-        <p className="text-gray-600 text-sm md:text-base">
+        <p className=" text-sm md:text-base">Description: {teacher.description}</p>
+        <p className=" text-sm md:text-base">
           Retirement Status: {teacher.isRetired ? 'Retired' : 'Active'}
         </p>
-    
+
+        <h3 className="text-lg font-semibold mt-4">Subjects</h3>
+        <p className=" flex items-center text-sm md:text-base">
+          <FaBookOpen className="mr-1" /> {teacher.subjectsLearned.join(', ')}
+        </p>
         <div className="flex justify-end mt-6">
           <button
             onClick={onClose}
@@ -270,7 +271,7 @@
     
               return {
                 ...teacher,
-                experience: currentYear - new Date(teacher.joiningDate).getFullYear(),
+                // experience: currentYear - new Date(teacher.joiningDate).getFullYear(),
 
                 age,
                 isRetired,
@@ -404,14 +405,14 @@
     </button>
     
     <div className="flex flex-col md:flex-row md:space-x-4 mt-2">
-      <span className="text-lg font-medium">Total Teachers: {totalTeachers}</span>
+      <span className="text-lg font-semibold">Total Teachers: {totalTeachers}</span>
       <div className="flex flex-wrap space-x-2 mt-2">
-        <span className="text-sm">Active: {retirementCounts.active}</span>
-        <span className="text-sm">Retired: {retirementCounts.retired}</span>
-        <span className="text-sm">Male: {counts.sex.Male || 0}</span>
-        <span className="text-sm">Female: {counts.sex.Female || 0}</span>
-        <span className="text-sm">Native: {counts.nativeStatus.Native || 0}</span>
-        <span className="text-sm">Non-native: {counts.nativeStatus['Non-native'] || 0}</span>
+        <span className="text-sm font-medium">Active: {retirementCounts.active}</span>
+        <span className="text-sm font-medium">Retired: {retirementCounts.retired}</span>
+        <span className="text-sm font-medium">Male: {counts.sex.Male || 0}</span>
+        <span className="text-sm font-medium">Female: {counts.sex.Female || 0}</span>
+        <span className="text-sm font-medium">Native: {counts.nativeStatus.Native || 0}</span>
+        <span className="text-sm font-medium">Non-native: {counts.nativeStatus['Non-native'] || 0}</span>
       </div>
     </div>
   </div>

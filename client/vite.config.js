@@ -8,7 +8,7 @@ export default defineConfig({
     proxy: {
       // Proxy API requests
       '/api': {
-        target: 'https://finalbakend.vercel.app',
+        target: 'https://authuserpro.vercel.app/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },

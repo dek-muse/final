@@ -1,103 +1,108 @@
-const Teacher = require('../models/Teacher');
-const path = require('path');
+// controllers/teacherController.js
+const Teacher = require('../models/Teacher'); // Adjust the path as necessary
+const User = require('../models/user.Model'); // Assuming you have a User model
 
-// Configure multer for file uploads
- 
- 
+// Custom error handler
+const handleError = (res, error, defaultMessage = 'An error occurred') => {
+    const message = error?.message || defaultMessage;
+    const statusCode = error?.statusCode || 500; // Default to 500 if not specified
+    return res.status(statusCode).json({ message });
+};
 
-// Create a new teacher
+// CREATE a new teacher
 exports.createTeacher = async (req, res) => {
-  try {
-    const teacherData = {
-      name: req.body.name,
-      email: req.body.email,
-      mobile: req.body.mobile,
-      address: req.body.address,
-      city: req.body.city,
-      region: req.body.region,
-      district: req.body.district,
-      qualifications: req.body.qualifications,
-      teacherType: req.body.teacherType,
-      experience: req.body.experience,
-      subjectsLearned: req.body.subjectsLearned,
-      subjectsTech: req.body.subjectsTech,
-      description: req.body.description,
-      joiningDate: req.body.joiningDate,
-      sex: req.body.sex,
-      nativeStatus: req.body.nativeStatus,
-      pic: req.file ? req.file.path : null
-    };
+    try {
+        const { createdBy, ...teacherData } = req.body;
 
-    const teacher = new Teacher(teacherData);
-    await teacher.save();
-    res.status(201).json(teacher);
-  } catch (error) {
-    if (error.code === 11000) {
-      // Duplicate key error
-      const duplicateKey = Object.keys(error.keyValue)[0];
-      res.status(400).json({ error: `${duplicateKey} must be unique` });
-    } else {
-      console.error('Error creating teacher:', error);
-      res.status(500).json({ error: error.message });
+        // Ensure the creator (user) exists in the system
+        const user = await User.findById(createdBy);
+        if (!user) {
+            return handleError(res, { statusCode: 404, message: 'User not found' });
+        }
+
+        // Check if the user is an Admin or SuperAdmin
+        if (user.role !== 'Admin' && user.role !== 'SuperAdmin') {
+            return handleError(res, { statusCode: 403, message: 'Only Admins and SuperAdmins can create a teacher.' });
+        }
+
+        const teacher = new Teacher({
+            ...teacherData,
+            createdBy,
+        });
+
+        await teacher.save();
+        res.status(201).json(teacher);
+    } catch (error) {
+        handleError(res, error);
     }
-  }
 };
 
-// Get all teachers
-exports.getAllTeachers = async (req, res) => {
-  try {
-    const teachers = await Teacher.find();
-    res.status(200).json(teachers);
-  } catch (error) {
-    console.error('Error fetching teachers:', error);
-    res.status(500).json({ error: error.message });
-  }
+// READ all teachers
+exports.getTeachers = async (req, res) => {
+    try {
+        const teachers = await Teacher.find().populate('createdBy updatedBy');
+        res.status(200).json(teachers);
+    } catch (error) {
+        handleError(res, error);
+    }
 };
 
-// Get a single teacher by ID
+// READ a single teacher by ID
 exports.getTeacherById = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const teacher = await Teacher.findById(id);
-    if (teacher) {
-      res.status(200).json(teacher);
-    } else {
-      res.status(404).json({ error: 'Teacher not found' });
+    try {
+        const teacher = await Teacher.findById(req.params.id).populate('createdBy updatedBy');
+        if (!teacher) {
+            return handleError(res, { statusCode: 404, message: 'Teacher not found' });
+        }
+        res.status(200).json(teacher);
+    } catch (error) {
+        handleError(res, error);
     }
-  } catch (error) {
-    console.error('Error fetching teacher:', error);
-    res.status(500).json({ error: error.message });
-  }
 };
 
-// Update teacher by ID
+// UPDATE a teacher by ID
 exports.updateTeacher = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const teacher = await Teacher.findByIdAndUpdate(id, req.body, { new: true });
-    if (teacher) {
-      res.status(200).json(teacher);
-    } else {
-      res.status(404).json({ error: 'Teacher not found' });
+    try {
+        const { updatedBy, ...teacherData } = req.body;
+
+        // Check if the user performing the update exists
+        const user = await User.findById(updatedBy);
+        if (!user) {
+            return handleError(res, { statusCode: 404, message: 'User not found' });
+        }
+
+        // Check if the user is an Admin or SuperAdmin
+        if (user.role !== 'Admin' && user.role !== 'SuperAdmin') {
+            return handleError(res, { statusCode: 403, message: 'Only Admins and SuperAdmins can update a teacher.' });
+        }
+
+        const teacher = await Teacher.findByIdAndUpdate(
+            req.params.id,
+            {
+                ...teacherData,
+                updatedBy,
+            },
+            { new: true, runValidators: true }
+        );
+
+        if (!teacher) {
+            return handleError(res, { statusCode: 404, message: 'Teacher not found' });
+        }
+        res.status(200).json(teacher);
+    } catch (error) {
+        handleError(res, error);
     }
-  } catch (error) {
-    console.error('Error updating teacher:', error);
-    res.status(500).json({ error: error.message });
-  }
 };
 
-// Delete teacher by ID
+// DELETE a teacher by ID
 exports.deleteTeacher = async (req, res) => {
-  const { id } = req.params;
-  try {
-    const teacher = await Teacher.findByIdAndDelete(id);
-    if (teacher) {
-      res.status(200).json({ message: 'Teacher deleted successfully' });
-    } else {
-      res.status(404).json({ error: 'Teacher not found' });
+    try {
+        const teacher = await Teacher.findByIdAndDelete(req.params.id);
+        if (!teacher) {
+            return handleError(res, { statusCode: 404, message: 'Teacher not found' });
+        }
+        res.status(200).json({ message: 'Teacher deleted successfully' });
+    } catch (error) {
+        handleError(res, error);
     }
-  } catch (error) {
-    console.error('Error deleting teacher:', error);
-    res.status(500).json({ error: error.message });
-  }
 };

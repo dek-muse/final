@@ -100,13 +100,28 @@ const TeacherForm = () => {
   const [formData, setFormData] = useState({});
   const filePickerRef = useRef();
 
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageFile(file);
-      setImageFileUrl(URL.createObjectURL(file));
+   // Handle image change
+   const handleImageChange = (e) => {
+    const selectedFile = e.target.files[0];
+    if (selectedFile) {
+      const fileType = selectedFile.type;
+      const fileSize = selectedFile.size;
+
+      if (!fileType.startsWith('image/')) {
+        setError('Please select a valid image file.');
+        return;
+      }
+
+      if (fileSize > 5 * 1024 * 1024) { // Limit to 5MB
+        setError('File size exceeds 5MB. Please select a smaller file.');
+        return;
+      }
+
+      setImage(selectedFile);
+      setError('');
     }
   };
+
   useEffect(() => {
     if (imageFile) {
       uploadImage();

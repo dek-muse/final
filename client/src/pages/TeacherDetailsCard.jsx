@@ -159,7 +159,7 @@ const TeacherDetailsCV = () => {
           </p>
           <p className="flex items-center">
             <FaMapMarkerAlt size={20} />
-            {teacher.address}, {teacher.region}, {teacher.district}
+              {teacher.region}, {teacher.district}
           </p>
           <div className="flex gap-2 mt-2">
             
@@ -188,7 +188,7 @@ const TeacherDetailsCV = () => {
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4 text-blue-700">Education</h2>
         <p><strong>Highest Education Level:</strong> {teacher.educationLevel || 'N/A'}</p>
-        <p><strong>Qualifications:</strong> {teacher.qualifications || 'N/A'}</p>
+        {/* <p><strong>Qualifications:</strong> {teacher.qualifications || 'N/A'}</p> */}
       </section>
 
       {/* Experience */}
@@ -200,31 +200,31 @@ const TeacherDetailsCV = () => {
         <p><strong>Subjects Learned:</strong> {teacher.subjectsLearned && teacher.subjectsLearned.length > 0 ? teacher.subjectsLearned.join(', ') : 'N/A'}</p>
       </section>
 
-      {/* Skills */}
-      <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-700">Skills</h2>
-        <ul className="list-disc pl-5">
-          {teacher.skills && teacher.skills.length > 0 ? (
-            teacher.skills.map((skill, index) => (
-              <li key={index} className="flex items-center gap-2">
-                <FaCheck size={16} className="text-green-600" /> {skill}
-              </li>
-            ))
-          ) : (
-            <p>No skills listed</p>
-          )}
-        </ul>
-      </section>
+        {/* Skills
+        <section className="mb-8">
+          <h2 className="text-2xl font-semibold mb-4 text-blue-700">Skills</h2>
+          <ul className="list-disc pl-5">
+            {teacher.skills && teacher.skills.length > 0 ? (
+              teacher.skills.map((skill, index) => (
+                <li key={index} className="flex items-center gap-2">
+                  <FaCheck size={16} className="text-green-600" /> {skill}
+                </li>
+              ))
+            ) : (
+              <p>No skills listed</p>
+            )}
+          </ul>
+        </section> */}
 
       {/* Additional Information */}
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4 text-blue-700">Additional Information</h2>
         <p><strong>Description:</strong> {teacher.description || 'N/A'}</p>
-        <p><strong>Salary:</strong> {teacher.salary ? `$${teacher.salary}` : 'N/A'}</p>
+        <p><strong>Salary:</strong> {teacher.salary ? `${teacher.salary} Birr` : 'N/A'}</p>
       </section>
 
       {/* Attachments */}
-      <section className="mb-8">
+      {/* <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4 text-blue-700">Attachments</h2>
         {teacher.fileAttachment ? (
           <a
@@ -238,7 +238,7 @@ const TeacherDetailsCV = () => {
         ) : (
           <p>No file attached</p>
         )}
-      </section>
+      </section> */}
 
       {/* Buttons */}
       <div className="flex justify-between gap-4">

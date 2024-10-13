@@ -111,7 +111,7 @@ const DashProfile = () => {
       }
       try {
         dispatch(updateStart());
-        const res = await fetch(`https://tuserapi.vercel.app/${currentUser._id}`, {
+        const res = await fetch(`/api/user/update/${currentUser._id}`, {
           method: 'PUT',
           headers: {
             'Content-Type': 'application/json',
@@ -135,7 +135,7 @@ const DashProfile = () => {
       setShowModal(false);
       try {
         dispatch(deleteUserStart());
-        const res = await fetch(`https://tuserapi.vercel.app/${currentUser._id}`, {
+        const res = await fetch(`/api/user/delete/${currentUser._id}`, {
           method: 'DELETE',
         });
         const data = await res.json();
@@ -220,7 +220,6 @@ const DashProfile = () => {
         placeholder='username'
         defaultValue={currentUser.username}
         onChange={handleChange}
-        disabled
       />
       <TextInput
         type='email'
@@ -248,10 +247,10 @@ const DashProfile = () => {
     </form>
     <div className='text-red-500 flex justify-between mt-5'>
       <span onClick={() => setShowModal(true)} className='cursor-pointer'>
-      
+        Delete Account
       </span>
       <Link to='/'> <span onClick={handleSignout} className='cursor-pointer'>
-        
+        Sign Out
       </span></Link>
     </div>
     {updateUserSuccess && (

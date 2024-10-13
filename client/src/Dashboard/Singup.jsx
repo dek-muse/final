@@ -1,37 +1,40 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Importing icons for showing/hiding password
+import { MdEmail } from 'react-icons/md'; // Email icon
 
 const roles = ['Admin', 'SuperAdmin', 'User'];
-const REGIONS = ['c', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
+const REGIONS = ['Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
 
 const SignUp = () => {
   const [formData, setFormData] = useState({
-    FullName: '',
+    username: '',
     email: '',
-    password: '',
+    password: '123456',
     role: '',
-    region: '' // Added region to formData
+    region: '',
   });
-
   const [errors, setErrors] = useState({});
   const [isLoading, setIsLoading] = useState(false);
+  const [isPasswordVisible, setIsPasswordVisible] = useState(false);
+  const [message, setMessage] = useState(''); // State for displaying messages
   const navigate = useNavigate();
 
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({ ...formData, [name]: value });
     setErrors((prevErrors) => ({ ...prevErrors, [name]: '' }));
+    setMessage(''); // Clear the message on input change
   };
 
   const validate = () => {
     const newErrors = {};
-    if (!formData.FullName) newErrors.FullName = 'FullName is required';
+    if (!formData.username) newErrors.username = 'Username is required';
     if (!formData.email) newErrors.email = 'Email is required';
     else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
     if (!formData.password) newErrors.password = 'Password is required';
     if (!formData.role) newErrors.role = 'Role is required';
-    // No validation error for region as it is optional
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -41,14 +44,17 @@ const SignUp = () => {
     if (!validate()) return;
 
     setIsLoading(true);
+    setMessage(''); // Clear previous messages
 
     try {
       await axios.post('https://tuserapi.vercel.app/signup', formData);
-      alert('Sign up successful! Redirecting to login page.');
-      navigate('/listUsers');
+      setMessage('Sign up successful! Redirecting to the user list.');
+      setTimeout(() => {
+        navigate('/listUsers');
+      }, 2000); // Redirect after 2 seconds
     } catch (error) {
       console.error('There was an error signing up!', error);
-      alert(`Error: ${error.response?.data?.message || 'An error occurred'}`);
+      setMessage(`Error: ${error.response?.data?.message || 'An error occurred'}`);
     } finally {
       setIsLoading(false);
     }
@@ -60,56 +66,67 @@ const SignUp = () => {
         <h2 className="text-xl font-bold mb-6 bg-[#b19d60] p-3 rounded-md uppercase">Create users</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-2">
-            <label htmlFor="FullName" className="block  text-xs font-medium mb-1">Full Name</label>
+            <label htmlFor="username" className="block text-xs font-medium mb-1">Username</label>
             <input
-              id="Full Name"
+              id="username"
               type="text"
-              name="Name"
-              value={formData.FullName}
+              name="username"
+              value={formData.username}
               onChange={handleChange}
-              required
-              placeholder="Enter your Full Name"
-              className={`w-full px-4 py-2.5 transition duration-200 ease-in-out transform hover:scale-105    rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.FullName ? 'border-red-500' : 'border-gray-300'}`}
+              placeholder="Enter your Username"
+              className={`w-full px-4 py-2.5 transition duration-200 ease-in-out transform hover:scale-105 rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.username ? 'border-red-500' : 'border-gray-300'}`}
             />
-            {errors.FullName && <p className="text-red-500 text-xs mt-1">{errors.FullName}</p>}
+            {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username}</p>}
           </div>
-          <div className="mb-2">
-            <label htmlFor="email" className="block  text-xs font-medium mb-1">Email</label>
-            <input
-              id="email"
-              type="email"
-              name="email"
-              value={formData.email}
-              onChange={handleChange}
-              required
-              placeholder="Enter your email"
-              className={`w-full px-4 py-2.5 transition duration-200 ease-in-out transform hover:scale-105   rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
-            />
+          <div className="mb-2 relative">
+            <label htmlFor="email" className="block text-xs font-medium mb-1">Email</label>
+            <div className="relative">
+              <input
+                id="email"
+                type="email"
+                name="email"
+                value={formData.email}
+                onChange={handleChange}
+                required
+                placeholder="Enter your email"
+                className={`w-full px-10 py-2.5 transition duration-200 ease-in-out transform hover:scale-105 rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
+              />
+              <MdEmail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
+            </div>
             {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
           </div>
-          <div className="mb-2">
-            <label htmlFor="password" className="block  text-xs font-medium mb-1">Password</label>
-            <input
-              id="password"
-              type="password"
-              name="password"
-              placeholder="Enter your password"
-              value={formData.password}
-              onChange={handleChange}
-              required
-              className={`w-full px-4 py-2.5 transition duration-200 ease-in-out transform hover:scale-105   rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
-            />
+          <div className="mb-2 relative">
+            <label htmlFor="password" className="block text-xs font-medium mb-1">Password</label>
+            <div className="relative">
+              <input
+                id="password"
+                type={isPasswordVisible ? 'text' : 'password'}
+                name="password"
+                placeholder="Enter your password"
+                value={formData.password}
+                onChange={handleChange}
+                required
+                className={`w-full px-4 py-2.5 transition duration-200 ease-in-out transform hover:scale-105 rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
+              />
+              <button
+                type="button"
+                onClick={() => setIsPasswordVisible(!isPasswordVisible)}
+                className="absolute inset-y-0 right-3 px-2 py-2 text-sm text-gray-600"
+              >
+                {isPasswordVisible ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
+              </button>
+            </div>
             {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
           </div>
           <div className="mb-2">
-            <label htmlFor="role" className="block  text-xs font-medium mb-1">Role</label>
+            <label htmlFor="role" className="block text-xs font-medium mb-1">Role</label>
             <select
               id="role"
               name="role"
               value={formData.role}
               onChange={handleChange}
               required
-              className={`w-full px-4 py-2.5 transition duration-200 ease-in-out transform hover:scale-105   rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.role ? 'border-red-500' : 'border-gray-300'}`}
+              className={`w-full px-4 py-2.5 transition duration-200 ease-in-out transform hover:scale-105 rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.role ? 'border-red-500' : 'border-gray-300'}`}
             >
               <option value="">Select a role</option>
               {roles.map(role => (
@@ -119,7 +136,7 @@ const SignUp = () => {
             {errors.role && <p className="text-red-500 text-xs mt-1">{errors.role}</p>}
           </div>
           <div className="mb-2">
-            <label htmlFor="region" className="block  text-xs font-medium mb-1">Region  </label>
+            <label htmlFor="region" className="block text-xs font-medium mb-1">Region</label>
             <select
               id="region"
               name="region"
@@ -142,6 +159,11 @@ const SignUp = () => {
             {isLoading ? 'Signing up...' : 'Sign Up'}
           </button>
         </form>
+        {message && (
+          <div className={`mt-4 p-4 rounded-md text-sm ${message.includes('Error') ? 'bg-red-200 text-red-600' : 'bg-green-200 text-green-600'}`}>
+            {message}
+          </div>
+        )}
       </div>
     </div>
   );

@@ -12,7 +12,7 @@ const UserSchema = new mongoose.Schema({
   },
   password: {
     type: String,
-    required: true
+    required: true,
   },
   profilePicture: {
     type: String,
@@ -21,13 +21,13 @@ const UserSchema = new mongoose.Schema({
   role: {
     type: String,
     enum: ['Admin', 'SuperAdmin', 'User'],
-    default: 'User'
+    default: 'User',
   },
   region: {
     type: String,
-    enum: ['Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'], // Added regions as an enum
-    required: false, // Ensure region is required
-  }, 
+    enum: ['Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'],
+    required: false,
+  },
 }, { timestamps: true });
 
 const User = mongoose.model('User', UserSchema);

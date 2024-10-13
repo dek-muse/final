@@ -1,13 +1,20 @@
 const express = require('express');
 const router = express.Router();
-const teacherController = require('../controllers/teacherController');
-const { authMiddleware } = require('../middleware/auth');
+const teacherController = require('../controllers/teacherController'); // Adjust the path as necessary
 
-// Add the routes for teacher operations
-router.post('/', authMiddleware, teacherController.createTeacher);
-router.get('/', teacherController.getAllTeachers);
+// CREATE a teacher
+router.post('', teacherController.createTeacher);
+
+// READ all teachers
+router.get('/', teacherController.getTeachers);
+
+// READ a single teacher by ID
 router.get('/:id', teacherController.getTeacherById);
-router.put('/:id', authMiddleware, teacherController.updateTeacher);
-router.delete('/:id', authMiddleware, teacherController.deleteTeacher);
+
+// UPDATE a teacher by ID
+router.put('/:id', teacherController.updateTeacher);
+
+// DELETE a teacher by ID
+router.delete('/:id', teacherController.deleteTeacher);
 
 module.exports = router;
