@@ -11,6 +11,8 @@ import NaveBare from './common/Navebare'; // Corrected component name
 import DashProfile from './Dashboard/DashProfile';
 import PrivateRoute from './context/PrivateRoute';
 import RoleBasedRoute from './context/RoleBasedRoute';
+import Connect from './components/Connect.jsx';
+import About from './components/About.jsx';
 // import SigIn from './Dashboard/SigIn';
 import SingIn from './Dashboard/SigIn';
 import Singup from './Dashboard/Singup';
@@ -48,19 +50,19 @@ import TeacherDetailsCard from './pages/TeacherDetailsCard';
 const App = () => {
   return (
     <Router>
-      <div className="flex flex-col ">
+      <div className="flex flex-col h-screen">
         <NaveBare /> {/* Ensure the NaveBare is fixed at the top */}
-        <div className="flex flex-1">
+        <div className="flex flex-1 top-20">
           <Sidebare /> {/* Sidebare is fixed to the left */}
           <main className="flex-1 p-6 overflow-auto">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/*" element={<NotFound />} />
-              <Route path="/signin" element={<SingIn/>} />
+              <Route path="/signin" element={<SingIn />} />
+              <Route path="/connect" element={<Connect  />} />
+              <Route path="/about" element={<About  />} />
 
               {/* Protected routes */}
-              {/* <Route path="/testList" element={<PrivateRoute><TestList /></PrivateRoute>} />
-              <Route path="/test" element={<PrivateRoute><Test /></PrivateRoute>} /> */}
               <Route path="/profile" element={<PrivateRoute><DashProfile /></PrivateRoute>} />
 
               {/* Region-specific teacher forms */}
@@ -75,8 +77,7 @@ const App = () => {
               <Route path="/teacher/form/shabelle" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Shabelle"><ShabelleForm /></RoleBasedRoute>} />
               <Route path="/teacher/form/afdheer" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Afdheer"><AfdheerForm /></RoleBasedRoute>} />
 
-
-              {/* Region-specific teacher Report */}
+              {/* Region-specific teacher reports */}
               <Route path="/teacher/report/afdheer" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Afdheer"><AfdheerReport /></RoleBasedRoute>} />
               <Route path="/teacher/report/daawo" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Daawo"><DaawoReport /></RoleBasedRoute>} />
               <Route path="/teacher/report/doolo" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Doolo"><DooloReport /></RoleBasedRoute>} />
@@ -88,9 +89,8 @@ const App = () => {
               <Route path="/teacher/report/qoraxay" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Qoraxay"><QoraxayReport /></RoleBasedRoute>} />
               <Route path="/teacher/report/shabelle" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Shabelle"><ShabelleReport /></RoleBasedRoute>} />
               <Route path="/teacher/report/sitti" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Sitti"><SittiReport /></RoleBasedRoute>} />
- 
 
-              {/* SuperAdmin general   */}
+              {/* SuperAdmin general */}
               <Route path="/dashboard" element={<RoleBasedRoute requiredRole="SuperAdmin"><Dashboard /></RoleBasedRoute>} />
               <Route path="/teacher/form" element={<RoleBasedRoute requiredRole="SuperAdmin"><TeacherForm /></RoleBasedRoute>} />
               <Route path="/teachersList" element={<RoleBasedRoute requiredRole="SuperAdmin"><TeacherList /></RoleBasedRoute>} />
