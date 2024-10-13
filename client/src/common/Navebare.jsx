@@ -59,9 +59,9 @@ const Header = () => {
         </button>
       </div>
 
-      <div className="flex items-center space-x-4 md:flex">
-        <NavLink to="/about" className="hidden md:block px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300">About</NavLink>
-        <NavLink to="/connect" className="hidden md:block px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300">Connect</NavLink>
+      <div className="hidden md:flex items-center space-x-4">
+        <NavLink to="/about" className="px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300">About</NavLink>
+        <NavLink to="/connect" className="px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300">Connect</NavLink>
 
         <div className="relative">
           {currentUser ? (
@@ -70,53 +70,78 @@ const Header = () => {
               inline
               label={
                 <Avatar
-                  alt='user'
+                  alt="user"
                   img={profilePicture}
                   rounded
-                  className='w-12 h-12 rounded-lg border-2 border-gray-200 dark:border-gray-600 hidden md:block"  '
+                  className="w-12 h-12 rounded-lg border-2 border-gray-200 dark:border-gray-600"
                 />
               }
             >
               <div className="p-2 border-b">
-                <span className='block text-sm'>{getGreeting()} @{username}</span>
-                <span className='block text-sm truncate'>{email}</span>
+                <span className="block text-sm">{getGreeting()} @{username}</span>
+                <span className="block text-sm truncate">{email}</span>
               </div>
               <NavLink to="/profile" className="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300">Profile</NavLink>
               <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300">Sign Out</button>
             </Dropdown>
           ) : (
-            <NavLink to="/signin" className=" items-center space-x-2 hidden md:block">
+            <NavLink to="/signin" className="items-center space-x-2">
               <span>Sign In</span>
             </NavLink>
           )}
-          
         </div>
-        <button onClick={toggleTheme} className=" items-center space-x-2 p-2 mt-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300 hidden md:block">
-        {isDarkMode ? <FaSun className="text-white" /> : <FaMoon className="text-gray-800" />}
-      </button>
+
+        <button onClick={toggleTheme} className="flex items-center space-x-2 p-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300">
+          {isDarkMode ? (
+            <>
+              <FaSun className="text-white" />
+              {/* <span className="text-white">Light Mode</span> */}
+            </>
+          ) : (
+            <>
+              <FaMoon className="text-gray-800" />
+              {/* <span className="text-gray-800">Dark Mode</span> */}
+            </>
+          )}
+        </button>
       </div>
 
+      {/* Mobile Menu */}
       {isMobileMenuOpen && (
-  <div className={`md:hidden mt-2 absolute -right-[1px] top-[90px] z-10`}>
-    <div className={`p-4 rounded-lg ${isDarkMode ? 'bg-gray-800' : 'bg-white'} transition duration-300 shadow-md`}>
-      <NavLink to="/" className="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600">Home</NavLink>
-      <NavLink to="/about" className="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600">About</NavLink>
-      <NavLink to="/connect" className="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600">Connect</NavLink>
-      {currentUser ? (
-        <>
-          <NavLink to="/profile" className="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600">Profile</NavLink>
-          <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600">Sign Out</button>
-        </>
-      ) : (
-        <NavLink to="/signin" className="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600">Sign In</NavLink>
-      )}
-      <button onClick={toggleTheme} className="flex items-center space-x-2 p-2 mt-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300">
-        {isDarkMode ? <FaSun className="text-yellow-400" /> : <FaMoon className="text-gray-800" />}
-      </button>
-    </div>
-  </div>
-)}
+        <div className={`md:hidden absolute top-[70px] right-0 w-72 bg-${isDarkMode ? 'gray-800' : 'white'} p-4 shadow-md z-10`}>
+          <NavLink to="/" className="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600">Home</NavLink>
+          <NavLink to="/about" className="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600">About</NavLink>
+          <NavLink to="/connect" className="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600">Connect</NavLink>
 
+          {currentUser ? (
+            <>
+              <NavLink to="/profile" className="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600">Profile</NavLink>
+              <button onClick={handleSignOut} className="block w-full text-left px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600">
+                Sign Out
+              </button>
+              <div className="flex justify-center mt-4">
+                <Avatar img={profilePicture} alt="User" rounded className="w-12 h-12" />
+              </div>
+            </>
+          ) : (
+            <NavLink to="/signin" className="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600">Sign In</NavLink>
+          )}
+
+          <button onClick={toggleTheme} className="flex items-center space-x-2 p-2 mt-4 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300">
+            {isDarkMode ? (
+              <>
+                <FaSun className="text-white" />
+                <span className="text-yellow-400">Light Mode</span>
+              </>
+            ) : (
+              <>
+                <FaMoon className="text-gray-800" />
+                <span className="text-gray-800">Dark Mode</span>
+              </>
+            )}
+          </button>
+        </div>
+      )}
     </header>
   );
 };
