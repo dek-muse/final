@@ -24,21 +24,20 @@ const subjects = [
 ];
 
 
-const REGIONS = [ 'Sitti'];
+const REGIONS = ['Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
 const DISTRICTS = {
-  'Afdheer': [ 'Hargeelle', 'Dhaawac','Baarey', 'limey galbeed', 'Raaso','Dollow Bay','Ceelkari','Qooxle','Godgod'],
-  'Daawo': ['Qadhadhumo','Hudet','Mooyale','Mubarak',],
-  'Doolo': [ 'Daraatole',    'Wardheer- Xarunta Gobalka','Danood','Galxumur','Galaadi','Bookh','Lehel-yucub'],
-  'Erar': ['Fiiq','Xamaro','Waangay','Lagahida','Yoxob','Salaxaad','Mayu-Muluqo','Qubi'],
-  'Faafan': ['Tuliguuled','Goljano','Harooreys','Shabeleey','Harawo','Mula','Qabribayax','Xarshin','Gursum','Babili','Awbare',  ],
-  'Jarar': ['Daroor','Aware','Dhagax-buur','Dhagax-madow','Gunagado','Gashamo','Birqod','Dig','Bilcil buur','Araarso','Yoocaale',  ],
-  'Liibaan': ['Filtu','Dollo Adow','Qarsadula','Gura-dhamoole','Goora-Baqaqsa','Boqol maayo','Dekasuftu',  ],
-  'Nogob': ['Dhuxun','Gerbo','Xaraarey','Ayun','Hor-shagah','Segeg','Ceelweyne', ],
-  'Qoraxay': ['Qabridahar','Shilaabo','Dhobaweyn','Shaygoosh','Marsin','Ceel-ogaden','Las-dharkeynle','Boodaley','Higlooley','Goglo/kudunbuur',  ],
-  'Shabelle': ['Dhanan','Godey','Qalafe','Beer caano','Feerfer','Iimey bari','Mustaxiil','Elele','Cadaadle','Abaqarow',],
-  'Sitti': ['Afdem','Ayshaca','Mieso','Dembel','Erar','Shiniile','Hadhagale','Biki','Geblalu','Dhuunya',],
+  'Afdheer': ['Hargeelle', 'Dhaawac', 'Baarey', 'limey galbeed', 'Raaso', 'Dollow Bay', 'Ceelkari', 'Qooxle', 'Godgod'],
+  'Daawo': ['Qadhadhumo', 'Hudet', 'Mooyale', 'Mubarak'],
+  'Doolo': ['Daraatole', 'Wardheer- Xarunta Gobalka', 'Danood', 'Galxumur', 'Galaadi', 'Bookh', 'Lehel-yucub'],
+  'Erar': ['Fiiq', 'Xamaro', 'Waangay', 'Lagahida', 'Yoxob', 'Salaxaad', 'Mayu-Muluqo', 'Qubi'],
+  'Faafan': ['Tuliguuled', 'Goljano', 'Harooreys', 'Shabeleey', 'Harawo', 'Mula', 'Qabribayax', 'Xarshin', 'Gursum', 'Babili', 'Awbare'],
+  'Jarar': ['Daroor', 'Aware', 'Dhagax-buur', 'Dhagax-madow', 'Gunagado', 'Gashamo', 'Birqod', 'Dig', 'Bilcil buur', 'Araarso', 'Yoocaale'],
+  'Liibaan': ['Filtu', 'Dollo Adow', 'Qarsadula', 'Gura-dhamoole', 'Goora-Baqaqsa', 'Boqol maayo', 'Dekasuftu'],
+  'Nogob': ['Dhuxun', 'Gerbo', 'Xaraarey', 'Ayun', 'Hor-shagah', 'Segeg', 'Ceelweyne'],
+  'Qoraxay': ['Qabridahar', 'Shilaabo', 'Dhobaweyn', 'Shaygoosh', 'Marsin', 'Ceel-ogaden', 'Las-dharkeynle', 'Boodaley', 'Higlooley', 'Goglo/kudunbuur'],
+  'Shabelle': ['Dhanan', 'Godey', 'Qalafe', 'Beer caano', 'Feerfer', 'Iimey bari', 'Mustaxiil', 'Elele', 'Cadaadle', 'Abaqarow'],
+  'Sitti': ['Afdem', 'Ayshaca', 'Mieso', 'Dembel', 'Erar', 'Shiniile', 'Hadhagale', 'Biki', 'Geblalu', 'Dhuunya'],
 };
-
 const subjectsList = [
   'Mathematics',
   'Science',

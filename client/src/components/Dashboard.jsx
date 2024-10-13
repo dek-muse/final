@@ -304,15 +304,15 @@ const retiredTeachersCount = teachers.length - activeTeachersCount;
 
 
       {/* Filters */}
-      <div className="flex flex-wrap gap-6 mb-7 bg-[#b19d60] p-4 rounded-md shadow-lg">
+      <div className="flex flex-wrap gap-6 mb-7 bg-[#2d1346] dark:bg-[#b19d60]   p-4 rounded-md shadow-lg">
         {/* Region Filter */}
         <div className="sm:w-full lg:w-1/6">
-          <label htmlFor="region" className="block mb-2 text-sm font-semibold ">Region:</label>
+          <label htmlFor="region" className="block mb-2 text-sm font-semibold text-white ">Region:</label>
           <select
             id="region"
             value={selectedRegion}
             onChange={(e) => setSelectedRegion(e.target.value)}
-            className="block w-full p-2 border dark:text-black   rounded-md shadow-sm    sm:text-sm"
+            className="block w-full p-2 border dark:text-black    rounded-md shadow-sm    sm:text-sm"
           >
             <option value="" className=''>All Regions</option>
             {REGIONS.map(region => (
@@ -324,7 +324,7 @@ const retiredTeachersCount = teachers.length - activeTeachersCount;
         {/* District Filter - Visible only if Region is selected */}
         {selectedRegion && (
           <div className="sm:w-full lg:w-1/6">
-            <label htmlFor="district" className="block mb-2 text-sm font-semibold ">District:</label>
+            <label htmlFor="district" className="block mb-2 text-sm font-semibold text-white">District:</label>
             <select
               id="district"
               value={selectedDistrict}
@@ -340,7 +340,7 @@ const retiredTeachersCount = teachers.length - activeTeachersCount;
         )}
         {/* Education Level Filter */}
 <div className="sm:w-full lg:w-1/6">
-  <label htmlFor="educationLevel" className="block mb-2 text-sm font-semibold">Education Level:</label>
+  <label htmlFor="educationLevel" className="block mb-2 text-sm font-semibold text-white">Education Level:</label>
   <select
     id="educationLevel"
     value={selectedEducationLevel}
@@ -357,7 +357,7 @@ const retiredTeachersCount = teachers.length - activeTeachersCount;
 
         {/* Teacher Type Filter */}
         <div className="sm:w-full lg:w-1/6">
-          <label htmlFor="teacherType" className="block mb-2 text-sm font-semibold ">Teacher Type:</label>
+          <label htmlFor="teacherType" className="block mb-2 text-sm font-semibold text-white">Teacher Type:</label>
           <select
             id="teacherType"
             value={selectedTeacherType}
@@ -379,12 +379,12 @@ const retiredTeachersCount = teachers.length - activeTeachersCount;
 
      {/* Summary Section */}
 <div className="mb-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md dark:shadow-gray-700 dark:p-4">
-    <h3 className="text-[14px] font-semibold mb-2">Total Teachers</h3>
+  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md bg-[#2d1346] dark:bg-[#b19d60] text-white dark:p-4">
+    <h3 className="text-[14px] font-semibold mb-2 ">Total Teachers</h3>
     <p className="text-xl font-bold">{totalTeachers}</p>
   </div>
 
-  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md dark:shadow-gray-700 dark:p-4">
+  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md bg-[#2d1346] dark:bg-[#b19d60] text-white dark:p-4">
     <h3 className="text-[14px] font-semibold mb-2">Sex Breakdown</h3>
     <div className="flex flex-col gap-2">
       <div className="flex justify-between">
@@ -398,7 +398,7 @@ const retiredTeachersCount = teachers.length - activeTeachersCount;
     </div>
   </div>
 
-  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md dark:shadow-gray-700 dark:p-4">
+  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md bg-[#2d1346] dark:bg-[#b19d60] text-white dark:p-4">
     <h3 className="text-[14px] font-semibold mb-2">Native Status</h3>
     <div className="flex flex-col gap-2">
       <div className="flex justify-between">
@@ -412,7 +412,7 @@ const retiredTeachersCount = teachers.length - activeTeachersCount;
     </div>
   </div>
 
-  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md dark:shadow-gray-700 dark:p-4">
+  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md bg-[#2d1346] dark:bg-[#b19d60] text-white dark:p-4">
     <h3 className="text-[14px] font-semibold mb-2">Retirement Status</h3>
     <div className="flex flex-col gap-2">
       <div className="flex justify-between">
@@ -426,7 +426,7 @@ const retiredTeachersCount = teachers.length - activeTeachersCount;
     </div>
   </div>
 
-  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md dark:shadow-gray-700 dark:p-4 col-span-1 sm:col-span-2 lg:col-span-3">
+  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md bg-[#2d1346] dark:bg-[#b19d60] text-white dark:p-4 col-span-1 sm:col-span-2 lg:col-span-3">
     <h3 className="text-[16px] font-semibold mb-4">Teacher Types</h3>
     <div className="flex flex-wrap gap-4">
       {[

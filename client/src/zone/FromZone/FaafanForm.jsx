@@ -1,637 +1,736 @@
-/* eslint-disable no-unused-vars */
-import { useEffect, useRef, useState } from 'react';
-import axios from 'axios';
+import React, { useState, useEffect } from 'react';
+import { storage } from '../../firebase'; // Hubi inaad saxdo dariiqa import-ga haddii loo baahdo
+import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
-import {
-  getDownloadURL,
-  getStorage,
-  ref,
-  uploadBytesResumable,
-} from 'firebase/storage';
-import { app } from '../../firebase';
-import { CircularProgressbar } from 'react-circular-progressbar';
-import 'react-circular-progressbar/dist/styles.css';
-import { Alert } from 'flowbite-react';
-// import { storage } from '../firebase'; // Adjust the path as necessary
-  
-
-const subjects = [
-  { id: 1, name: 'Mathematics' },
-  { id: 2, name: 'Science' },
-  { id: 3, name: 'English' },
-  { id: 4, name: 'History' },
-  // Add more subjects as needed
-];
-
-// Constants for education levels and salary ranges
-const EDUCATION_LEVELS = ['High School', 'Master\'s Degree', 'Doctorate'];
-const SALARY_RANGES = {
-  'High School': [7000, 8000],
-  'Master\'s Degree': [9000, 10000],
-  'Doctorate': [11000, 12000],
-};
-
-
-const REGIONS = ["Faafan"];
-const DISTRICTS = {
-  'Afdheer': ['Hargeelle', 'Dhaawac', 'Baarey', 'limey galbeed', 'Raaso', 'Dollow Bay', 'Ceelkari', 'Qooxle', 'Godgod'],
-  'Daawo': ['Qadhadhumo', 'Hudet', 'Mooyale', 'Mubarak'],
-  'Doolo': ['Daraatole', 'Wardheer- Xarunta Gobalka', 'Danood', 'Galxumur', 'Galaadi', 'Bookh', 'Lehel-yucub'],
-  'Erar': ['Fiiq', 'Xamaro', 'Waangay', 'Lagahida', 'Yoxob', 'Salaxaad', 'Mayu-Muluqo', 'Qubi'],
-  'Faafan': ['Tuliguuled', 'Goljano', 'Harooreys', 'Shabeleey', 'Harawo', 'Mula', 'Qabribayax', 'Xarshin', 'Gursum', 'Babili', 'Awbare'],
-  'Jarar': ['Daroor', 'Aware', 'Dhagax-buur', 'Dhagax-madow', 'Gunagado', 'Gashamo', 'Birqod', 'Dig', 'Bilcil buur', 'Araarso', 'Yoocaale'],
-  'Liibaan': ['Filtu', 'Dollo Adow', 'Qarsadula', 'Gura-dhamoole', 'Goora-Baqaqsa', 'Boqol maayo', 'Dekasuftu'],
-  'Nogob': ['Dhuxun', 'Gerbo', 'Xaraarey', 'Ayun', 'Hor-shagah', 'Segeg', 'Ceelweyne'],
-  'Qoraxay': ['Qabridahar', 'Shilaabo', 'Dhobaweyn', 'Shaygoosh', 'Marsin', 'Ceel-ogaden', 'Las-dharkeynle', 'Boodaley', 'Higlooley', 'Goglo/kudunbuur'],
-  'Shabelle': ['Dhanan', 'Godey', 'Qalafe', 'Beer caano', 'Feerfer', 'Iimey bari', 'Mustaxiil', 'Elele', 'Cadaadle', 'Abaqarow'],
-  'Sitti': ['Afdem', 'Ayshaca', 'Mieso', 'Dembel', 'Erar', 'Shiniile', 'Hadhagale', 'Biki', 'Geblalu', 'Dhuunya'],
-};
-
-const subjectsList = [
-  'Mathematics',
-  'Science',
-  'English',
-  'History',
-  // Add more subjects as needed
-];
-
-
-
-
-const sexOptions = ['Male', 'Female'];
-const nativeStatusOptions = ['Native', 'Non-native'];
-const teacherType = ['Kg','Primary', 'Secondary', 'Preparatory' , 'University/Colleges']
 
 const TeacherForm = () => {
+  // Helitaanka isticmaalaha hadda jira ee ka imanaya Redux
+  const { currentUser } = useSelector((state) => state.user)
+  const navigate = useNavigate();
+
+  // Qeexitaanka Goobaha iyo Degmooyinka
+  const REGIONS = [ 'Faafan'];
+
+  const DISTRICTS = {
+    'Afdheer': ['Hargeelle', 'Dhaawac', 'Baarey', 'Limey Galbeed', 'Raaso', 'Dollow Bay', 'Ceelkari', 'Qooxle', 'Godgod'],
+    'Daawo': ['Qadhadhumo', 'Hudet', 'Mooyale', 'Mubarak'],
+    'Doolo': ['Daraatole', 'Wardheer- Xarunta Gobalka', 'Danood', 'Galxumur', 'Galaadi', 'Bookh', 'Lehel-yucub'],
+    'Erar': ['Fiiq', 'Xamaro', 'Waangay', 'Lagahida', 'Yoxob', 'Salaxaad', 'Mayu-Muluqo', 'Qubi'],
+    'Faafan': ['Tuliguuled', 'Goljano', 'Harooreys', 'Shabeleey', 'Harawo', 'Mula', 'Qabribayax', 'Xarshin', 'Gursum', 'Babili', 'Awbare'],
+    'Jarar': ['Daroor', 'Aware', 'Dhagax-buur', 'Dhagax-madow', 'Gunagado', 'Gashamo', 'Birqod', 'Dig', 'Bilcil buur', 'Araarso', 'Yoocaale'],
+    'Liibaan': ['Filtu', 'Dollo Adow', 'Qarsadula', 'Gura-dhamoole', 'Goora-Baqaqsa', 'Boqol maayo', 'Dekasuftu'],
+    'Nogob': ['Dhuxun', 'Gerbo', 'Xaraarey', 'Ayun', 'Hor-shagah', 'Segeg', 'Ceelweyne'],
+    'Qoraxay': ['Qabridahar', 'Shilaabo', 'Dhobaweyn', 'Shaygoosh', 'Marsin', 'Ceel-ogaden', 'Las-dharkeynle', 'Boodaley', 'Higlooley', 'Goglo/kudunbuur'],
+    'Shabelle': ['Dhanan', 'Godey', 'Qalafe', 'Beer caano', 'Feerfer', 'Iimey bari', 'Mustaxiil', 'Elele', 'Cadaadle', 'Abaqarow'],
+    'Sitti': ['Afdem', 'Ayshaca', 'Mieso', 'Dembel', 'Erar', 'Shiniile', 'Hadhagale', 'Biki', 'Geblalu', 'Dhuunya'],
+  };
+
+  // Qeexitaanka Heerarka Waxbarashada iyo Kala-duwanaanshaha Mushaharka
+  const EDUCATION_LEVELS = ['TTI', 'DIP', 'Deg', 'MA'];
+
+  const SALARY_RANGES = {
+    TTI: {
+      'new employee': 3934,
+      '2 year exp': 4609,
+      '5 year exp': 5358,
+      '8 year exp': 6193,
+      '11 year exp': 7071,
+      '14 year exp': 8017,
+      '17 year exp': 9056,
+    },
+    DIP: {
+      'new employee': 4609,
+      '2 year exp': 5358,
+      '5 year exp': 6193,
+      '8 year exp': 7071,
+      '11 year exp': 8017,
+      '14 year exp': 9056,
+      '17 year exp': 10150,
+    },
+    Deg: {
+      'new employee': 5358,
+      '2 year exp': 6193,
+      '5 year exp': 7071,
+      '8 year exp': 8017,
+      '11 year exp': 9056,
+      '14 year exp': 10150,
+      '17 year exp': 11305,
+    },
+    MA: {
+      'new employee': 6193,
+      '2 year exp': 7071,
+      '5 year exp': 8017,
+      '8 year exp': 9056,
+      '11 year exp': 10150,
+      '14 year exp': 11305,
+      '17 year exp': 12579,
+    },
+  };
+
+  // Qeexitaanka Xulashooyinka Jinsi iyo Heerka Dhalashada
+  const sexOptions = ['Male', 'Female'];
+  const nativeStatusOptions = ['Native', 'Non-native'];
+  const teacherTypes = ['Kg', 'Primary', 'Secondary', 'Preparatory', 'University/Colleges'];
+
+  // Qeexitaanka Mawduucyada
+  const subjects = [
+    { id: 1, name: 'Mathematics' },
+    { id: 2, name: 'Science' },
+    { id: 3, name: 'English' },
+    { id: 4, name: 'History' },
+    // Ku dar mawduucyo kale sida loo baahan yahay
+  ];
+
+  const subjectsList = subjects.map(subject => subject.name); // Liiska magacyada mawduucyada
+
+  // Dejinta State-ka Foomka
+  const [formData, setFormData] = useState({
+    name: '',
+    email: '',
+    mobile: '',
+    picture: null,
+    region: 'Faafan',
+    district: '',
+    educationLevel: '',
+    experience: '',
+    sex: '',
+    nativeStatus: '',
+    teacherType: '',
+    joiningDate: '',
+    birthDate: '',
+    subjectsLearned: '',
+    subjectsTech: '',
+    salary: '',
+    description: '',
+  });
+
+  const [districts, setDistricts] = useState([]);
+  const [loading, setLoading] = useState(false); // State-ka Loading
+  const [error, setError] = useState(''); // State-ka Qalad
+  const [errors, setErrors] = useState({}); // State-ka Validation Errors
+  const [success, setSuccess] = useState(''); // State-ka Ogeysiiska Guusha
+
+  // Function-ka Isbedelka Goobaha Foomka
+  const handleChange = (e) => {
+    const { name, value } = e.target;
+    setFormData({
+      ...formData,
+      [name]: value,
+    });
+    // console.log(`Updated ${name}:`, value); // Log-ga Isbedelada
+  };
+  const handleCheckboxChange = (e) => {
+    const { name, value, checked } = e.target;
+    const updatedValue = checked
+      ? [...formData[name], value]
+      : formData[name].filter((item) => item !== value);
   
-    const [teacher, setTeacher] = useState({
+    setFormData({ ...formData, [name]: updatedValue });
+  };
+  
+  // Function-ka Isbedelka Faylka
+  const handleFileChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData({
+        ...formData,
+        picture: file,
+      });
+      // console.log('Selected file:', file.name); // Log-ga Faylka La Doortay
+    }
+  };
+
+  // Function-ka Dib-u-dejinta Foomka
+  const resetForm = () => {
+    setFormData({
       name: '',
       email: '',
       mobile: '',
-      city: '',
-      address: '',
-      region: '',
+      picture: null,
+      region: 'Faafan',
       district: '',
-      subjectsLearned: '',
-      subjectsTech: '',
-      description: '',
+      educationLevel: '',
+      experience: '',
       sex: '',
       nativeStatus: '',
       teacherType: '',
-      picture: null,
       joiningDate: '',
-      educationLevel: '', // New field
-      salary: '', // New field
-      birthDate: ''
+      birthDate: '',
+      subjectsLearned: '',
+      subjectsTech: '',
+      salary: '',
+      description: '',
     });
-  
-
-  const [errors, setErrors] = useState({});
-  const [isLoading, setIsLoading] = useState(false);
-  const [isSubmitted, setIsSubmitted] = useState(false);
-  const [picturePreview, setPicturePreview] = useState('');
-  const [districts, setDistricts] = useState([]);
-  const { currentUser, error, loading } = useSelector((state) => state.user);
-  const [imageFile, setImageFile] = useState(null);
-  const [imageFileUrl, setImageFileUrl] = useState(null);
-  const [imageFileUploadProgress, setImageFileUploadProgress] = useState(null);
-  const [imageFileUploadError, setImageFileUploadError] = useState(null);
-  const [imageFileUploading, setImageFileUploading] = useState(false);
-  const [formData, setFormData] = useState({});
-  const filePickerRef = useRef();
-
-  const handleImageChange = (e) => {
-    const file = e.target.files[0];
-    if (file) {
-      setImageFile(file);
-      setImageFileUrl(URL.createObjectURL(file));
-    }
+    navigate('/teacher/form');
+    setDistricts([]); // Nadiifi Degmooyinka
+    setErrors({}); // Nadiifi Validation Errors
+    setSuccess(''); // Nadiifi Ogeysiiska Guusha
+    setError(''); // Nadiifi Qaladka
   };
-  useEffect(() => {
-    if (imageFile) {
-      uploadImage();
-    }
-  }, [imageFile]);
 
-  const uploadImage = async () => {
-    // service firebase.storage {
-      //   match /b/{bucket}/o {
-      //     match /{allPaths=**} {
-      //       allow read;
-      //       allow write: if
-      //       request.resource.size < 2 * 1024 * 1024 &&
-      //       request.resource.contentType.matches('image/.*')
-      //     }
-      //   }
-      // }
-      const storage = getStorage(app);
-      const fileName = new Date().getTime() + imageFile.name;
-      const storageRef = ref(storage, fileName);
-      const uploadTask = uploadBytesResumable(storageRef, imageFile);
-      uploadTask.on(
-        'state_changed',
-        (snapshot) => {
-          const progress =
-            (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-  
-          setImageFileUploadProgress(progress.toFixed(0));
-        },
-        (error) => {
-          setImageFileUploadError(
-            'Could not upload image (File must be less than 2MB)'
-          );
-          setImageFileUploadProgress(null);
-          setImageFile(null);
-          setImageFileUrl(null);
-          setImageFileUploading(false);
-        },
-        () => {
-          getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-            setImageFileUrl(downloadURL);
-            setFormData({ ...formData, profilePicture: downloadURL });
-            setImageFileUploading(false);
-          });
-        }
-      );
-  }
-  
-
-
-  useEffect(() => {
-    if (teacher.region) {
-      setDistricts(DISTRICTS[teacher.region] || []);
-    }
-  }, [teacher.region])
-  const navigate = useNavigate();
-
-  const handleChange = (e) => {
-    const { name, value, files } = e.target;
-    if (name === 'picture') {
-      setTeacher({ ...teacher, [name]: files[0] });
-      setPicturePreview(URL.createObjectURL(files[0]));
-    } else {
-      setTeacher({ ...teacher, [name]: value });
-    }
-    setErrors({ ...errors, [name]: '' });
-    setFormData({ ...formData, [e.target.id]: e.target.value });
-  };
-  
-
-    const validate = () => {
-      const newErrors = {};
-      if (!teacher.name) newErrors.name = 'Name is required';
-    if (!teacher.email) newErrors.email = 'Email is required';
-    else if (!/\S+@\S+\.\S+/.test(teacher.email)) newErrors.email = 'Email is invalid';
-    if (!teacher.mobile) newErrors.mobile = 'Mobile is required';
-    // if (!teacher.city) newErrors.city = 'City is required';
-    if (!teacher.address) newErrors.address = 'Address is required';
-    if (!teacher.teacherType) newErrors.teacherType = 'Teacher Type is required';
-    if (!teacher.region) newErrors.region = 'Region is required';
-    if (!teacher.district) newErrors.district = 'District is required';
-    if (!teacher.subjectsLearned) newErrors.subjectsLearned = 'Subjects Learned are required';
-    if (!teacher.subjectsTech) newErrors.subjectsTech = 'Subjects Tech are required';
-    if (!teacher.description) newErrors.description = 'Description is required';
-    if (!teacher.sex) newErrors.sex = 'Sex is required';  // Validation for new field
-    if (!teacher.nativeStatus) newErrors.nativeStatus = 'Native Status is required';  // Validation for new field
-    // if (!teacher.picture) newErrors.picture = 'Picture is required';  // Validation for new field
-    if (!teacher.educationLevel) newErrors.educationLevel = 'Education Level is required'; // Validation for new field
-    if (!teacher.salary) newErrors.salary = 'Salary Range is required'; // Validation for new field
-    if (!teacher.birthDate) newErrors.birthDate = 'Birth Date is required';
-
+  // Function-ka Validation
+  const validate = () => {
+    const newErrors = {};
+    if (!formData.name) newErrors.name = 'Name is required';
+    if (!formData.email) newErrors.email = 'Email is required';
+    else if (!/\S+@\S+\.\S+/.test(formData.email)) newErrors.email = 'Email is invalid';
+    if (!formData.mobile) newErrors.mobile = 'Mobile is required';
+    if (!formData.region) newErrors.region = 'Region is required';
+    if (!formData.district) newErrors.district = 'District is required';
+    if (!formData.subjectsLearned) newErrors.subjectsLearned = 'Subjects Learned are required';
+    if (!formData.subjectsTech) newErrors.subjectsTech = 'Subjects Tech are required';
+    if (!formData.sex) newErrors.sex = 'Sex is required';
+    if (!formData.nativeStatus) newErrors.nativeStatus = 'Native Status is required';
+    if (!formData.educationLevel) newErrors.educationLevel = 'Education Level is required';
+    if (!formData.birthDate) newErrors.birthDate = 'Birth Date is required';
+    if (!formData.description) newErrors.description = 'Birth Date is required';
+    // Haddii aad rabto inaad ku darto validate for salary, hubi inuu si sax ah u xisaabmay
+    
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
 
-  const handleSubmit = async (e) => {
-    e.preventDefault();
-    if (!validate()) return;
-  
-    setIsLoading(true);
-  
-    try {
-      let pictureURL = '';
-  
-      if (teacher.picture) {
-        const pictureRef = storage.ref(`pictures/${teacher.picture.name}`);
-        await pictureRef.put(teacher.picture);
-        pictureURL = await pictureRef.getDownloadURL();
-      }
-  
-      const teacherData = { ...teacher, picture: pictureURL };
-  
-      // Exclude picture field in the form submission if it's not needed
-      const { picture, ...dataToSend } = teacherData;
-  
-      const response = await axios.post('https://finalbakend.vercel.app/', dataToSend);
-      console.log(response.data);
-  
-      setIsSubmitted(true);
-      setTeacher({
-        name: '',
-        email: '',
-        mobile: '',
-        city: '',
-        address: '',
-        region: '',
-        district: '',
-        subjectsLearned: '',
-        subjectsTech: '',
-        description: '',
-        sex: '',
-        nativeStatus: '',
-        teacherType: '',
-        picture: null,
-        joiningDate: ''
-      });
-      navigate('/teachersList');
-    } catch (error) {
-      console.error('There was an error creating the teacher!', error);
-      alert(`Error: ${error.response.data.error}`);
-    } finally {
-      setIsLoading(false);
+  // Function-ka Xisaabinta Mushaharka
+  const getSalary = (educationLevel, experience) => {
+    if (SALARY_RANGES[educationLevel] && SALARY_RANGES[educationLevel][experience]) {
+      return SALARY_RANGES[educationLevel][experience];
+    } else {
+      return 'Salary data not available for this combination.';
     }
   };
-  
-  
 
-  const handleReset = () => {
-    setTeacher({
-      name: '',
-      email: '',
-      mobile: '',
-      city: '',
-      address: '',
-      region: '',
-      district: '',
-      subjectsLearned: '',
-      subjectsTech: '',
-      description: '',
-      sex: '',  // Reset new field
-      nativeStatus: '',  // Reset new field
-      teacherType: '',
-      picture: null
-    });
-    setErrors({});
-    setIsSubmitted(false); // Reset the submitted status
+  // useEffect si loo cusbooneysiiyo Mushaharka marka Education Level ama Experience isbedelaan
+  useEffect(() => {
+    if (formData.educationLevel && formData.experience) {
+      const calculatedSalary = getSalary(formData.educationLevel, formData.experience);
+      setFormData(prevData => ({
+        ...prevData,
+        salary: calculatedSalary,
+      }));
+      console.log(`Calculated Salary: ${calculatedSalary}`);
+    } else {
+      setFormData(prevData => ({
+        ...prevData,
+        salary: '',
+      }));
+    }
+  }, [formData.educationLevel, formData.experience]);
+
+  // useEffect si loo cusbooneysiiyo liiska Degmooyinka marka Region isbedelaan
+  useEffect(() => {
+    if (formData.region) {
+      setDistricts(DISTRICTS[formData.region] || []);
+      setFormData(prevData => ({
+        ...prevData,
+        district: '', // Dib u dejinta District marka Region isbedesho
+      }));
+    } else {
+      setDistricts([]);
+    }
+  }, [formData.region]);
+
+  // Function-ka Dirista Foomka
+  const handleSubmit = async (e) => {
+    e.preventDefault();
+    console.log('Form submission initiated with data:', formData);
+
+    // Validate the form before submitting
+    if (!validate()) {
+      console.log('Validation failed with errors:', errors);
+      return; // Ka bax haddii validation aysan guuleysan
+    }
+
+    setLoading(true); // Bilow Loading state
+    setError(''); // Nadiifi Qaladka
+    setSuccess(''); // Nadiifi Ogeysiiska Guusha
+
+    let pictureURL = '';
+
+    if (formData.picture) {
+      const storageRef = ref(storage, `images/${formData.picture.name}`);
+      console.log('Uploading picture to Firebase Storage...');
+
+      try {
+        await uploadBytes(storageRef, formData.picture);
+        console.log('Picture uploaded successfully:', formData.picture.name);
+        pictureURL = await getDownloadURL(storageRef);
+        console.log('Picture download URL:', pictureURL);
+      } catch (error) {
+        console.error('Error uploading picture:', error);
+        setError('Error uploading picture.'); // Dejiso fariin qalad
+        setLoading(false); // Jooji Loading state
+        return; // Ka bax si aan loo sii wadin
+      }
+    }
+
+    // Diyaarinta xogta loo dirayo API-ga
+    const dataToSend = {
+      ...formData,
+      picture: pictureURL, // Ku dar URL-ka sawirka xogta
+      createdBy: currentUser._id, // Ku dar field-ka createdBy
+    };
+
+    console.log('Data to send to API:', JSON.stringify(dataToSend, null, 2));
+
+    try {
+      const response = await fetch('https://finalbakend.vercel.app/', {
+        method: 'POST',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify(dataToSend),
+      });
+
+      if (response.ok) {
+        const responseData = await response.json();
+        console.log('Data successfully sent:', responseData);
+        setSuccess('Form submitted successfully!'); // Dejiso fariin guul
+        resetForm(); // Dib u deji foomka
+      } else {
+        const responseText = await response.text();
+        console.error('Response error message:', responseText);
+        setError('Error sending data to API.'); // Dejiso fariin qalad
+      }
+
+      console.log('API response status:', response.status);
+    } catch (error) {
+      console.error('Error sending data to API:', error);
+      setError('Error sending data to API.'); // Dejiso fariin qalad
+    } finally {
+      setLoading(false); // Jooji Loading state
+    }
   };
-  
 
   return (
-    <div className="max-w-4xl mx-auto p-8  rounded-lg   shadow-2xl border shadow-[#b19d60] border-[#b19d60]">
-      <h2 className="text-3xl font-bold  mb-6">Create Teacher</h2>
-      {isSubmitted ? (
-        <div className="text-green-600 text-center mb-6 text-lg font-medium">
-          Teacher has been created successfully!
+    <div className="max-w-4xl mx-auto p-8 rounded-lg shadow-2xl border shadow-[#b19d60] border-[#b19d60]">
+    <h1 className="text-3xl font-bold mb-6">Teacher Form</h1>
+  
+    {loading && <p>
+      <div className="min-h-screen flex items-center justify-center -mt-6">
+        <div className="flex-col gap-4 w-full flex items-center justify-center">
+          <div className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 border-4 border-transparent text-[#f27405] text-4xl md:text-5xl lg:text-6xl animate-spin flex items-center justify-center border-t-[#f27405] rounded-full">
+            <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 border-4 border-transparent text-2xl md:text-3xl lg:text-4xl animate-spin flex items-center justify-center border-t-gray-800 rounded-full" />
           </div>
-      ) : (
-        <form onSubmit={handleSubmit}>
-          <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
-            {/* Personal Details */}
-            <div>
-              <h3 className="text-xl font-medium mb-4">
-                {/* Teacher Personal Details */}
-              </h3>
-              <div className="mb-5">
-                <label htmlFor="name" className="block   text-sm font-medium mb-2">Teacher Name</label>
-                <input
-                  id="name"
-                  type="text"
-                  name="name"
-                  value={teacher.name}
-                  onChange={handleChange}
-                  required
-                  placeholder='Enter Full Name'
-                  className={`w-full px-4 py-3 border rounded-lg shadow-sm  dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
-                />
-                {errors.name && <p className="text-red-600 text-xs mt-1">{errors.name}</p>}
-              </div>
-              <div className="mb-5">
-                <label htmlFor="email" className="block  text-sm font-medium mb-2">Teacher Email ID</label>
-                <input
-                  id="email"
-                  type="email"
-                  name="email"
-                  value={teacher.email}
-                  onChange={handleChange}
-                  required
-                  placeholder='Enter Email'
-                  className={`w-full px-4 py-3 border rounded-lg shadow-sm  dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
-                />
-                {errors.email && <p className="text-red-600  text-xs mt-1">{errors.email}</p>}
-              </div>
-              <div className="mb-5">
-                <label htmlFor="mobile" className="block  text-sm font-medium mb-2">Teacher Mobile Number</label>
-                <input
-                  id="mobile"
-                  type=" "
-                  name="mobile"
-                  value={teacher.mobile}
-                  onChange={handleChange}
-                  required
-                  placeholder='Entry Mobile Number'
-                  className={`w-full px-4 py-3 border rounded-lg shadow-sm  dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
-                />
-                {errors.mobile && <p className="text-red-600 text-xs mt-1">{errors.mobile}</p>}
-              </div>
-              <div className="mb-5">
-                <label htmlFor="address" className="block  text-sm font-medium mb-2">Teacher Address</label>
-                <input
-                  id="address"
-                  name="address"
-                  value={teacher.address}
-                  onChange={handleChange}
-                  required
-                  placeholder='Entry Address'
-                  className={`w-full px-4 py-3 border rounded-lg shadow-sm  dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
-                />
-                {errors.address && <p className="text-red-600 text-xs mt-1">{errors.address}</p>}
-              </div>
-              <div className="mb-5">
-                <label className="block  text-sm font-medium mb-2">Sex</label>
-                {sexOptions.map(option => (
-                  <div key={option} className="flex items-center mb-2">
-                    <input
-                      id={option}
-                      type="checkbox"
-                      name="sex"
-                      value={option}
-                      checked={teacher.sex.includes(option)}
-                      onChange={handleChange}
-                      className="mr-2"
-                    />
-                    <label htmlFor={option} className="">{option}</label>
-                  </div>
-                ))}
-                {errors.sex && <p className="text-red-600 text-xs mt-1">{errors.sex}</p>}
-              </div>
-              <div className="mb-5">
-                <label className="block  text-sm font-medium mb-2">Native Status</label>
-                {nativeStatusOptions.map(option => (
-                  <div key={option} className="flex items-center mb-2">
-                    <input
-                      id={option}
-                      type="checkbox"
-                      name="nativeStatus"
-                      value={option}
-                      checked={teacher.nativeStatus.includes(option)}
-                      onChange={handleChange}
-                      className="mr-2"
-                    />
-                    <label htmlFor={option} className="">{option}</label>
-                  </div>
-                ))}
-                {errors.nativeStatus && <p className="text-red-600 text-xs mt-1">{errors.nativeStatus}</p>}
-              </div>
-                      {/* date birth */}
-            <div className="mb-5">
-  <label htmlFor="birthDate" className="block text-sm font-medium mb-2">Teacher Birth Date</label>
-  <input
-    type="date"
-    id="birthDate"
-    name="birthDate"
-    value={teacher.birthDate}
-    onChange={handleChange}
-    required
-    className={`w-full px-4 py-3 border rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.birthDate ? 'border-red-500' : 'border-gray-300'}`}
-  />
-  {errors.birthDate && <p className="text-red-600 text-xs mt-1">{errors.birthDate}</p>}
-</div>
-             {/*  */}
-              <div>
-              <input
-               type='file'
-               accept='image/*'
-               onChange={handleImageChange}
-               ref={filePickerRef}
-              //  hidden
-      />
-      <div className="relative w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full"
-      onClick={() => filePickerRef.current.click()}>
-        {imageFileUploadProgress && (
-          <CircularProgressbar
-          value={imageFileUploadProgress || 0}
-          text={`${imageFileUploadProgress}%`}
-          strokeWidth={5}
-          styles={{
-            root: {
-              width: '100%',
-              height: '100%',
-              position: 'absolute',
-              top: 0,
-              left: 0,
-            },
-            path: {
-              stroke: `rgba(62, 152, 199, ${
-                imageFileUploadProgress / 100
-              })`,
-            },
-          }}
+        </div>
+      </div>
+      </p>}
+  
+    {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message */}
+    {success && <p style={{ color: 'green' }}>{success}</p>} {/* Display success message */}
+    
+    <form onSubmit={handleSubmit}>
+      {/* Shaqsiga (Personal Information): */}
+      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
+        <div>
+          {/* Name Field */}
+          <div>
+            <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+              Name
+            </label>
+            <input
+              type="text"
+              id="name"
+              name="name"
+              placeholder="Enter your full name"
+              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              value={formData.name}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            />
+            {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
+          </div>
+  
+          {/* Email Field */}
+          <div className="mb-4">
+            <label htmlFor="email" className="block font-semibold mb-1">
+              Email:
+            </label>
+            <input
+              type="email"
+              id="email"
+              name="email"
+              placeholder="example@domain.com"
+              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              value={formData.email}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            />
+            {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
+          </div>
+  
+          {/* Mobile Field */}
+          <div className="mb-4">
+            <label htmlFor="mobile" className="block font-semibold mb-1">
+              Mobile:
+            </label>
+            <input
+              type="tel"
+              id="mobile"
+              name="mobile"
+              placeholder="e.g., +1234567890"
+              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              value={formData.mobile}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            />
+            {errors.mobile && <p style={{ color: 'red' }}>{errors.mobile}</p>}
+          </div>
+  
+          {/* Region Dropdown */}
+          <div className="mb-4">
+            <label htmlFor="region" className="block font-semibold mb-1">
+              Region:
+            </label>
+            <select
+              id="region"
+              name="region"
+              placeholder="Select your region"
+              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              value={formData.region}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            >
+              <option value="" disabled>
+                Select a region
+              </option>
+              {REGIONS.map((region) => (
+                <option key={region} value={region}>
+                  {region}
+                </option>
+              ))}
+            </select>
+            {errors.region && <p style={{ color: 'red' }}>{errors.region}</p>}
+          </div>
+  
+          {/* District Dropdown */}
+          <div className="mb-4">
+            <label htmlFor="district" className="block font-semibold mb-1">
+              District:
+            </label>
+            <select
+              id="district"
+              name="district"
+              placeholder="Select your district"
+              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              value={formData.district}
+              onChange={handleChange}
+              required
+              disabled={!formData.region || loading} // Disable if no region selected or loading
+            >
+              <option value="" disabled>
+                Select a district
+              </option>
+              {districts.map((district) => (
+                <option key={district} value={district}>
+                  {district}
+                </option>
+              ))}
+            </select>
+            {errors.district && <p style={{ color: 'red' }}>{errors.district}</p>}
+          </div>
+  
+       {/* Sex Checkboxes */}
+<div className="mb-4">
+  <label className="block font-semibold mb-1">Sex:</label>
+  <div className="flex items-center space-x-4">
+    {sexOptions.map((sex) => (
+      <label key={sex} className="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          name="sex"
+          value={sex}
+          checked={formData.sex.includes(sex)}
+          onChange={handleCheckboxChange}
+          className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+          disabled={loading}
         />
-        )}
-        {/* <img
-          src={imageFileUrl || currentUser.profilePicture}
-          alt='user'
-          className={`rounded-full w-full h-full object-cover border-8 border-[lightgray] ${
-            imageFileUploadProgress &&
-            imageFileUploadProgress < 100 &&
-            'opacity-60'
+        <span>{sex}</span>
+      </label>
+    ))}
+  </div>
+  {errors.sex && <p style={{ color: 'red' }}>{errors.sex}</p>}
+</div>
+
+{/* Native Status Checkboxes */}
+<div className="mb-4">
+  <label className="block font-semibold mb-1">Native Status:</label>
+  <div className="flex items-center space-x-4">
+    {nativeStatusOptions.map((status) => (
+      <label key={status} className="flex items-center space-x-2">
+        <input
+          type="checkbox"
+          name="nativeStatus"
+          value={status}
+          checked={formData.nativeStatus.includes(status)}
+          onChange={handleCheckboxChange}
+          className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+          disabled={loading}
+        />
+        <span>{status}</span>
+      </label>
+    ))}
+  </div>
+  {errors.nativeStatus && <p style={{ color: 'red' }}>{errors.nativeStatus}</p>}
+</div>
+
+          {/* Birth Date Field */}
+          <div className="mb-4">
+            <label htmlFor="birthDate" className="block font-semibold mb-1">
+              Birth Date:
+            </label>
+            <input
+              type="date"
+              id="birthDate"
+              name="birthDate"
+              placeholder="Select your birth date"
+              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              value={formData.birthDate}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            />
+            {errors.birthDate && <p style={{ color: 'red' }}>{errors.birthDate}</p>}
+          </div>
+  
+          {/* Profile Picture Upload */}
+          <div className="mb-4">
+            <label htmlFor="picture" className="block font-semibold mb-1">
+              Profile Picture:
+            </label>
+            <input
+              type="file"
+              id="picture"
+              name="picture"
+              accept="image/*"
+              placeholder="Upload your profile picture"
+              className="w-full"
+              onChange={handleFileChange}
+              required
+              disabled={loading}
+            />
+            {errors.picture && <p style={{ color: 'red' }}>{errors.picture}</p>}
+          </div>
+        </div>
+  
+        {/* Xirfadeedka (Professional Information): */}
+        <div>
+          {/* Education Level Dropdown */}
+          <div className="mb-4">
+            <label htmlFor="educationLevel" className="block font-semibold mb-1">
+              Education Level:
+            </label>
+            <select
+              id="educationLevel"
+              name="educationLevel"
+              placeholder="Select your education level"
+              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              value={formData.educationLevel}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            >
+              <option value="" disabled>
+                Select education level
+              </option>
+              {EDUCATION_LEVELS.map((level) => (
+                <option key={level} value={level}>
+                  {level}
+                </option>
+              ))}
+            </select>
+            {errors.educationLevel && <p style={{ color: 'red' }}>{errors.educationLevel}</p>}
+          </div>
+  
+          {/* Experience Dropdown */}
+          <div className="mb-4">
+            <label htmlFor="experience" className="block font-semibold mb-1">
+              Years of Experience:
+            </label>
+            <select
+              id="experience"
+              name="experience"
+              placeholder="Select your years of experience"
+              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              value={formData.experience}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            >
+              <option value="" disabled>
+                Select experience
+              </option>
+              {Object.keys(SALARY_RANGES[formData.educationLevel] || {}).map((exp) => (
+                <option key={exp} value={exp}>
+                  {exp}
+                </option>
+              ))}
+            </select>
+            {errors.experience && <p style={{ color: 'red' }}>{errors.experience}</p>}
+          </div>
+  
+          {/* Teacher Type Dropdown */}
+          <div className="mb-4">
+            <label htmlFor="teacherType" className="block font-semibold mb-1">
+              Teacher Type:
+            </label>
+            <select
+              id="teacherType"
+              name="teacherType"
+              placeholder="Select teacher type"
+              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              value={formData.teacherType}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            >
+              <option value="" disabled>
+                Select teacher type
+              </option>
+              {teacherTypes.map((type) => (
+                <option key={type} value={type}>
+                  {type}
+                </option>
+              ))}
+            </select>
+            {errors.teacherType && <p style={{ color: 'red' }}>{errors.teacherType}</p>}
+          </div>
+  
+          {/* Joining Date Field */}
+          <div className="mb-4">
+            <label htmlFor="joiningDate" className="block font-semibold mb-1">
+              Joining Date:
+            </label>
+            <input
+              type="date"
+              id="joiningDate"
+              name="joiningDate"
+              placeholder="Select your joining date"
+              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              value={formData.joiningDate}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            />
+          </div>
+  
+          {/* Subjects Learned Dropdown */}
+          <div className="mb-4">
+            <label htmlFor="subjectsLearned" className="block font-semibold mb-1">
+              Subjects Learned:
+            </label>
+            <select
+              id="subjectsLearned"
+              name="subjectsLearned"
+              placeholder="Select subjects you have learned"
+              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              value={formData.subjectsLearned}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            >
+              <option value="" disabled>
+                Select subjects learned
+              </option>
+              {subjectsList.map((subject) => (
+                <option key={subject} value={subject}>
+                  {subject}
+                </option>
+              ))}
+            </select>
+            {errors.subjectsLearned && <p style={{ color: 'red' }}>{errors.subjectsLearned}</p>}
+          </div>
+  
+          {/* Subjects Taught Dropdown */}
+          <div className="mb-4">
+            <label htmlFor="subjectsTech" className="block font-semibold mb-1">
+              Subjects Taught:
+            </label>
+            <select
+              id="subjectsTech"
+              name="subjectsTech"
+              placeholder="Select subjects you teach"
+              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              value={formData.subjectsTech}
+              onChange={handleChange}
+              required
+              disabled={loading}
+            >
+              <option value="" disabled>
+                Select subjects taught
+              </option>
+              {subjectsList.map((subject) => (
+                <option key={subject} value={subject}>
+                  {subject}
+                </option>
+              ))}
+            </select>
+            {errors.subjectsTech && <p style={{ color: 'red' }}>{errors.subjectsTech}</p>}
+          </div>
+  
+          {/* Salary Field (Read-Only) */}
+          <div className="mb-4">
+            <label className="block font-semibold mb-1">
+              Salary:
+            </label>
+            <input
+              type="text"
+              name="salary"
+              placeholder="Salary will be calculated automatically"
+              className={`w-full px-4 py-3 border rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out`}
+              value={formData.salary}
+              readOnly
+            />
+            {errors.salary && <p style={{ color: 'red' }}>{errors.salary}</p>}
+          </div>
+  
+          {/* Description Field */}
+          <div className="mb-5">
+            <label htmlFor="description" className="block text-sm font-medium mb-2">
+              Description
+            </label>
+            <textarea
+              id="description"
+              name="description"
+              placeholder="Enter a brief description"
+              value={formData.description}
+              onChange={handleChange}
+              required
+              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+            />
+          </div>
+        </div>
+      </div>
+  
+      {/* Submit and Reset Buttons */}
+      <div className="flex justify-between">
+        <button
+          type="submit"
+          className={`bg-blue-500 text-white py-2 px-4 rounded ${
+            loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
           }`}
-        /> */}
-      </div>
-            </div>
-            {imageFileUploadError && (
-              <Alert color='failure'>{imageFileUploadError}</Alert>
-            )}
-
-     
-            </div>
-
-
-
-            {/* Professional Details */}
-            <div>
-
-              <h3 className="text-xl font-medium mb-4">
-                {/* Teacher Professional Details */}
-                </h3>
-                   {/* Education Level Field */}
-      <div className="mb-5">
-        <label htmlFor="educationLevel" className="block text-sm font-medium mb-2">Teacher Education Levels</label>
-        <select
-          id="educationLevel"
-          name="educationLevel"
-          value={teacher.educationLevel}
-          onChange={handleChange}
-          required
-          className={`w-full px-4 py-3 border rounded-lg shadow-sm ${errors.educationLevel ? 'border-red-500' : 'border-gray-300'}`}
+          disabled={loading}
         >
-          <option value="">Select Education Level</option>
-          {EDUCATION_LEVELS.map(level => (
-            <option key={level} value={level}>{level}</option>
-          ))}
-        </select>
-        {errors.educationLevel && <p className="text-red-600 text-xs mt-1">{errors.educationLevel}</p>}
-      </div>
-
-      {/* Salary Range Field */}
-      <div className="mb-5">
-        <label htmlFor="salaryRange" className="block text-sm font-medium mb-2">Teacher Salary Ranges</label>
-        <select
-          id="salaryRange"
-          name="salary"
-          value={teacher.salary}
-          onChange={handleChange}
-          required
-          className={`w-full px-4 py-3 border rounded-lg ${errors.salary ? 'border-red-500' : 'border-gray-300'}`}
+          {loading ? 'Submitting...' : 'Submit'}
+        </button>
+        <button
+          type="button"
+          className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+          onClick={resetForm}
+          disabled={loading}
         >
-          <option value="">Select Salary Range</option>
-          {teacher.educationLevel && SALARY_RANGES[teacher.educationLevel]?.map((salary, index) => (
-            <option key={index} value={salary}>{salary}</option>
-          ))}
-        </select>
-        {errors.salary && <p className="text-red-600 text-xs mt-1">{errors.salary}</p>}
+          Reset
+        </button>
       </div>
-              <div className="mb-5">
-
-                <label htmlFor="region" className="block  text-sm font-medium mb-2">Select Teacher Type</label>
-                <select
-                  id="teacherType"
-                  name="teacherType"
-                  value={teacher.teacherType}
-                  onChange={handleChange}
-                  required
-                  className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.teacherType ? 'border-red-500' : 'border-gray-300'}`}
-                >
-                  <option value="">Select Teacher Type</option>
-                  {teacherType.map(teacherType => (
-                    <option key={teacherType} value={teacherType}>{teacherType}</option>
-                  ))}
-                </select>
-                {errors.teacherType && <p className="text-red-600 text-xs mt-1">{errors.teacherType}</p>}
-              </div>
-
-
-              <div className="mb-5">
-                <label htmlFor="region" className="block  text-sm font-medium mb-2">Teacher Region</label>
-                <select
-                  id="region"
-                  name="region"
-                  value={teacher.region}
-                  onChange={handleChange}
-                  required
-                  className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.region ? 'border-red-500' : 'border-gray-300'}`}
-                >
-                  <option value="">Select Region</option>
-                  {REGIONS.map(region => (
-                    <option key={region} value={region}>{region}</option>
-                  ))}
-                </select>
-                {errors.region && <p className="text-red-600 text-xs mt-1">{errors.region}</p>}
-              </div>
-              <div className="mb-5">
-                <label htmlFor="district" className="block  text-sm font-medium mb-2">Teacher District</label>
-                <select
-                  id="district"
-                  name="district"
-                  value={teacher.district}
-                  onChange={handleChange}
-                  required
-                  className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.district ? 'border-red-500' : 'border-gray-300'}`}
-
-                >
-                  <option value="">Select District</option>
-                  {districts.map(district => (
-                    <option key={district} value={district}>{district}</option>
-                  ))}
-                </select>
-                {errors.district && <p className="text-red-600 text-xs mt-1">{errors.district}</p>}
-              </div>
-              <div className="mb-5">
-                <label htmlFor="subjectsLearned" className="block  text-sm font-medium mb-2">Subjects Learned</label>
-                <select
-                  id="subjectsLearned"
-                  name="subjectsLearned"
-                  value={teacher.subjectsLearned}
-                  onChange={handleChange}
-                  required
-                  className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.subjectsLearned ? 'border-red-500' : 'border-gray-300'}`}
-                >
-                  <option value="">Select Subjects</option>
-                  {subjectsList.map(subject => (
-                    <option key={subject} value={subject}>{subject}</option>
-                  ))}
-                </select>
-                {errors.subjectsLearned && <p className="text-red-600 text-xs mt-1">{errors.subjectsLearned}</p>}
-              </div>
-              <div className="mb-5">
-                <label htmlFor="subjectsTech" className="block  text-sm font-medium mb-2">Subjects Tech</label>
-                <select
-                  id="subjectsTech"
-                  name="subjectsTech"
-                  value={teacher.subjectsTech}
-                  onChange={handleChange}
-                  required
-              className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.subjectsTech ? 'border-red-500' : 'border-gray-300'}`}
-
-                >
-                  <option value="">Select Subjects</option>
-                  {subjectsList.map(subject => (
-                    <option key={subject} value={subject}>{subject}</option>
-                  ))}
-                </select>
-                {errors.subjectsTech && <p className="text-red-600 text-xs mt-1">{errors.subjectsTech}</p>}
-              </div>
-              <div className="mb-5">
-                <label htmlFor="description" className="block  text-sm font-medium mb-2">Description</label>
-                <textarea
-                  id="description"
-                  name="description"
-                  value={teacher.description}
-                  onChange={handleChange}
-                  required
-                  placeholder='Entry Description'
-                  className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.description ? 'border-red-500' : 'border-gray-300'}`}
-            
-                />
-                {errors.description && <p className="text-red-600 text-xs mt-1">{errors.description}</p>}
-              </div>
-              <div className="mb-5">
-                <label htmlFor="joiningDate" className="block  text-sm font-medium mb-2">Joining Date</label>
-                <input
-                  id="joiningDate"
-                  type="date"
-                  name="joiningDate"
-                  value={teacher.joiningDate}
-                  onChange={handleChange}
-                  required
-                  className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out ${errors.joiningDate ? 'border-red-500' : 'border-gray-300'}`}
-                   />
-                {errors.joiningDate && <p className="text-red-600 text-xs mt-1">{errors.joiningDate}</p>}
-              </div>
-            </div>
-            
-          </div>
-          <div className="flex justify-end gap-4 mt-8">
-            <button
-              type="submit"
-              disabled={isLoading}
-              className="px-4 py-2 bg-blue-600 text-white rounded-md shadow-sm hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
-            >
-              {isLoading ? 'Submitting...' : 'Submit'}
-            </button>
-            <button
-              type="button"
-              onClick={handleReset}
-              className="px-4 py-2 bg-gray-600 text-white rounded-md shadow-sm hover:bg-gray-700 focus:outline-none focus:ring-2 focus:ring-gray-500"
-            >
-              Reset
-            </button>
-          </div>
-        </form>
-      )}
-    </div>
+    </form>
+  </div>
+  
+  
   );
 };
 
-export default TeacherForm; 
+export default TeacherForm;

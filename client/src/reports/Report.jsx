@@ -172,7 +172,7 @@
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.teacherType}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.educationLevel}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.salary}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.experience}</td> {/* Display experience */}
+                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.experience}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.age}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.isRetired ? 'Retired' : 'Active'}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.isRetired ? 'N/A' : teacher.yearsToRetirement}</td>
@@ -270,7 +270,7 @@
     
               return {
                 ...teacher,
-                experience: currentYear - new Date(teacher.joiningDate).getFullYear(),
+                // experience: currentYear - new Date(teacher.joiningDate).getFullYear(),
 
                 age,
                 isRetired,
