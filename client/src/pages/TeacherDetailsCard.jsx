@@ -138,7 +138,7 @@ const TeacherDetailsCV = () => {
         <div className="flex items-center gap-6">
           <div className="w-32 rounded-full overflow-hidden border-4 border-blue-300 shadow-lg">
             {teacher.picture ? (
-              <img src={teacher.picture} alt={teacher.name} className="rounded-full" />
+              <img src={teacher.picture} alt={teacher.name} className="rounded-full w-[7rem] h-[8rem]" />
             ) : (
               <div className="bg-gray-300 rounded-full"></div>
             )}

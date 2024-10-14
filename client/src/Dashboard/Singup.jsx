@@ -3,6 +3,8 @@ import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa'; // Importing icons for showing/hiding password
 import { MdEmail } from 'react-icons/md'; // Email icon
+import sigin from '../assets/sigin.svg'
+
 
 const roles = ['Admin', 'SuperAdmin', 'User'];
 const REGIONS = ['Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
@@ -12,7 +14,7 @@ const SignUp = () => {
     username: '',
     email: '',
     password: '123456',
-    role: '',
+    role: 'User',
     region: '',
   });
   const [errors, setErrors] = useState({});
@@ -61,111 +63,95 @@ const SignUp = () => {
   };
 
   return (
-    <div className="flex justify-center items-center min-h-screen p-6 -mt-[50px]">
-      <div className="w-full max-w-md shadow-lg rounded-lg p-8 shadow-[#b19d60] border-[#b19d60]">
-        <h2 className="text-xl font-bold mb-6 bg-[#b19d60] p-3 rounded-md uppercase">Create users</h2>
-        <form onSubmit={handleSubmit}>
-          <div className="mb-2">
-            <label htmlFor="username" className="block text-xs font-medium mb-1">Username</label>
-            <input
-              id="username"
-              type="text"
-              name="username"
-              value={formData.username}
-              onChange={handleChange}
-              placeholder="Enter your Username"
-              className={`w-full px-4 py-2.5 transition duration-200 ease-in-out transform hover:scale-105 rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.username ? 'border-red-500' : 'border-gray-300'}`}
-            />
-            {errors.username && <p className="text-red-500 text-xs mt-1">{errors.username}</p>}
-          </div>
-          <div className="mb-2 relative">
-            <label htmlFor="email" className="block text-xs font-medium mb-1">Email</label>
-            <div className="relative">
-              <input
-                id="email"
-                type="email"
-                name="email"
-                value={formData.email}
-                onChange={handleChange}
-                required
-                placeholder="Enter your email"
-                className={`w-full px-10 py-2.5 transition duration-200 ease-in-out transform hover:scale-105 rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.email ? 'border-red-500' : 'border-gray-300'}`}
-              />
-              <MdEmail className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-500" size={20} />
-            </div>
-            {errors.email && <p className="text-red-500 text-xs mt-1">{errors.email}</p>}
-          </div>
-          <div className="mb-2 relative">
-            <label htmlFor="password" className="block text-xs font-medium mb-1">Password</label>
-            <div className="relative">
-              <input
-                id="password"
-                type={isPasswordVisible ? 'text' : 'password'}
-                name="password"
-                placeholder="Enter your password"
-                value={formData.password}
-                onChange={handleChange}
-                required
-                className={`w-full px-4 py-2.5 transition duration-200 ease-in-out transform hover:scale-105 rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.password ? 'border-red-500' : 'border-gray-300'}`}
-              />
-              <button
-                type="button"
-                onClick={() => setIsPasswordVisible(!isPasswordVisible)}
-                className="absolute inset-y-0 right-3 px-2 py-2 text-sm text-gray-600"
-              >
-                {isPasswordVisible ? <FaEyeSlash size={20} /> : <FaEye size={20} />}
-              </button>
-            </div>
-            {errors.password && <p className="text-red-500 text-xs mt-1">{errors.password}</p>}
-          </div>
-          <div className="mb-2">
-            <label htmlFor="role" className="block text-xs font-medium mb-1">Role</label>
-            <select
-              id="role"
-              name="role"
-              value={formData.role}
-              onChange={handleChange}
-              required
-              className={`w-full px-4 py-2.5 transition duration-200 ease-in-out transform hover:scale-105 rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.role ? 'border-red-500' : 'border-gray-300'}`}
-            >
-              <option value="">Select a role</option>
-              {roles.map(role => (
-                <option key={role} value={role}>{role}</option>
-              ))}
-            </select>
-            {errors.role && <p className="text-red-500 text-xs mt-1">{errors.role}</p>}
-          </div>
-          <div className="mb-2">
-            <label htmlFor="region" className="block text-xs font-medium mb-1">Region</label>
-            <select
-              id="region"
-              name="region"
-              value={formData.region}
-              onChange={handleChange}
-              className={`w-full px-4 py-2.5 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.region ? 'border-red-500' : 'border-gray-300'}`}
-            >
-              <option value="">Select a region</option>
-              {REGIONS.map(region => (
-                <option key={region} value={region}>{region}</option>
-              ))}
-            </select>
-            {errors.region && <p className="text-red-500 text-xs mt-1">{errors.region}</p>}
-          </div>
-          <button
-            type="submit"
-            disabled={isLoading}
-            className={`w-full px-4 py-3 rounded-md shadow-sm text-white font-semibold ${isLoading ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
-          >
-            {isLoading ? 'Signing up...' : 'Sign Up'}
-          </button>
-        </form>
-        {message && (
-          <div className={`mt-4 p-4 rounded-md text-sm ${message.includes('Error') ? 'bg-red-200 text-red-600' : 'bg-green-200 text-green-600'}`}>
-            {message}
-          </div>
-        )}
-      </div>
+<div className="flex justify-center items-center min-h-screen   p-6">
+  <div className="flex w-full max-w-4xl    overflow-hidden">
+    {/* Image Section */}
+    <div className="hidden lg:flex lg:w-1/2 justify-center items-center  ">
+      <img src={sigin} alt="Illustration" className="w-full h-auto object-contain p-6" />
     </div>
+
+    {/* Form Section */}
+    <div className="w-full lg:w-1/2 p-8">
+      <h2 className="text-3xl font-bold text-center mb-8">Login</h2>
+      <form onSubmit={handleSubmit}>
+        <div className="mb-6">
+          <label htmlFor="email" className="block text-sm font-medium mb-1">Email</label>
+          <input
+            id="email"
+            type="email"
+            name="email"
+            value={formData.email}
+            onChange={handleChange}
+            placeholder="example@example.com"
+            required
+              className={`w-full px-4 py-2.5 transition duration-200 ease-in-out transform hover:scale-105 rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.username ? 'border-red-500' : 'border-gray-300'}`}
+          />
+        </div>
+
+        <div className="mb-6">
+          <label htmlFor="password" className="block text-sm font-medium mb-1">Password</label>
+          <input
+            id="password"
+            type={isPasswordVisible ? 'text' : 'password'}
+            name="password"
+            placeholder="Password"
+            value={formData.password}
+            onChange={handleChange}
+            required
+              className={`w-full px-4 py-2.5 transition duration-200 ease-in-out transform hover:scale-105 rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.username ? 'border-red-500' : 'border-gray-300'}`}
+          />
+        </div>
+
+        {/* Role Selection */}
+        <div className="mb-6">
+          <label htmlFor="role" className="block text-sm font-medium mb-1">Role</label>
+          <select
+            id="role"
+            name="role"
+            value={formData.role}
+            onChange={handleChange}
+            required
+              className={`w-full px-4 py-2.5 transition duration-200 ease-in-out transform hover:scale-105 rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.username ? 'border-red-500' : 'border-gray-300'}`}
+          >
+            <option value="">Select a role</option>
+            {roles.map(role => (
+              <option key={role} value={role}>{role}</option>
+            ))}
+          </select>
+        </div>
+
+        {/* Region Selection */}
+        <div className="mb-6">
+          <label htmlFor="region" className="block text-sm font-medium mb-1">Region</label>
+          <select
+            id="region"
+            name="region"
+            value={formData.region}
+            onChange={handleChange}
+            required
+              className={`w-full px-4 py-2.5 transition duration-200 ease-in-out transform hover:scale-105 rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 ${errors.username ? 'border-red-500' : 'border-gray-300'}`}
+          >
+            <option value="">Select a region</option>
+            {REGIONS.map(region => (
+              <option key={region} value={region}>{region}</option>
+            ))}
+          </select>
+        </div>
+
+        <button
+          type="submit"
+          disabled={isLoading}
+          className={`w-full py-3 text-white font-semibold rounded-lg ${isLoading ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+        >
+          {isLoading ? 'Signing in...' : 'Sign In'}
+        </button>
+      </form>
+    </div>
+  </div>
+</div>
+
+ 
+  
   );
 };
 

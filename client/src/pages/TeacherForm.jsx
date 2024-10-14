@@ -333,7 +333,7 @@ const TeacherForm = () => {
               id="name"
               name="name"
               placeholder="Enter your full name"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
               value={formData.name}
               onChange={handleChange}
               required
@@ -352,7 +352,7 @@ const TeacherForm = () => {
               id="email"
               name="email"
               placeholder="example@domain.com"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
               value={formData.email}
               onChange={handleChange}
               required
@@ -371,7 +371,7 @@ const TeacherForm = () => {
               id="mobile"
               name="mobile"
               placeholder="e.g., +1234567890"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
               value={formData.mobile}
               onChange={handleChange}
               required
@@ -389,7 +389,7 @@ const TeacherForm = () => {
               id="region"
               name="region"
               placeholder="Select your region"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
               value={formData.region}
               onChange={handleChange}
               required
@@ -416,7 +416,7 @@ const TeacherForm = () => {
               id="district"
               name="district"
               placeholder="Select your district"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
               value={formData.district}
               onChange={handleChange}
               required
@@ -488,7 +488,7 @@ const TeacherForm = () => {
               id="birthDate"
               name="birthDate"
               placeholder="Select your birth date"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
               value={formData.birthDate}
               onChange={handleChange}
               required
@@ -528,7 +528,7 @@ const TeacherForm = () => {
               id="educationLevel"
               name="educationLevel"
               placeholder="Select your education level"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
               value={formData.educationLevel}
               onChange={handleChange}
               required
@@ -555,7 +555,7 @@ const TeacherForm = () => {
               id="experience"
               name="experience"
               placeholder="Select your years of experience"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
               value={formData.experience}
               onChange={handleChange}
               required
@@ -582,7 +582,7 @@ const TeacherForm = () => {
               id="teacherType"
               name="teacherType"
               placeholder="Select teacher type"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
               value={formData.teacherType}
               onChange={handleChange}
               required
@@ -610,7 +610,7 @@ const TeacherForm = () => {
               id="joiningDate"
               name="joiningDate"
               placeholder="Select your joining date"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
               value={formData.joiningDate}
               onChange={handleChange}
               required
@@ -627,7 +627,7 @@ const TeacherForm = () => {
               id="subjectsLearned"
               name="subjectsLearned"
               placeholder="Select subjects you have learned"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
               value={formData.subjectsLearned}
               onChange={handleChange}
               required
@@ -654,7 +654,7 @@ const TeacherForm = () => {
               id="subjectsTech"
               name="subjectsTech"
               placeholder="Select subjects you teach"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
               value={formData.subjectsTech}
               onChange={handleChange}
               required
@@ -700,7 +700,7 @@ const TeacherForm = () => {
               value={formData.description}
               onChange={handleChange}
               required
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+              className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
             />
           </div>
         </div>

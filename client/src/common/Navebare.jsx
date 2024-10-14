@@ -46,7 +46,8 @@ const Header = () => {
 
   return (
     <header className={`flex flex-col md:flex-row items-center justify-between p-4 shadow-md ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'} transition-colors duration-300`}>
-      <div className="flex items-center justify-between w-full md:w-auto">
+      <div className="flex items-center justify-between  ">
+        
         <NavLink to="/" className="flex items-center space-x-2 text-2xl font-bold uppercase">
           <img src={logo} alt="Logo" className="h-16 w-16" />
         </NavLink>

@@ -135,7 +135,7 @@ const TeacherList = () => {
     );
 
   return (
-    <div className="max-w-6xl mx-auto p-6 rounded-lg shadow-2xl border shadow-[#b19d60] border-[#b19d60]">
+    <div className="max-w-[90rem] mx-auto p-6 rounded-lg shadow-2xl border shadow-[#b19d60] border-[#b19d60]">
       {/* Header Section */}
       <div className="flex flex-col sm:flex-row justify-between items-center mb-6 space-y-4 sm:space-y-0 bg-[#2d1346] dark:bg-[#b19d60] text-white p-6 rounded-md">
         <h2 className="text-3xl font-bold dark:text-white uppercase">Teachers List</h2>
@@ -230,7 +230,7 @@ const TeacherList = () => {
                       <img
                         src={teacher.picture}
                         alt={teacher.name}
-                        className="w-12 h-12 object-cover rounded-full border border-gray-200"
+                        className="w-20 h-20 object-cover rounded-full border border-gray-200"
                       />
                     ) : (
                       <div className="w-12 h-12 bg-gray-300 rounded-full border border-gray-200 dark:bg-gray-600"></div>

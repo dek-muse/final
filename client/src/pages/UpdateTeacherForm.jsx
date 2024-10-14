@@ -9,6 +9,12 @@ const TeacherForm = () => {
   const navigate = useNavigate();
   const { id } = useParams(); // Assuming you're using react-router for dynamic routing
   const [previousPictureURL, setPreviousPictureURL] = useState('');
+  const [previousDistrict, setPreviousDistrict] = useState('');
+  const [previousBirthDate, setPreviousBirthDate] = useState('');
+  const [previousJoiningDate, setPreviousJoiningDate] = useState('');
+  const [picturePreview, setPicturePreview] = useState(null); // State for picture preview
+
+  
 
 
   // Regions and Districts
@@ -123,6 +129,9 @@ const TeacherForm = () => {
       const data = await response.json();
       setFormData(data);
       setPreviousPictureURL(data.picture); // Kaydi URL-ka sawirka hore
+      setPreviousDistrict(data.district); // Set previous district
+      setPreviousBirthDate(data.birthDate); // Set previous birth date
+      setPreviousJoiningDate(data.joiningDate); // Set previous joining date
     } catch (error) {
       // console.error('Error fetching teacher data:', error);
       setError('Error fetching teacher data.');
@@ -149,8 +158,16 @@ const TeacherForm = () => {
         ...formData,
         picture: file,
       });
-      // console.log('Selected file:', file.name);
-    }
+     // Create a FileReader to read the file and set the preview
+     const reader = new FileReader();
+     reader.onloadend = () => {
+       setPicturePreview(reader.result); // Set the preview state
+     };
+     reader.readAsDataURL(file);
+    }else{
+      setPicturePreview(previousPictureURL); // Haddii aan sawir la dooran, dib ugu noqo sawirka hore
+
+     }
   };
 
   const resetForm = () => {
@@ -216,7 +233,7 @@ const TeacherForm = () => {
       setDistricts(DISTRICTS[formData.region] || []);
       setFormData(prevData => ({
         ...prevData,
-        district: '',
+        // district: formData.district/t,
       }));
     } else {
       setDistricts([]);
@@ -259,6 +276,9 @@ const TeacherForm = () => {
       ...formData,
       picture: pictureURL, // Ku dar URL-ka sawirka
       updatedBy: currentUser._id,
+      district: formData.district || previousDistrict, // Use previous district if not provided
+      birthDate: formData.birthDate || previousBirthDate, // Use previous birth date if not provided
+      joiningDate: formData.joiningDate || previousJoiningDate, // Use previous joining date if not provided
     };
 
     try {
@@ -300,12 +320,18 @@ const TeacherForm = () => {
 
 
   return (
-    <div className="max-w-5xl mx-auto p-8  rounded-lg   shadow-2xl border shadow-[#b19d60] border-[#b19d60]">
+    <div className="max-w-7xl mx-auto p-8  rounded-lg   shadow-2xl border shadow-[#b19d60] border-[#b19d60]">
 
 
       <h1 className="  text-3xl font-bold  mb-6">Teacher Form</h1>
 
-      {loading && <p>Loading...</p>}
+      {loading && <div className="min-h-screen flex items-center justify-center -mt-6">
+        <div className="flex-col gap-4 w-full flex items-center justify-center">
+          <div className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 border-4 border-transparent text-[#f27405] text-4xl md:text-5xl lg:text-6xl animate-spin flex items-center justify-center border-t-[#f27405] rounded-full">
+            <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 border-4 border-transparent text-2xl md:text-3xl lg:text-4xl animate-spin flex items-center justify-center border-t-gray-800 rounded-full" />
+          </div>
+        </div>
+      </div>}
 
 
       {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message */}
@@ -406,7 +432,7 @@ const TeacherForm = () => {
                 value={formData.district}
                 onChange={handleChange}
                 required
-                disabled={!formData.region || loading} // Disable if no region selected or loading
+                disabled={loading} // Disable if no region selected or loading
               >
                 <option value="">Select a district</option>
                 {districts.map((district) => (
@@ -499,8 +525,16 @@ const TeacherForm = () => {
                 disabled={loading}
               />
               {errors.picture && <p style={{ color: 'red' }}>{errors.picture}</p>}
+              
 
             </div>
+             {/* Display picture preview if available */}
+       {/* Display picture preview if available */}
+       {picturePreview && (
+        <div className="picture-preview">
+          <img src={picturePreview || previousPictureURL} alt="Preview" className=' rounded-full w-[120px]' />
+        </div>
+      )}
           </div>
 
           {/* Xirfadeedka (Professional Information): */}
