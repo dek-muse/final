@@ -118,6 +118,9 @@
         className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
       />
     </div>
+
+
+    
     <div className="col-span-1 md:col-span-2 lg:col-span-5 flex justify-end mt-4">
       <button
         onClick={handleResetFilters}
@@ -139,7 +142,7 @@
         <table className="min-w-full divide-y divide-gray-200">
           <thead className=" bg-[#b19d60]  opacity-75">
             <tr>
-              {['#', 'Name', 'Email', 'Mobile', 'Region', 'District', 'Birth Date', 'Subjects Learned', 'Subjects Teaching', 'Description', 'Sex', 'Native Status', 'Teacher Type', 'Level', 'salary','experience',  'Age', 'Retirement Status', 'Years to Retirement', 'Joining Date',  ].map((header) => (
+              {['#', 'Name', 'Email', 'Mobile', 'Region', 'District', 'Birth Date', 'Subjects Learned', 'Subjects Teaching', 'Sex', 'Native Status', 'Teacher Type', 'Level', 'salary','experience',  'Age', 'Retirement Status', 'Years to Retirement', 'Joining Date',  ].map((header) => (
                 <th key={header} className="px-6 py-3 text-left text-xs font-medium  text-white dark:border-gray-900 uppercase tracking-wider">
                   {header}
                 </th>
@@ -155,24 +158,24 @@
                     onClick={() => onViewDetails(teacher)}
                     className="text-indigo-600 hover:text-indigo-900"
                   >
-                <td className="px-6 py-4 whitespace-nowrap text-[14px]  font-semibold">{teacher.name}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-[14px]  font-semibold uppercase">{teacher.name}</td>
 
                   </button>
                 </td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.email}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.mobile}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.region}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.district}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm uppercase  ">{teacher.region}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm uppercase  ">{teacher.district}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{new Date(teacher.birthDate).getFullYear()}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.subjectsLearned}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.subjectsTech}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.description}</td>
+                {/* <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.description}</td> */}
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.sex}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.nativeStatus}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.teacherType}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm  uppercase ">{teacher.teacherType}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.educationLevel}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.salary}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.experience}</td> {/* Display experience */}
+                <td className="px-6 py-4 whitespace-nowrap text-sm  uppercase ">{teacher.experience}</td> {/* Display experience */}
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.age}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.isRetired ? 'Retired' : 'Active'}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.isRetired ? '0' : teacher.yearsToRetirement}</td>
@@ -298,19 +301,20 @@
           (filters.region ? teacher.region === filters.region : true) &&
           (filters.district ? teacher.district === filters.district : true) &&
           (filters.teacherType ? teacher.teacherType === filters.teacherType : true) &&
-          // (filters.educationLevel ? teacher.educationLevel === filters.educationLevel : true) // New line
           (filters.yearJoined ? joiningYear === parseInt(filters.yearJoined, 10) : true) &&
           (filters.name ? teacher.name.toLowerCase().includes(filters.name.toLowerCase()) : true) &&
           (filters.subject ? teacher.subjectsLearned.toLowerCase().includes(filters.subject.toLowerCase()) : true) &&
           (filters.sex ? teacher.sex === filters.sex : true) &&
           (filters.nativeStatus ? teacher.nativeStatus === filters.nativeStatus : true) &&
-          (filters.educationLevel ? teacher.educationLevel === filters.educationLevel : true) // New line
-
+          (filters.educationLevel ? teacher.educationLevel === filters.educationLevel : true) &&
+          (filters.experience ? teacher.experience >= parseInt(filters.experience, 10) : true) &&
+          (filters.isRetired ? (filters.isRetired === "true" ? teacher.isRetired : !teacher.isRetired) : true)
         );
       });
       setFilteredTeachers(filtered);
       setPage(1); // Reset page on filter change
     }, [filters, teachers]);
+    
 
     const paginatedTeachers = filteredTeachers.slice((page - 1) * pageSize, page * pageSize);
 

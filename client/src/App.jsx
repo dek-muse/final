@@ -6,6 +6,8 @@ import Sidebare from './common/Sidebare'; // Ensure component name is correct
 import Dashboard from './components/Dashboard';
 import TeacherForm from './pages/TeacherForm.jsx';
 import TeacherList from './pages/TeacherList';
+import TeachersInfo from './pages/TeachersInfo';
+import TeacherDetails from './pages/TeacherDetails';
 import UpdateTeacherForm from './pages/UpdateTeacherForm';
 import NaveBare from './common/Navebare'; // Corrected component name
 import DashProfile from './Dashboard/DashProfile';
@@ -50,7 +52,7 @@ import TeacherDetailsCard from './pages/TeacherDetailsCard';
 const App = () => {
   return (
     <Router>
-      <div className="flex flex-col h-screen">
+      <div className="flex flex-col h-screen app">
         <NaveBare /> {/* Ensure the NaveBare is fixed at the top */}
         <div className="flex flex-1 top-20">
           <Sidebare /> {/* Sidebare is fixed to the left */}
@@ -99,6 +101,8 @@ const App = () => {
               <Route path="/teacher/details/:id" element={<RoleBasedRoute requiredRole="SuperAdmin"><TeacherDetailsCard /></RoleBasedRoute>} />
               <Route path="/listUsers" element={<RoleBasedRoute requiredRole="SuperAdmin"><ListUser /></RoleBasedRoute>} />
               <Route path="/report" element={<RoleBasedRoute requiredRole="SuperAdmin"><Report /></RoleBasedRoute>} />
+              <Route path="/teachersInfo" element={<RoleBasedRoute requiredRole="SuperAdmin"><TeachersInfo /></RoleBasedRoute>} />
+              <Route path="/teachers/:id" element={<RoleBasedRoute requiredRole="SuperAdmin"><TeacherDetails   /></RoleBasedRoute>} />
             </Routes>
           </main>
         </div>

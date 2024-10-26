@@ -246,11 +246,9 @@ const DashProfile = () => {
       
     </form>
     <div className='text-red-500 flex justify-between mt-5'>
-      <span onClick={() => setShowModal(true)} className='cursor-pointer'>
-        Delete Account
-      </span>
+       
       <Link to='/'> <span onClick={handleSignout} className='cursor-pointer'>
-        Sign Out
+        
       </span></Link>
     </div>
     {updateUserSuccess && (
@@ -258,16 +256,8 @@ const DashProfile = () => {
         {updateUserSuccess}
       </Alert>
     )}
-    {updateUserError && (
-      <Alert color='failure' className='mt-5 bg-red-300 text-red-600'>
-        {updateUserError}
-      </Alert>
-    )}
-    {error && (
-      <Alert color='failure' className='mt-5'>
-        {error}
-      </Alert>
-    )}
+    
+     
     <Modal
       show={showModal}
       onClose={() => setShowModal(false)}

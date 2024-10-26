@@ -4,9 +4,12 @@ import {
   FaHome, FaChalkboardTeacher, FaUserPlus, FaUsers, FaBars, FaTimes,
   FaChevronDown, FaChevronUp, FaMapMarkerAlt, FaFlag, FaRegListAlt,
   FaTable,
+  
 } from 'react-icons/fa';
-import { MdAddModerator, MdReport } from 'react-icons/md';
-import { MdGroupAdd } from "react-icons/md";
+import { FaCircleInfo } from "react-icons/fa6";
+
+import { MdAddModerator, MdGroupAdd } from 'react-icons/md';
+import { BiSolidReport } from "react-icons/bi";
 import { Tooltip } from 'react-tooltip'; // For tooltips on collapsed sidebar
 
 const regions = ['Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
@@ -65,6 +68,7 @@ const Sidebar = () => {
                 {!isSidebarOpen && <Tooltip content="Dashboard" />}
               </NavLink>
 
+
               <NavLink
                 to="/teachersList"
                 className={({ isActive }) =>
@@ -75,13 +79,27 @@ const Sidebar = () => {
                 {isSidebarOpen ? <span>Teachers List</span> : <Tooltip content="Teachers List" />}
               </NavLink>
 
+              
+              <NavLink
+                to="/teachersInfo"
+                className={({ isActive }) =>
+                  `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-[#b19d60] ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
+                }
+              >
+                <FaCircleInfo size={20} />
+             
+                {isSidebarOpen ? <span>Teachers Info</span> : <Tooltip content="Teachers List" />}
+              </NavLink>
+
+              
               <NavLink
                 to="/report"
                 className={({ isActive }) =>
                   `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-[#b19d60] ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
                 }
               >
-                <MdReport size={20} />
+                <BiSolidReport size={20} />
+               
                 {isSidebarOpen ? <span>Report</span> : <Tooltip content="Report" />}
               </NavLink>
 
@@ -140,7 +158,7 @@ const Sidebar = () => {
                       `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-[#b19d60] ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
                     }
                   >
-                    <MdReport size={20} />
+                    <BiSolidReport size={20} />
                     {isSidebarOpen ? <span>Report ({region})</span> : <Tooltip content={`Report (${region})`} />}
                   </NavLink>
                 )

@@ -129,7 +129,13 @@ const TeacherDetailsCV = () => {
     });
   };
 
-  if (isLoading) return <p className="text-center">Loading...</p>;
+  if (isLoading) return <div className="min-h-screen flex items-center justify-center -mt-6">
+  <div className="flex-col gap-4 w-full flex items-center justify-center">
+    <div className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 border-4 border-transparent text-[#f27405] text-4xl md:text-5xl lg:text-6xl animate-spin flex items-center justify-center border-t-[#f27405] rounded-full">
+      <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 border-4 border-transparent text-2xl md:text-3xl lg:text-4xl animate-spin flex items-center justify-center border-t-gray-800 rounded-full" />
+    </div>
+  </div>
+</div>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
@@ -144,7 +150,7 @@ const TeacherDetailsCV = () => {
             )}
           </div>
           <div>
-            <h1 className="text-3xl font-bold text-blue-800">{teacher.name}</h1>
+            <h1 className="text-3xl font-bold text-blue-800 uppercase">{teacher.name}</h1>
             <p className="text-2xl">{teacher.teacherType}</p>
           </div>
         </div>
@@ -157,7 +163,7 @@ const TeacherDetailsCV = () => {
             <FaPhone size={20} />
             {teacher.mobile}
           </p>
-          <p className="flex items-center">
+          <p className="flex items-center uppercase ">
             <FaMapMarkerAlt size={20} />
               {teacher.region}, {teacher.district}
           </p>
@@ -171,7 +177,7 @@ const TeacherDetailsCV = () => {
       {/* Personal Information */}
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4 text-blue-700">Personal Information</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 uppercase ">
           <div>
             <p><strong>Birth Date:</strong> {teacher.birthDate ? new Date(teacher.birthDate).toLocaleDateString() : 'N/A'}</p>
             <p><strong>Sex:</strong> {teacher.sex ? teacher.sex.join(', ') : 'N/A'}</p>
@@ -186,7 +192,7 @@ const TeacherDetailsCV = () => {
 
       {/* Education */}
       <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-700">Education</h2>
+        <h2 className="text-2xl font-semibold mb-4 text-blue-700 uppercase ">Education</h2>
         <p><strong>Highest Education Level:</strong> {teacher.educationLevel || 'N/A'}</p>
         {/* <p><strong>Qualifications:</strong> {teacher.qualifications || 'N/A'}</p> */}
       </section>

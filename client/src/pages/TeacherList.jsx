@@ -29,7 +29,7 @@ const TeacherList = () => {
                 const imageUrl = await getDownloadURL(imageRef); // Get download URL
                 return { ...teacher, picture: imageUrl };
               } catch (error) {
-                console.error('Error fetching image URL:', error);
+                // console.error('Error fetching image URL:', error);
                 return teacher; // Return teacher without the image
               }
             }
@@ -57,7 +57,7 @@ const TeacherList = () => {
         await axios.delete(`https://finalbakend.vercel.app/${id}`);
         setTeachers(teachers.filter((teacher) => teacher._id !== id));
       } catch (err) {
-        console.error('Failed to delete teacher', err);
+        // console.error('Failed to delete teacher', err);
         setError('Failed to delete teacher');
       }
     }
@@ -119,12 +119,12 @@ const TeacherList = () => {
   if (isLoading)
     return (
       <div className="min-h-screen flex items-center justify-center -mt-6">
-        <div className="flex-col gap-4 w-full flex items-center justify-center">
-          <div className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 border-4 border-transparent text-[#f27405] text-4xl md:text-5xl lg:text-6xl animate-spin flex items-center justify-center border-t-[#f27405] rounded-full">
-            <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 border-4 border-transparent text-2xl md:text-3xl lg:text-4xl animate-spin flex items-center justify-center border-t-gray-800 rounded-full" />
-          </div>
+      <div className="flex-col gap-4 w-full flex items-center justify-center">
+        <div className="w-20 h-20 border-4 border-transparent text-[#f27405] text-4xl animate-spin flex items-center justify-center border-t-[#f27405] rounded-full">
+          <div className="w-16 h-16 border-4 border-transparent  text-2xl animate-spin flex items-center justify-center border-t-gray-800 rounded-full" />
         </div>
       </div>
+    </div>
     );
 
   if (error)
@@ -239,7 +239,7 @@ const TeacherList = () => {
                   <td className="py-4 px-4 hidden md:table-cell">
                     <button
                       onClick={() => navigate(`/teacher/details/${teacher._id}`)} // Navigate to teacher details
-                      className="text-blue-600 hover:text-blue-700 text-sm font-semibold"
+                      className="text-blue-600 uppercase hover:text-blue-700 text-sm font-semibold"
                     >
                       {teacher.name}
                     </button>

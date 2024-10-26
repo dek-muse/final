@@ -184,36 +184,41 @@ const UserManagement = () => {
 
         <div className="overflow-x-auto">
           <table className="min-w-full divide-y divide-gray-200">
-            <thead>
-              <tr>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">No</th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Username</th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Role</th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Region</th>
-                <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
-              </tr>
-            </thead>
-            <tbody className="divide-y divide-gray-200">
-              {filteredUsers.map((user, index) => (
-                <tr key={user._id}>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{index + 1}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">{user.username}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">{user.email}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">{user.role}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm">{user.region}</td>
-                  <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-2">
-                    <Button onClick={() => handleEdit(user)} className="bg-blue-500 hover:bg-blue-600 text-white">
-                      <FaEdit className="mr-2" />
-                    </Button>
-                    <Button onClick={() => confirmDelete(user._id)} className="bg-red-500 hover:bg-red-600 text-white">
-                      <FaTrashAlt className="mr-2" />
-                    </Button>
-                  </td>
-                </tr>
-              ))}
-            </tbody>
-          </table>
+  <thead>
+    <tr>
+      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">No</th>
+      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Profile Picture</th>
+      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Username</th>
+      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
+      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Role</th>
+      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Region</th>
+      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
+    </tr>
+  </thead>
+  <tbody className="divide-y divide-gray-200">
+    {filteredUsers.map((user, index) => (
+      <tr key={user._id}>
+        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{index + 1}</td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm">
+          <img src={user.profilePicture || '/default-profile.png'} alt="Profile" className="h-10 w-10 rounded-full" />
+        </td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm">{user.username}</td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm">{user.email}</td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm">{user.role}</td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm">{user.region}</td>
+        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-2">
+          <Button onClick={() => handleEdit(user)} className="bg-blue-500 hover:bg-blue-600 text-white">
+            <FaEdit className="mr-2" />
+          </Button>
+          <Button onClick={() => confirmDelete(user._id)} className="bg-red-500 hover:bg-red-600 text-white">
+            <FaTrashAlt className="mr-2" />
+          </Button>
+        </td>
+      </tr>
+    ))}
+  </tbody>
+</table>
+
         </div>
       </div>
 
@@ -277,9 +282,13 @@ const UserManagement = () => {
       )}
 
       {isLoading && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
-          <div className="text-white text-lg">Loading...</div>
+        <div className="min-h-screen flex items-center justify-center -mt-6">
+        <div className="flex-col gap-4 w-full flex items-center justify-center">
+          <div className="w-20 h-20 border-4 border-transparent text-[#f27405] text-4xl animate-spin flex items-center justify-center border-t-[#f27405] rounded-full">
+            <div className="w-16 h-16 border-4 border-transparent  text-2xl animate-spin flex items-center justify-center border-t-gray-800 rounded-full" />
+          </div>
         </div>
+      </div>
       )}
 
       {error && (

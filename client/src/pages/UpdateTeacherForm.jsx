@@ -4,7 +4,7 @@ import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
 
-const TeacherForm = () => {
+const UpdateTeacherForm = () => {
   const { currentUser } = useSelector((state) => state.user);
   const navigate = useNavigate();
   const { id } = useParams(); // Assuming you're using react-router for dynamic routing
@@ -13,9 +13,6 @@ const TeacherForm = () => {
   const [previousBirthDate, setPreviousBirthDate] = useState('');
   const [previousJoiningDate, setPreviousJoiningDate] = useState('');
   const [picturePreview, setPicturePreview] = useState(null); // State for picture preview
-
-  
-
 
   // Regions and Districts
   const REGIONS = ['Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
@@ -110,8 +107,9 @@ const TeacherForm = () => {
     subjectsTech: '',
     salary: '',
     description: '',
+    
   });
-
+  
   const [districts, setDistricts] = useState([]);
   const [loading, setLoading] = useState(false);
   const [error, setError] = useState('');
@@ -323,7 +321,7 @@ const TeacherForm = () => {
     <div className="max-w-7xl mx-auto p-8  rounded-lg   shadow-2xl border shadow-[#b19d60] border-[#b19d60]">
 
 
-      <h1 className="  text-3xl font-bold  mb-6">Teacher Form</h1>
+      <h1 className="  text-3xl font-bold  mb-6">Teacher Form Updating</h1>
 
       {loading && <div className="min-h-screen flex items-center justify-center -mt-6">
         <div className="flex-col gap-4 w-full flex items-center justify-center">
@@ -349,7 +347,7 @@ const TeacherForm = () => {
                 type="text"
                 id="name"
                 name="name"
-                className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
+                className={`w-full uppercase px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
                 value={formData.name}
                 onChange={handleChange}
                 required
@@ -394,8 +392,6 @@ const TeacherForm = () => {
               {errors.mobile && <p style={{ color: 'red' }}>{errors.mobile}</p>}
             </div>
 
-
-
             {/* Region Dropdown */}
             <div className="mb-4">
               <label htmlFor="region" className="block font-semibold mb-1">
@@ -407,7 +403,6 @@ const TeacherForm = () => {
                 className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
                 value={formData.region}
                 onChange={handleChange}
-                required
                 disabled={loading}
               >
                 <option value="">Select a region</option>
@@ -431,7 +426,6 @@ const TeacherForm = () => {
                 className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
                 value={formData.district}
                 onChange={handleChange}
-                required
                 disabled={loading} // Disable if no region selected or loading
               >
                 <option value="">Select a district</option>
@@ -455,7 +449,6 @@ const TeacherForm = () => {
                 className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
                 value={formData.sex}
                 onChange={handleChange}
-                required
                 disabled={loading}
               >
                 <option value="">Select sex</option>
@@ -491,6 +484,166 @@ const TeacherForm = () => {
               </select>
               {errors.nativeStatus && <p style={{ color: 'red' }}>{errors.nativeStatus}</p>}
             </div>
+            <form onSubmit={handleSubmit}>
+  {/* Health Status Checkboxes */}
+  <div className="mb-4">
+    <label className="block font-semibold mb-1">Health Status:</label>
+    <div className="flex items-center space-x-4">
+      <label className="flex items-center space-x-2">
+        <input
+          type="radio"
+          name="healthStatus"
+          value="yes"
+          checked={formData.healthStatus === 'yes'}
+          onChange={() => setFormData((prev) => ({
+            ...prev,
+            healthStatus: prev.healthStatus === 'yes' ? '' : 'yes',
+            healthNote: '', // Reset note if user selects "Yes"
+          }))}
+          className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+          disabled={loading}
+        />
+        <span>Yes</span>
+      </label>
+      <label className="flex items-center space-x-2">
+        <input
+          type="radio"
+          name="healthStatus"
+          value="no"
+          checked={formData.healthStatus === 'no'}
+          onChange={() => setFormData((prev) => ({
+            ...prev,
+            healthStatus: prev.healthStatus === 'no' ? '' : 'no',
+            healthNote: '', // Reset note if user selects "No"
+          }))}
+          className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+          disabled={loading}
+        />
+        <span>No</span>
+      </label>
+    </div>
+    {errors.healthStatus && <p style={{ color: 'red' }}>{errors.healthStatus}</p>}
+  </div>
+
+  {/* Health Note Field (Conditional) */}
+  {formData.healthStatus === 'no' && (
+    <div className="mb-4">
+      <label htmlFor="healthNote" className="block font-semibold mb-1">
+        Health Note:
+      </label>
+      <textarea
+        id="healthNote"
+        name="healthNote"
+        placeholder="Enter your health notes here (optional)"
+        value={formData.healthNote}
+        onChange={(e) => setFormData((prev) => ({ ...prev, healthNote: e.target.value }))}
+        className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+      />
+    </div>
+  )}
+
+  {/* Transfer Field */}
+<div className="mb-4">
+  <label className="block font-semibold mb-1">Transfer:</label>
+  <div className="flex items-center space-x-4">
+    <label className="flex items-center space-x-2">
+      <input
+        type="radio"
+        name="transfer"
+        value="yes"
+        checked={formData.transfer === 'yes'}
+        onChange={(e) => setFormData({ ...formData, transfer: e.target.value })}
+        className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+        disabled={loading}
+      />
+      <span>Yes</span>
+    </label>
+    <label className="flex items-center space-x-2">
+      <input
+        type="radio"
+        name="transfer"
+        value="no"
+        checked={formData.transfer === 'no'}
+        onChange={(e) => setFormData({ ...formData, transfer: e.target.value })}
+        className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+        disabled={loading}
+      />
+      <span>No</span>
+    </label>
+  </div>
+
+  {/* Conditional Transfer Reason Field */}
+  {formData.transfer === 'yes' && (
+    <div className="mt-2">
+      <label htmlFor="transferReason" className="block font-semibold mb-1">
+        Transfer Reason:
+      </label>
+      <input
+        type="text"
+        id="transferReason"
+        name="transferReason"
+        value={formData.transferReason}
+        onChange={(e) => setFormData({ ...formData, transferReason: e.target.value })}
+        className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+        disabled={loading}
+      />
+      {errors.transferReason && <p style={{ color: 'red' }}>{errors.transferReason}</p>}
+      
+      {/* New Region Dropdown */}
+      <div className="mt-4">
+        <label htmlFor="newRegion" className="block font-semibold mb-1">
+          New Region:
+        </label>
+        <select
+          id="newRegion"
+          name="newRegion"
+          value={formData.newRegion}
+          onChange={(e) => {
+            setFormData({ 
+              ...formData, 
+              newRegion: e.target.value, 
+              newDistrict: '' // Reset district when region changes
+            });
+          }}
+          className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out border rounded-lg shadow-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+        >
+          <option value="">Select a Region</option>
+          {REGIONS.map((region) => (
+            <option key={region} value={region}>
+              {region}
+            </option>
+          ))}
+        </select>
+      </div>
+
+      {/* New District Dropdown */}
+      {formData.newRegion && (
+        <div className="mt-4">
+          <label htmlFor="newDistrict" className="block font-semibold mb-1">
+            New District:
+          </label>
+          <select
+            id="newDistrict"
+            name="newDistrict"
+            value={formData.newDistrict}
+            onChange={(e) => setFormData({ ...formData, newDistrict: e.target.value })}
+            className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out border rounded-lg shadow-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+            disabled={!formData.newRegion} // Disable if no region is selected
+          >
+            <option value="">Select a District</option>
+            {DISTRICTS[formData.newRegion]?.map((district) => (
+              <option key={district} value={district}>
+                {district}
+              </option>
+            ))}
+          </select>
+        </div>
+      )}
+    </div>
+  )}
+</div>
+
+ </form>
 
             {/* Birth Date Field */}
             <div className="mb-4">
@@ -504,7 +657,6 @@ const TeacherForm = () => {
                 className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
                 value={formData.birthDate}
                 onChange={handleChange}
-
                 disabled={loading}
               />
               {errors.birthDate && <p style={{ color: 'red' }}>{errors.birthDate}</p>}
@@ -521,12 +673,9 @@ const TeacherForm = () => {
                 accept="image/*"
                 className="w-full"
                 onChange={handleFileChange}
-
                 disabled={loading}
               />
               {errors.picture && <p style={{ color: 'red' }}>{errors.picture}</p>}
-              
-
             </div>
              {/* Display picture preview if available */}
        {/* Display picture preview if available */}
@@ -580,12 +729,9 @@ const TeacherForm = () => {
               >
                 <option value="">Select experience</option>
                 {Object.keys(SALARY_RANGES[formData.educationLevel] || {}).map((exp) => (
-
                   <option key={exp} value={exp}>
                     {exp}
-
                   </option>
-
                 ))}
               </select>
               {errors.experience && <p style={{ color: 'red' }}>{errors.experience}</p>}
@@ -627,7 +773,6 @@ const TeacherForm = () => {
                 className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
                 value={formData.joiningDate}
                 onChange={handleChange}
-
                 disabled={loading}
               />
             </div>
@@ -668,7 +813,6 @@ const TeacherForm = () => {
                 value={formData.subjectsTech}
                 onChange={handleChange}
                 required
-
                 disabled={loading}
               >
                 <option value="">Select subjects taught</option>
@@ -701,15 +845,11 @@ const TeacherForm = () => {
                 name="description"
                 value={formData.description}
                 onChange={handleChange}
-
                 placeholder='Entry Description'
                 className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
 
               />
             </div>
-
-
-
 
           </div>
         </div>
@@ -738,4 +878,4 @@ const TeacherForm = () => {
   );
 };
 
-export default TeacherForm;
+export default UpdateTeacherForm;
