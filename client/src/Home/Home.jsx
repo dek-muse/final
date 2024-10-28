@@ -2,7 +2,7 @@ import React from 'react';
 import image1 from '../assets/student/image1.jpg';
 import image2 from '../assets/student/image2.jpg';
 import mrabdullahiabdi from '../assets/about/mrabdullahiabdi.png';
-import mrguledAhmedAli from '../assets/about/mrguledAhmedAli.png';
+// import mrguledAhmedAli from '../assets/about/mrguledAhmedAli.png';
 import MrMahamudHassan from '../assets/about/MrMahamudHassan.png';
 import MrOmerAden from '../assets/about/MrOmerAden.png';
 import MrMahamedMuseGure from '../assets/about/MrMahamedMuseGure.png';
@@ -12,7 +12,7 @@ import { FaCheckCircle, FaRegLightbulb, FaHandsHelping, FaPeopleArrows, FaGradua
 const Home = () => {
   const teamMembers = [
     { name: 'Mr. Abdullahi Abdi', role: 'Bureau Head', image: mrabdullahiabdi },
-    { name: 'Mr. Guled Ahmed Ali', role: 'Deputy Bureau Head', image: mrguledAhmedAli },
+    // { name: 'Mr. Guled Ahmed Ali', role: 'Deputy Bureau Head', image: mrguledAhmedAli },
     { name: 'Mr. Mahamud Hassan', role: 'Human Resource Management', image: MrMahamudHassan },
     { name: 'Mr. Omer Aden', role: 'Deputy Bureau Head', image: MrOmerAden },
     { name: 'Mr. Mahamed Muse Gure', role: 'Deputy Bureau Head', image: MrMahamedMuseGure },
