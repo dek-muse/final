@@ -449,39 +449,39 @@ const TeacherForm = () => {
               </select>
               {errors.district && <p style={{ color: 'red' }}>{errors.district}</p>}
             </div>
-            
-          {/* Sex Checkboxes */}
+
+            {/* Sex Checkboxes */}
             {/* Sex Field */}
-<div className="mb-4">
-  <label className="block font-semibold mb-1">Sex:</label>
-  <div className="flex items-center space-x-4">
-    <label className="flex items-center space-x-2">
-      <input
-        type="radio"
-        name="sex"
-        value="Male"
-        checked={formData.sex === 'Male'}
-        onChange={(e) => setFormData({ ...formData, sex: e.target.value })}
-        className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
-        disabled={loading}
-      />
-      <span>Male</span>
-    </label>
-    <label className="flex items-center space-x-2">
-      <input
-        type="radio"
-        name="sex"
-        value="Female"
-        checked={formData.sex === 'Female'}
-        onChange={(e) => setFormData({ ...formData, sex: e.target.value })}
-        className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
-        disabled={loading}
-      />
-      <span>Female</span>
-    </label>
-  </div>
-  {errors.sex && <p style={{ color: 'red' }}>{errors.sex}</p>}
-</div>
+            <div className="mb-4">
+              <label className="block font-semibold mb-1">Sex:</label>
+              <div className="flex items-center space-x-4">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="sex"
+                    value="Male"
+                    checked={formData.sex === 'Male'}
+                    onChange={(e) => setFormData({ ...formData, sex: e.target.value })}
+                    className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>Male</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="sex"
+                    value="Female"
+                    checked={formData.sex === 'Female'}
+                    onChange={(e) => setFormData({ ...formData, sex: e.target.value })}
+                    className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>Female</span>
+                </label>
+              </div>
+              {errors.sex && <p style={{ color: 'red' }}>{errors.sex}</p>}
+            </div>
 
 
 
@@ -489,8 +489,8 @@ const TeacherForm = () => {
             {/* Native Status Checkboxes */}
             <div className="mb-4">
               <label className="block font-semibold mb-1">Native Status:</label>
-             
-                <div className="flex items-center space-x-4">
+
+              <div className="flex items-center space-x-4">
                 {nativeStatusOptions.map((status) => (
                   <label key={status} className="flex items-center space-x-2">
                     <input
@@ -510,115 +510,115 @@ const TeacherForm = () => {
             </div>
 
 
-           
-{/* Health Status Checkboxes */}
-<div className="mb-4">
-  <label className="block font-semibold mb-1">Health Status:</label>
-  <div className="flex items-center space-x-4">
-    <label className="flex items-center space-x-2">
-      <input
-        type="radio"
-        name="healthStatus"
-        value="yes"
-        checked={formData.healthStatus === 'yes'}
-        onChange={() => setFormData((prev) => ({
-          ...prev,
-          healthStatus: 'yes',
-          healthNote: '', // Reset note if user selects "Yes"
-        }))}
-        className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
-        disabled={loading}
-      />
-      <span>Yes</span>
-    </label>
-    <label className="flex items-center space-x-2">
-      <input
-        type="radio"
-        name="healthStatus"
-        value="no"
-        checked={formData.healthStatus === 'no'}
-        onChange={() => setFormData((prev) => ({
-          ...prev,
-          healthStatus: 'no',
-          healthNote: '', // Reset note if user selects "No"
-        }))}
-        className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
-        disabled={loading}
-      />
-      <span>No</span>
-    </label>
-  </div>
-  {errors.healthStatus && <p style={{ color: 'red' }}>{errors.healthStatus}</p>}
-</div>
 
-{/* Health Note Field (Conditional) */}
-{formData.healthStatus === 'no' && (
-  <div className="mb-4">
-    <label htmlFor="healthNote" className="block font-semibold mb-1">
-      Health Note:
-    </label>
-    <textarea
-      id="healthNote"
-      name="healthNote"
-      placeholder="Enter your health notes here (optional)"
-      value={formData.healthNote}
-      onChange={(e) => setFormData((prev) => ({ ...prev, healthNote: e.target.value }))}
-      className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
-    />
-  </div>
-)}
+            {/* Health Status Checkboxes */}
+            <div className="mb-4">
+              <label className="block font-semibold mb-1">Health Status:</label>
+              <div className="flex items-center space-x-4">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="healthStatus"
+                    value="yes"
+                    checked={formData.healthStatus === 'yes'}
+                    onChange={() => setFormData((prev) => ({
+                      ...prev,
+                      healthStatus: 'yes',
+                      healthNote: '', // Reset note if user selects "Yes"
+                    }))}
+                    className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>Yes</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="healthStatus"
+                    value="no"
+                    checked={formData.healthStatus === 'no'}
+                    onChange={() => setFormData((prev) => ({
+                      ...prev,
+                      healthStatus: 'no',
+                      healthNote: '', // Reset note if user selects "No"
+                    }))}
+                    className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>No</span>
+                </label>
+              </div>
+              {errors.healthStatus && <p style={{ color: 'red' }}>{errors.healthStatus}</p>}
+            </div>
 
-{/* Transfer Field */}
+            {/* Health Note Field (Conditional) */}
+            {formData.healthStatus === 'no' && (
+              <div className="mb-4">
+                <label htmlFor="healthNote" className="block font-semibold mb-1">
+                  Health Note:
+                </label>
+                <textarea
+                  id="healthNote"
+                  name="healthNote"
+                  placeholder="Enter your health notes here (optional)"
+                  value={formData.healthNote}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, healthNote: e.target.value }))}
+                  className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                />
+              </div>
+            )}
 
-<div className="mb-4">
-  <label className="block font-semibold mb-1">Transfer:</label>
-  <div className="flex items-center space-x-4">
-    <label className="flex items-center space-x-2">
-      <input
-        type="radio"
-        name="transfer"
-        value="yes"
-        checked={formData.transfer === true}
-        onChange={() => setFormData({ ...formData, transfer: true })} // Set to true
-        className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
-        disabled={loading}
-      />
-      <span>Yes</span>
-    </label>
-    <label className="flex items-center space-x-2">
-      <input
-        type="radio"
-        name="transfer"
-        value="no"
-        checked={formData.transfer === false}
-        onChange={() => setFormData({ ...formData, transfer: false })} // Set to false
-        className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
-        disabled={loading}
-      />
-      <span>No</span>
-    </label>
-  </div>
+            {/* Transfer Field */}
 
-  {/* Conditional Transfer Reason Field */}
-  {formData.transfer === true && (
-    <div className="mt-2">
-      <label htmlFor="transferReason" className="block font-semibold mb-1">
-        Transfer Reason:
-      </label>
-      <input
-        type="text"
-        id="transferReason"
-        name="transferReason"
-        placeholder='Enter reason for transfer'
-        value={formData.transferReason}
-        onChange={(e) => setFormData({ ...formData, transferReason: e.target.value })}
-        className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
-        disabled={loading}
-      />
-      {errors.transferReason && <p style={{ color: 'red' }}>{errors.transferReason}</p>}
-    </div>
-  )}
-</div>
+            <div className="mb-4">
+              <label className="block font-semibold mb-1">Transfer:</label>
+              <div className="flex items-center space-x-4">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="transfer"
+                    value="yes"
+                    checked={formData.transfer === true}
+                    onChange={() => setFormData({ ...formData, transfer: true })} // Set to true
+                    className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>Yes</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="transfer"
+                    value="no"
+                    checked={formData.transfer === false}
+                    onChange={() => setFormData({ ...formData, transfer: false })} // Set to false
+                    className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>No</span>
+                </label>
+              </div>
+
+              {/* Conditional Transfer Reason Field */}
+              {formData.transfer === true && (
+                <div className="mt-2">
+                  <label htmlFor="transferReason" className="block font-semibold mb-1">
+                    Transfer Reason:
+                  </label>
+                  <input
+                    type="text"
+                    id="transferReason"
+                    name="transferReason"
+                    placeholder='Enter reason for transfer'
+                    value={formData.transferReason}
+                    onChange={(e) => setFormData({ ...formData, transferReason: e.target.value })}
+                    className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    disabled={loading}
+                  />
+                  {errors.transferReason && <p style={{ color: 'red' }}>{errors.transferReason}</p>}
+                </div>
+              )}
+            </div>
 
 
             {/* Birth Date Field */}

@@ -10,7 +10,7 @@ const TeacherForm = () => {
   const navigate = useNavigate();
 
   // Qeexitaanka Goobaha iyo Degmooyinka
-  const REGIONS = ['Qoraxay'];
+  const REGIONS = [ 'Qoraxay'];
 
   const DISTRICTS = {
     'Afdheer': ['Hargeelle', 'Dhaawac', 'Baarey', 'Limey Galbeed', 'Raaso', 'Dollow Bay', 'Ceelkari', 'Qooxle', 'Godgod'],
@@ -103,6 +103,11 @@ const TeacherForm = () => {
     subjectsTech: '',
     salary: '',
     description: '',
+    healthStatus: '', // Initialized as an empty string
+    healthNote: '',   // Initialized as an empty string
+    transfer: false,  // Change to Boolean
+    transferReason: '', // Initialized as an empty string
+    // ... (initialize other fields)
   });
 
   const [districts, setDistricts] = useState([]);
@@ -126,7 +131,13 @@ const TeacherForm = () => {
       ? [...formData[name], value]
       : formData[name].filter((item) => item !== value);
 
-    setFormData({ ...formData, [name]: updatedValue });
+    setFormData({
+      ...formData, [name]: updatedValue,
+      transfer: e.target.checked,
+      transferReason: '', // Reset fields when toggled
+      newRegion: '',
+      newDistrict: ''
+    });
   };
 
   // Function-ka Isbedelka Faylka
@@ -161,6 +172,11 @@ const TeacherForm = () => {
       subjectsTech: '',
       salary: '',
       description: '',
+      healthStatus: '', // Initialized as an empty string
+      healthNote: '',   // Initialized as an empty string
+      transfer: false,  // Change to Boolean
+      transferReason: '', // Initialized as an empty string
+      // ... (initialize other fields)
     });
     navigate('/teacher/form');
     setDistricts([]); // Nadiifi Degmooyinka
@@ -184,7 +200,7 @@ const TeacherForm = () => {
     if (!formData.nativeStatus) newErrors.nativeStatus = 'Native Status is required';
     if (!formData.educationLevel) newErrors.educationLevel = 'Education Level is required';
     if (!formData.birthDate) newErrors.birthDate = 'Birth Date is required';
-    if (!formData.description) newErrors.description = 'Birth Date is required';
+    // if (!formData.description) newErrors.description = 'Birth Date is required';
     // Haddii aad rabto inaad ku darto validate for salary, hubi inuu si sax ah u xisaabmay
 
     setErrors(newErrors);
@@ -234,7 +250,7 @@ const TeacherForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Form submission initiated with data:', formData);
-
+    handleCheckboxChange
     // Validate the form before submitting
     if (!validate()) {
       console.log('Validation failed with errors:', errors);
@@ -303,7 +319,7 @@ const TeacherForm = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-8 rounded-lg shadow-2xl border shadow-[#b19d60] border-[#b19d60]">
+    <div className="max-w-6xl mx-auto p-8 rounded-lg shadow-2xl border shadow-[#b19d60] border-[#b19d60]">
       <h1 className="text-3xl font-bold mb-6">Teacher Form</h1>
 
       {loading && <p>
@@ -333,7 +349,7 @@ const TeacherForm = () => {
                 id="name"
                 name="name"
                 placeholder="Enter your full name"
-                className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 value={formData.name}
                 onChange={handleChange}
                 required
@@ -352,7 +368,7 @@ const TeacherForm = () => {
                 id="email"
                 name="email"
                 placeholder="example@domain.com"
-                className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 value={formData.email}
                 onChange={handleChange}
                 required
@@ -371,7 +387,7 @@ const TeacherForm = () => {
                 id="mobile"
                 name="mobile"
                 placeholder="e.g., +1234567890"
-                className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 value={formData.mobile}
                 onChange={handleChange}
                 required
@@ -383,20 +399,20 @@ const TeacherForm = () => {
             {/* Region Dropdown */}
             <div className="mb-4">
               <label htmlFor="region" className="block font-semibold mb-1">
-                Region:
+                Zone:
               </label>
               <select
                 id="region"
                 name="region"
                 placeholder="Select your region"
-                className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 value={formData.region}
                 onChange={handleChange}
                 required
                 disabled={loading}
               >
                 <option value="" disabled>
-                  Select a region
+                  Select a Zone
                 </option>
                 {REGIONS.map((region) => (
                   <option key={region} value={region}>
@@ -416,7 +432,7 @@ const TeacherForm = () => {
                 id="district"
                 name="district"
                 placeholder="Select your district"
-                className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 value={formData.district}
                 onChange={handleChange}
                 required
@@ -435,35 +451,50 @@ const TeacherForm = () => {
             </div>
 
             {/* Sex Checkboxes */}
+            {/* Sex Field */}
             <div className="mb-4">
               <label className="block font-semibold mb-1">Sex:</label>
               <div className="flex items-center space-x-4">
-                {sexOptions.map((sex) => (
-                  <label key={sex} className="flex items-center space-x-2">
-                    <input
-                      type="checkbox"
-                      name="sex"
-                      value={sex}
-                      checked={formData.sex.includes(sex)}
-                      onChange={handleCheckboxChange}
-                      className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
-                      disabled={loading}
-                    />
-                    <span>{sex}</span>
-                  </label>
-                ))}
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="sex"
+                    value="Male"
+                    checked={formData.sex === 'Male'}
+                    onChange={(e) => setFormData({ ...formData, sex: e.target.value })}
+                    className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>Male</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="sex"
+                    value="Female"
+                    checked={formData.sex === 'Female'}
+                    onChange={(e) => setFormData({ ...formData, sex: e.target.value })}
+                    className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>Female</span>
+                </label>
               </div>
               {errors.sex && <p style={{ color: 'red' }}>{errors.sex}</p>}
             </div>
 
+
+
+
             {/* Native Status Checkboxes */}
             <div className="mb-4">
               <label className="block font-semibold mb-1">Native Status:</label>
+
               <div className="flex items-center space-x-4">
                 {nativeStatusOptions.map((status) => (
                   <label key={status} className="flex items-center space-x-2">
                     <input
-                      type="checkbox"
+                      type="radio"
                       name="nativeStatus"
                       value={status}
                       checked={formData.nativeStatus.includes(status)}
@@ -478,6 +509,118 @@ const TeacherForm = () => {
               {errors.nativeStatus && <p style={{ color: 'red' }}>{errors.nativeStatus}</p>}
             </div>
 
+
+
+            {/* Health Status Checkboxes */}
+            <div className="mb-4">
+              <label className="block font-semibold mb-1">Health Status:</label>
+              <div className="flex items-center space-x-4">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="healthStatus"
+                    value="yes"
+                    checked={formData.healthStatus === 'yes'}
+                    onChange={() => setFormData((prev) => ({
+                      ...prev,
+                      healthStatus: 'yes',
+                      healthNote: '', // Reset note if user selects "Yes"
+                    }))}
+                    className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>Yes</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="healthStatus"
+                    value="no"
+                    checked={formData.healthStatus === 'no'}
+                    onChange={() => setFormData((prev) => ({
+                      ...prev,
+                      healthStatus: 'no',
+                      healthNote: '', // Reset note if user selects "No"
+                    }))}
+                    className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>No</span>
+                </label>
+              </div>
+              {errors.healthStatus && <p style={{ color: 'red' }}>{errors.healthStatus}</p>}
+            </div>
+
+            {/* Health Note Field (Conditional) */}
+            {formData.healthStatus === 'no' && (
+              <div className="mb-4">
+                <label htmlFor="healthNote" className="block font-semibold mb-1">
+                  Health Note:
+                </label>
+                <textarea
+                  id="healthNote"
+                  name="healthNote"
+                  placeholder="Enter your health notes here (optional)"
+                  value={formData.healthNote}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, healthNote: e.target.value }))}
+                  className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                />
+              </div>
+            )}
+
+            {/* Transfer Field */}
+
+            <div className="mb-4">
+              <label className="block font-semibold mb-1">Transfer:</label>
+              <div className="flex items-center space-x-4">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="transfer"
+                    value="yes"
+                    checked={formData.transfer === true}
+                    onChange={() => setFormData({ ...formData, transfer: true })} // Set to true
+                    className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>Yes</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="transfer"
+                    value="no"
+                    checked={formData.transfer === false}
+                    onChange={() => setFormData({ ...formData, transfer: false })} // Set to false
+                    className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>No</span>
+                </label>
+              </div>
+
+              {/* Conditional Transfer Reason Field */}
+              {formData.transfer === true && (
+                <div className="mt-2">
+                  <label htmlFor="transferReason" className="block font-semibold mb-1">
+                    Transfer Reason:
+                  </label>
+                  <input
+                    type="text"
+                    id="transferReason"
+                    name="transferReason"
+                    placeholder='Enter reason for transfer'
+                    value={formData.transferReason}
+                    onChange={(e) => setFormData({ ...formData, transferReason: e.target.value })}
+                    className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    disabled={loading}
+                  />
+                  {errors.transferReason && <p style={{ color: 'red' }}>{errors.transferReason}</p>}
+                </div>
+              )}
+            </div>
+
+
             {/* Birth Date Field */}
             <div className="mb-4">
               <label htmlFor="birthDate" className="block font-semibold mb-1">
@@ -488,7 +631,7 @@ const TeacherForm = () => {
                 id="birthDate"
                 name="birthDate"
                 placeholder="Select your birth date"
-                className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 value={formData.birthDate}
                 onChange={handleChange}
                 required
@@ -528,7 +671,7 @@ const TeacherForm = () => {
                 id="educationLevel"
                 name="educationLevel"
                 placeholder="Select your education level"
-                className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 value={formData.educationLevel}
                 onChange={handleChange}
                 required
@@ -555,7 +698,7 @@ const TeacherForm = () => {
                 id="experience"
                 name="experience"
                 placeholder="Select your years of experience"
-                className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 value={formData.experience}
                 onChange={handleChange}
                 required
@@ -582,7 +725,7 @@ const TeacherForm = () => {
                 id="teacherType"
                 name="teacherType"
                 placeholder="Select teacher type"
-                className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 value={formData.teacherType}
                 onChange={handleChange}
                 required
@@ -610,7 +753,7 @@ const TeacherForm = () => {
                 id="joiningDate"
                 name="joiningDate"
                 placeholder="Select your joining date"
-                className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 value={formData.joiningDate}
                 onChange={handleChange}
                 required
@@ -627,7 +770,7 @@ const TeacherForm = () => {
                 id="subjectsLearned"
                 name="subjectsLearned"
                 placeholder="Select subjects you have learned"
-                className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 value={formData.subjectsLearned}
                 onChange={handleChange}
                 required
@@ -654,7 +797,7 @@ const TeacherForm = () => {
                 id="subjectsTech"
                 name="subjectsTech"
                 placeholder="Select subjects you teach"
-                className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
                 value={formData.subjectsTech}
                 onChange={handleChange}
                 required
@@ -699,8 +842,7 @@ const TeacherForm = () => {
                 placeholder="Enter a brief description"
                 value={formData.description}
                 onChange={handleChange}
-                required
-                className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
             </div>
           </div>

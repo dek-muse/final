@@ -10,7 +10,7 @@ const TeacherForm = () => {
   const navigate = useNavigate();
 
   // Qeexitaanka Goobaha iyo Degmooyinka
-  const REGIONS = ['Sitti'];
+  const REGIONS = [ 'Sitti'];
 
   const DISTRICTS = {
     'Afdheer': ['Hargeelle', 'Dhaawac', 'Baarey', 'Limey Galbeed', 'Raaso', 'Dollow Bay', 'Ceelkari', 'Qooxle', 'Godgod'],
@@ -103,6 +103,11 @@ const TeacherForm = () => {
     subjectsTech: '',
     salary: '',
     description: '',
+    healthStatus: '', // Initialized as an empty string
+    healthNote: '',   // Initialized as an empty string
+    transfer: false,  // Change to Boolean
+    transferReason: '', // Initialized as an empty string
+    // ... (initialize other fields)
   });
 
   const [districts, setDistricts] = useState([]);
@@ -125,10 +130,16 @@ const TeacherForm = () => {
     const updatedValue = checked
       ? [...formData[name], value]
       : formData[name].filter((item) => item !== value);
-  
-    setFormData({ ...formData, [name]: updatedValue });
+
+    setFormData({
+      ...formData, [name]: updatedValue,
+      transfer: e.target.checked,
+      transferReason: '', // Reset fields when toggled
+      newRegion: '',
+      newDistrict: ''
+    });
   };
-  
+
   // Function-ka Isbedelka Faylka
   const handleFileChange = (e) => {
     const file = e.target.files[0];
@@ -161,6 +172,11 @@ const TeacherForm = () => {
       subjectsTech: '',
       salary: '',
       description: '',
+      healthStatus: '', // Initialized as an empty string
+      healthNote: '',   // Initialized as an empty string
+      transfer: false,  // Change to Boolean
+      transferReason: '', // Initialized as an empty string
+      // ... (initialize other fields)
     });
     navigate('/teacher/form');
     setDistricts([]); // Nadiifi Degmooyinka
@@ -184,9 +200,9 @@ const TeacherForm = () => {
     if (!formData.nativeStatus) newErrors.nativeStatus = 'Native Status is required';
     if (!formData.educationLevel) newErrors.educationLevel = 'Education Level is required';
     if (!formData.birthDate) newErrors.birthDate = 'Birth Date is required';
-    if (!formData.description) newErrors.description = 'Birth Date is required';
+    // if (!formData.description) newErrors.description = 'Birth Date is required';
     // Haddii aad rabto inaad ku darto validate for salary, hubi inuu si sax ah u xisaabmay
-    
+
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
   };
@@ -234,7 +250,7 @@ const TeacherForm = () => {
   const handleSubmit = async (e) => {
     e.preventDefault();
     console.log('Form submission initiated with data:', formData);
-
+    handleCheckboxChange
     // Validate the form before submitting
     if (!validate()) {
       console.log('Validation failed with errors:', errors);
@@ -303,433 +319,558 @@ const TeacherForm = () => {
   };
 
   return (
-    <div className="max-w-4xl mx-auto p-8 rounded-lg shadow-2xl border shadow-[#b19d60] border-[#b19d60]">
-    <h1 className="text-3xl font-bold mb-6">Teacher Form</h1>
-  
-    {loading && <p>
-      <div className="min-h-screen flex items-center justify-center -mt-6">
-        <div className="flex-col gap-4 w-full flex items-center justify-center">
-          <div className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 border-4 border-transparent text-[#f27405] text-4xl md:text-5xl lg:text-6xl animate-spin flex items-center justify-center border-t-[#f27405] rounded-full">
-            <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 border-4 border-transparent text-2xl md:text-3xl lg:text-4xl animate-spin flex items-center justify-center border-t-gray-800 rounded-full" />
+    <div className="max-w-6xl mx-auto p-8 rounded-lg shadow-2xl border shadow-[#b19d60] border-[#b19d60]">
+      <h1 className="text-3xl font-bold mb-6">Teacher Form</h1>
+
+      {loading && <p>
+        <div className="min-h-screen flex items-center justify-center -mt-6">
+          <div className="flex-col gap-4 w-full flex items-center justify-center">
+            <div className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 border-4 border-transparent text-[#f27405] text-4xl md:text-5xl lg:text-6xl animate-spin flex items-center justify-center border-t-[#f27405] rounded-full">
+              <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 border-4 border-transparent text-2xl md:text-3xl lg:text-4xl animate-spin flex items-center justify-center border-t-gray-800 rounded-full" />
+            </div>
           </div>
         </div>
-      </div>
       </p>}
-  
-    {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message */}
-    {success && <p style={{ color: 'green' }}>{success}</p>} {/* Display success message */}
-    
-    <form onSubmit={handleSubmit}>
-      {/* Shaqsiga (Personal Information): */}
-      <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-        <div>
-          {/* Name Field */}
+
+      {error && <p style={{ color: 'red' }}>{error}</p>} {/* Display error message */}
+      {success && <p style={{ color: 'green' }}>{success}</p>} {/* Display success message */}
+
+      <form onSubmit={handleSubmit}>
+        {/* Shaqsiga (Personal Information): */}
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
           <div>
-            <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-              Name
-            </label>
-            <input
-              type="text"
-              id="name"
-              name="name"
-              placeholder="Enter your full name"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
-              value={formData.name}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            />
-            {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
-          </div>
-  
-          {/* Email Field */}
-          <div className="mb-4">
-            <label htmlFor="email" className="block font-semibold mb-1">
-              Email:
-            </label>
-            <input
-              type="email"
-              id="email"
-              name="email"
-              placeholder="example@domain.com"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
-              value={formData.email}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            />
-            {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
-          </div>
-  
-          {/* Mobile Field */}
-          <div className="mb-4">
-            <label htmlFor="mobile" className="block font-semibold mb-1">
-              Mobile:
-            </label>
-            <input
-              type="tel"
-              id="mobile"
-              name="mobile"
-              placeholder="e.g., +1234567890"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
-              value={formData.mobile}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            />
-            {errors.mobile && <p style={{ color: 'red' }}>{errors.mobile}</p>}
-          </div>
-  
-          {/* Region Dropdown */}
-          <div className="mb-4">
-            <label htmlFor="region" className="block font-semibold mb-1">
-              Region:
-            </label>
-            <select
-              id="region"
-              name="region"
-              placeholder="Select your region"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
-              value={formData.region}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            >
-              <option value="" disabled>
-                Select a region
-              </option>
-              {REGIONS.map((region) => (
-                <option key={region} value={region}>
-                  {region}
-                </option>
-              ))}
-            </select>
-            {errors.region && <p style={{ color: 'red' }}>{errors.region}</p>}
-          </div>
-  
-          {/* District Dropdown */}
-          <div className="mb-4">
-            <label htmlFor="district" className="block font-semibold mb-1">
-              District:
-            </label>
-            <select
-              id="district"
-              name="district"
-              placeholder="Select your district"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
-              value={formData.district}
-              onChange={handleChange}
-              required
-              disabled={!formData.region || loading} // Disable if no region selected or loading
-            >
-              <option value="" disabled>
-                Select a district
-              </option>
-              {districts.map((district) => (
-                <option key={district} value={district}>
-                  {district}
-                </option>
-              ))}
-            </select>
-            {errors.district && <p style={{ color: 'red' }}>{errors.district}</p>}
-          </div>
-  
-       {/* Sex Checkboxes */}
-<div className="mb-4">
-  <label className="block font-semibold mb-1">Sex:</label>
-  <div className="flex items-center space-x-4">
-    {sexOptions.map((sex) => (
-      <label key={sex} className="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          name="sex"
-          value={sex}
-          checked={formData.sex.includes(sex)}
-          onChange={handleCheckboxChange}
-          className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
-          disabled={loading}
-        />
-        <span>{sex}</span>
-      </label>
-    ))}
-  </div>
-  {errors.sex && <p style={{ color: 'red' }}>{errors.sex}</p>}
-</div>
+            {/* Name Field */}
+            <div>
+              <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
+                Name
+              </label>
+              <input
+                type="text"
+                id="name"
+                name="name"
+                placeholder="Enter your full name"
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                value={formData.name}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              />
+              {errors.name && <p className="mt-1 text-sm text-red-500">{errors.name}</p>}
+            </div>
 
-{/* Native Status Checkboxes */}
-<div className="mb-4">
-  <label className="block font-semibold mb-1">Native Status:</label>
-  <div className="flex items-center space-x-4">
-    {nativeStatusOptions.map((status) => (
-      <label key={status} className="flex items-center space-x-2">
-        <input
-          type="checkbox"
-          name="nativeStatus"
-          value={status}
-          checked={formData.nativeStatus.includes(status)}
-          onChange={handleCheckboxChange}
-          className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
-          disabled={loading}
-        />
-        <span>{status}</span>
-      </label>
-    ))}
-  </div>
-  {errors.nativeStatus && <p style={{ color: 'red' }}>{errors.nativeStatus}</p>}
-</div>
+            {/* Email Field */}
+            <div className="mb-4">
+              <label htmlFor="email" className="block font-semibold mb-1">
+                Email:
+              </label>
+              <input
+                type="email"
+                id="email"
+                name="email"
+                placeholder="example@domain.com"
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                value={formData.email}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              />
+              {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
+            </div>
 
-          {/* Birth Date Field */}
-          <div className="mb-4">
-            <label htmlFor="birthDate" className="block font-semibold mb-1">
-              Birth Date:
-            </label>
-            <input
-              type="date"
-              id="birthDate"
-              name="birthDate"
-              placeholder="Select your birth date"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
-              value={formData.birthDate}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            />
-            {errors.birthDate && <p style={{ color: 'red' }}>{errors.birthDate}</p>}
+            {/* Mobile Field */}
+            <div className="mb-4">
+              <label htmlFor="mobile" className="block font-semibold mb-1">
+                Mobile:
+              </label>
+              <input
+                type="tel"
+                id="mobile"
+                name="mobile"
+                placeholder="e.g., +1234567890"
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                value={formData.mobile}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              />
+              {errors.mobile && <p style={{ color: 'red' }}>{errors.mobile}</p>}
+            </div>
+
+            {/* Region Dropdown */}
+            <div className="mb-4">
+              <label htmlFor="region" className="block font-semibold mb-1">
+                Zone:
+              </label>
+              <select
+                id="region"
+                name="region"
+                placeholder="Select your region"
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                value={formData.region}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              >
+                <option value="" disabled>
+                  Select a Zone
+                </option>
+                {REGIONS.map((region) => (
+                  <option key={region} value={region}>
+                    {region}
+                  </option>
+                ))}
+              </select>
+              {errors.region && <p style={{ color: 'red' }}>{errors.region}</p>}
+            </div>
+
+            {/* District Dropdown */}
+            <div className="mb-4">
+              <label htmlFor="district" className="block font-semibold mb-1">
+                District:
+              </label>
+              <select
+                id="district"
+                name="district"
+                placeholder="Select your district"
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                value={formData.district}
+                onChange={handleChange}
+                required
+                disabled={!formData.region || loading} // Disable if no region selected or loading
+              >
+                <option value="" disabled>
+                  Select a district
+                </option>
+                {districts.map((district) => (
+                  <option key={district} value={district}>
+                    {district}
+                  </option>
+                ))}
+              </select>
+              {errors.district && <p style={{ color: 'red' }}>{errors.district}</p>}
+            </div>
+
+            {/* Sex Checkboxes */}
+            {/* Sex Field */}
+            <div className="mb-4">
+              <label className="block font-semibold mb-1">Sex:</label>
+              <div className="flex items-center space-x-4">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="sex"
+                    value="Male"
+                    checked={formData.sex === 'Male'}
+                    onChange={(e) => setFormData({ ...formData, sex: e.target.value })}
+                    className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>Male</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="sex"
+                    value="Female"
+                    checked={formData.sex === 'Female'}
+                    onChange={(e) => setFormData({ ...formData, sex: e.target.value })}
+                    className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>Female</span>
+                </label>
+              </div>
+              {errors.sex && <p style={{ color: 'red' }}>{errors.sex}</p>}
+            </div>
+
+
+
+
+            {/* Native Status Checkboxes */}
+            <div className="mb-4">
+              <label className="block font-semibold mb-1">Native Status:</label>
+
+              <div className="flex items-center space-x-4">
+                {nativeStatusOptions.map((status) => (
+                  <label key={status} className="flex items-center space-x-2">
+                    <input
+                      type="radio"
+                      name="nativeStatus"
+                      value={status}
+                      checked={formData.nativeStatus.includes(status)}
+                      onChange={handleCheckboxChange}
+                      className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                      disabled={loading}
+                    />
+                    <span>{status}</span>
+                  </label>
+                ))}
+              </div>
+              {errors.nativeStatus && <p style={{ color: 'red' }}>{errors.nativeStatus}</p>}
+            </div>
+
+
+
+            {/* Health Status Checkboxes */}
+            <div className="mb-4">
+              <label className="block font-semibold mb-1">Health Status:</label>
+              <div className="flex items-center space-x-4">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="healthStatus"
+                    value="yes"
+                    checked={formData.healthStatus === 'yes'}
+                    onChange={() => setFormData((prev) => ({
+                      ...prev,
+                      healthStatus: 'yes',
+                      healthNote: '', // Reset note if user selects "Yes"
+                    }))}
+                    className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>Yes</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="healthStatus"
+                    value="no"
+                    checked={formData.healthStatus === 'no'}
+                    onChange={() => setFormData((prev) => ({
+                      ...prev,
+                      healthStatus: 'no',
+                      healthNote: '', // Reset note if user selects "No"
+                    }))}
+                    className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>No</span>
+                </label>
+              </div>
+              {errors.healthStatus && <p style={{ color: 'red' }}>{errors.healthStatus}</p>}
+            </div>
+
+            {/* Health Note Field (Conditional) */}
+            {formData.healthStatus === 'no' && (
+              <div className="mb-4">
+                <label htmlFor="healthNote" className="block font-semibold mb-1">
+                  Health Note:
+                </label>
+                <textarea
+                  id="healthNote"
+                  name="healthNote"
+                  placeholder="Enter your health notes here (optional)"
+                  value={formData.healthNote}
+                  onChange={(e) => setFormData((prev) => ({ ...prev, healthNote: e.target.value }))}
+                  className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                />
+              </div>
+            )}
+
+            {/* Transfer Field */}
+
+            <div className="mb-4">
+              <label className="block font-semibold mb-1">Transfer:</label>
+              <div className="flex items-center space-x-4">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="transfer"
+                    value="yes"
+                    checked={formData.transfer === true}
+                    onChange={() => setFormData({ ...formData, transfer: true })} // Set to true
+                    className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>Yes</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="transfer"
+                    value="no"
+                    checked={formData.transfer === false}
+                    onChange={() => setFormData({ ...formData, transfer: false })} // Set to false
+                    className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>No</span>
+                </label>
+              </div>
+
+              {/* Conditional Transfer Reason Field */}
+              {formData.transfer === true && (
+                <div className="mt-2">
+                  <label htmlFor="transferReason" className="block font-semibold mb-1">
+                    Transfer Reason:
+                  </label>
+                  <input
+                    type="text"
+                    id="transferReason"
+                    name="transferReason"
+                    placeholder='Enter reason for transfer'
+                    value={formData.transferReason}
+                    onChange={(e) => setFormData({ ...formData, transferReason: e.target.value })}
+                    className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    disabled={loading}
+                  />
+                  {errors.transferReason && <p style={{ color: 'red' }}>{errors.transferReason}</p>}
+                </div>
+              )}
+            </div>
+
+
+            {/* Birth Date Field */}
+            <div className="mb-4">
+              <label htmlFor="birthDate" className="block font-semibold mb-1">
+                Birth Date:
+              </label>
+              <input
+                type="date"
+                id="birthDate"
+                name="birthDate"
+                placeholder="Select your birth date"
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                value={formData.birthDate}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              />
+              {errors.birthDate && <p style={{ color: 'red' }}>{errors.birthDate}</p>}
+            </div>
+
+            {/* Profile Picture Upload */}
+            <div className="mb-4">
+              <label htmlFor="picture" className="block font-semibold mb-1">
+                Profile Picture:
+              </label>
+              <input
+                type="file"
+                id="picture"
+                name="picture"
+                accept="image/*"
+                placeholder="Upload your profile picture"
+                className="w-full"
+                onChange={handleFileChange}
+                required
+                disabled={loading}
+              />
+              {errors.picture && <p style={{ color: 'red' }}>{errors.picture}</p>}
+            </div>
           </div>
-  
-          {/* Profile Picture Upload */}
-          <div className="mb-4">
-            <label htmlFor="picture" className="block font-semibold mb-1">
-              Profile Picture:
-            </label>
-            <input
-              type="file"
-              id="picture"
-              name="picture"
-              accept="image/*"
-              placeholder="Upload your profile picture"
-              className="w-full"
-              onChange={handleFileChange}
-              required
-              disabled={loading}
-            />
-            {errors.picture && <p style={{ color: 'red' }}>{errors.picture}</p>}
+
+          {/* Xirfadeedka (Professional Information): */}
+          <div>
+            {/* Education Level Dropdown */}
+            <div className="mb-4">
+              <label htmlFor="educationLevel" className="block font-semibold mb-1">
+                Education Level:
+              </label>
+              <select
+                id="educationLevel"
+                name="educationLevel"
+                placeholder="Select your education level"
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                value={formData.educationLevel}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              >
+                <option value="" disabled>
+                  Select education level
+                </option>
+                {EDUCATION_LEVELS.map((level) => (
+                  <option key={level} value={level}>
+                    {level}
+                  </option>
+                ))}
+              </select>
+              {errors.educationLevel && <p style={{ color: 'red' }}>{errors.educationLevel}</p>}
+            </div>
+
+            {/* Experience Dropdown */}
+            <div className="mb-4">
+              <label htmlFor="experience" className="block font-semibold mb-1">
+                Years of Experience:
+              </label>
+              <select
+                id="experience"
+                name="experience"
+                placeholder="Select your years of experience"
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                value={formData.experience}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              >
+                <option value="" disabled>
+                  Select experience
+                </option>
+                {Object.keys(SALARY_RANGES[formData.educationLevel] || {}).map((exp) => (
+                  <option key={exp} value={exp}>
+                    {exp}
+                  </option>
+                ))}
+              </select>
+              {errors.experience && <p style={{ color: 'red' }}>{errors.experience}</p>}
+            </div>
+
+            {/* Teacher Type Dropdown */}
+            <div className="mb-4">
+              <label htmlFor="teacherType" className="block font-semibold mb-1">
+                Teacher Type:
+              </label>
+              <select
+                id="teacherType"
+                name="teacherType"
+                placeholder="Select teacher type"
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                value={formData.teacherType}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              >
+                <option value="" disabled>
+                  Select teacher type
+                </option>
+                {teacherTypes.map((type) => (
+                  <option key={type} value={type}>
+                    {type}
+                  </option>
+                ))}
+              </select>
+              {errors.teacherType && <p style={{ color: 'red' }}>{errors.teacherType}</p>}
+            </div>
+
+            {/* Joining Date Field */}
+            <div className="mb-4">
+              <label htmlFor="joiningDate" className="block font-semibold mb-1">
+                Joining Date:
+              </label>
+              <input
+                type="date"
+                id="joiningDate"
+                name="joiningDate"
+                placeholder="Select your joining date"
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                value={formData.joiningDate}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              />
+            </div>
+
+            {/* Subjects Learned Dropdown */}
+            <div className="mb-4">
+              <label htmlFor="subjectsLearned" className="block font-semibold mb-1">
+                Subjects Learned:
+              </label>
+              <select
+                id="subjectsLearned"
+                name="subjectsLearned"
+                placeholder="Select subjects you have learned"
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                value={formData.subjectsLearned}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              >
+                <option value="" disabled>
+                  Select subjects learned
+                </option>
+                {subjectsList.map((subject) => (
+                  <option key={subject} value={subject}>
+                    {subject}
+                  </option>
+                ))}
+              </select>
+              {errors.subjectsLearned && <p style={{ color: 'red' }}>{errors.subjectsLearned}</p>}
+            </div>
+
+            {/* Subjects Taught Dropdown */}
+            <div className="mb-4">
+              <label htmlFor="subjectsTech" className="block font-semibold mb-1">
+                Subjects Taught:
+              </label>
+              <select
+                id="subjectsTech"
+                name="subjectsTech"
+                placeholder="Select subjects you teach"
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                value={formData.subjectsTech}
+                onChange={handleChange}
+                required
+                disabled={loading}
+              >
+                <option value="" disabled>
+                  Select subjects taught
+                </option>
+                {subjectsList.map((subject) => (
+                  <option key={subject} value={subject}>
+                    {subject}
+                  </option>
+                ))}
+              </select>
+              {errors.subjectsTech && <p style={{ color: 'red' }}>{errors.subjectsTech}</p>}
+            </div>
+
+            {/* Salary Field (Read-Only) */}
+            <div className="mb-4">
+              <label className="block font-semibold mb-1">
+                Salary:
+              </label>
+              <input
+                type="text"
+                name="salary"
+                placeholder="Salary will be calculated automatically"
+                className={`w-full px-4 py-3 border rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out`}
+                value={formData.salary}
+                readOnly
+              />
+              {errors.salary && <p style={{ color: 'red' }}>{errors.salary}</p>}
+            </div>
+
+            {/* Description Field */}
+            <div className="mb-5">
+              <label htmlFor="description" className="block text-sm font-medium mb-2">
+                Description
+              </label>
+              <textarea
+                id="description"
+                name="description"
+                placeholder="Enter a brief description"
+                value={formData.description}
+                onChange={handleChange}
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              />
+            </div>
           </div>
         </div>
-  
-        {/* Xirfadeedka (Professional Information): */}
-        <div>
-          {/* Education Level Dropdown */}
-          <div className="mb-4">
-            <label htmlFor="educationLevel" className="block font-semibold mb-1">
-              Education Level:
-            </label>
-            <select
-              id="educationLevel"
-              name="educationLevel"
-              placeholder="Select your education level"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
-              value={formData.educationLevel}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            >
-              <option value="" disabled>
-                Select education level
-              </option>
-              {EDUCATION_LEVELS.map((level) => (
-                <option key={level} value={level}>
-                  {level}
-                </option>
-              ))}
-            </select>
-            {errors.educationLevel && <p style={{ color: 'red' }}>{errors.educationLevel}</p>}
-          </div>
-  
-          {/* Experience Dropdown */}
-          <div className="mb-4">
-            <label htmlFor="experience" className="block font-semibold mb-1">
-              Years of Experience:
-            </label>
-            <select
-              id="experience"
-              name="experience"
-              placeholder="Select your years of experience"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
-              value={formData.experience}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            >
-              <option value="" disabled>
-                Select experience
-              </option>
-              {Object.keys(SALARY_RANGES[formData.educationLevel] || {}).map((exp) => (
-                <option key={exp} value={exp}>
-                  {exp}
-                </option>
-              ))}
-            </select>
-            {errors.experience && <p style={{ color: 'red' }}>{errors.experience}</p>}
-          </div>
-  
-          {/* Teacher Type Dropdown */}
-          <div className="mb-4">
-            <label htmlFor="teacherType" className="block font-semibold mb-1">
-              Teacher Type:
-            </label>
-            <select
-              id="teacherType"
-              name="teacherType"
-              placeholder="Select teacher type"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
-              value={formData.teacherType}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            >
-              <option value="" disabled>
-                Select teacher type
-              </option>
-              {teacherTypes.map((type) => (
-                <option key={type} value={type}>
-                  {type}
-                </option>
-              ))}
-            </select>
-            {errors.teacherType && <p style={{ color: 'red' }}>{errors.teacherType}</p>}
-          </div>
-  
-          {/* Joining Date Field */}
-          <div className="mb-4">
-            <label htmlFor="joiningDate" className="block font-semibold mb-1">
-              Joining Date:
-            </label>
-            <input
-              type="date"
-              id="joiningDate"
-              name="joiningDate"
-              placeholder="Select your joining date"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
-              value={formData.joiningDate}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            />
-          </div>
-  
-          {/* Subjects Learned Dropdown */}
-          <div className="mb-4">
-            <label htmlFor="subjectsLearned" className="block font-semibold mb-1">
-              Subjects Learned:
-            </label>
-            <select
-              id="subjectsLearned"
-              name="subjectsLearned"
-              placeholder="Select subjects you have learned"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
-              value={formData.subjectsLearned}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            >
-              <option value="" disabled>
-                Select subjects learned
-              </option>
-              {subjectsList.map((subject) => (
-                <option key={subject} value={subject}>
-                  {subject}
-                </option>
-              ))}
-            </select>
-            {errors.subjectsLearned && <p style={{ color: 'red' }}>{errors.subjectsLearned}</p>}
-          </div>
-  
-          {/* Subjects Taught Dropdown */}
-          <div className="mb-4">
-            <label htmlFor="subjectsTech" className="block font-semibold mb-1">
-              Subjects Taught:
-            </label>
-            <select
-              id="subjectsTech"
-              name="subjectsTech"
-              placeholder="Select subjects you teach"
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
-              value={formData.subjectsTech}
-              onChange={handleChange}
-              required
-              disabled={loading}
-            >
-              <option value="" disabled>
-                Select subjects taught
-              </option>
-              {subjectsList.map((subject) => (
-                <option key={subject} value={subject}>
-                  {subject}
-                </option>
-              ))}
-            </select>
-            {errors.subjectsTech && <p style={{ color: 'red' }}>{errors.subjectsTech}</p>}
-          </div>
-  
-          {/* Salary Field (Read-Only) */}
-          <div className="mb-4">
-            <label className="block font-semibold mb-1">
-              Salary:
-            </label>
-            <input
-              type="text"
-              name="salary"
-              placeholder="Salary will be calculated automatically"
-              className={`w-full px-4 py-3 border rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out`}
-              value={formData.salary}
-              readOnly
-            />
-            {errors.salary && <p style={{ color: 'red' }}>{errors.salary}</p>}
-          </div>
-  
-          {/* Description Field */}
-          <div className="mb-5">
-            <label htmlFor="description" className="block text-sm font-medium mb-2">
-              Description
-            </label>
-            <textarea
-              id="description"
-              name="description"
-              placeholder="Enter a brief description"
-              value={formData.description}
-              onChange={handleChange}
-              required
-              className={`mt-1 block w-full px-3 py-2 bg-gray-50 dark:bg-gray-700 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm placeholder-gray-400 focus:outline-none focus:ring-blue-500 focus:border-blue-500 dark:text-white transition duration-150 ease-in-out`}
-            />
-          </div>
+
+        {/* Submit and Reset Buttons */}
+        <div className="flex justify-between">
+          <button
+            type="submit"
+            className={`bg-blue-500 text-white py-2 px-4 rounded ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
+              }`}
+            disabled={loading}
+          >
+            {loading ? 'Submitting...' : 'Submit'}
+          </button>
+          <button
+            type="button"
+            className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
+            onClick={resetForm}
+            disabled={loading}
+          >
+            Reset
+          </button>
         </div>
-      </div>
-  
-      {/* Submit and Reset Buttons */}
-      <div className="flex justify-between">
-        <button
-          type="submit"
-          className={`bg-blue-500 text-white py-2 px-4 rounded ${
-            loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
-          }`}
-          disabled={loading}
-        >
-          {loading ? 'Submitting...' : 'Submit'}
-        </button>
-        <button
-          type="button"
-          className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
-          onClick={resetForm}
-          disabled={loading}
-        >
-          Reset
-        </button>
-      </div>
-    </form>
-  </div>
-  
-  
+      </form>
+    </div>
+
+
   );
 };
 
