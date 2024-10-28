@@ -165,10 +165,10 @@ const Dashboard = () => {
           );
 
         } else {
-          setError('Data format error');
+          setError('Waan ka xumanahay interner kaga ayaa xun ');
         }
       } catch (err) {
-        setError('Failed to fetch data');
+        setError('Waan ka xumanahay interner kaga ayaa xun ');
       } finally {
         setLoading(false);
       }

@@ -10,7 +10,7 @@ const TeacherForm = () => {
   const navigate = useNavigate();
 
   // Qeexitaanka Goobaha iyo Degmooyinka
-  const REGIONS = [ 'Sitti'];
+  const REGIONS = ['Sitti'];
 
   const DISTRICTS = {
     'Afdheer': ['Hargeelle', 'Dhaawac', 'Baarey', 'Limey Galbeed', 'Raaso', 'Dollow Bay', 'Ceelkari', 'Qooxle', 'Godgod'],

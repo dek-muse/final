@@ -3,22 +3,22 @@ import { FaMapMarkerAlt, FaPhone, FaEnvelope } from 'react-icons/fa';
 
 function Contact() {
   return (
-    <div className="p-6 bg-white rounded-lg shadow-lg max-w-4xl mx-auto mt-10">
-      <h1 className="text-4xl font-extrabold text-gray-800 mb-6 text-center border-b-2 border-blue-500 pb-4">
+    <div className="p-6  rounded-lg shadow-lg max-w-4xl mx-auto mt-10">
+      <h1 className="text-4xl font-extrabold  mb-6 text-center border-b-2 border-blue-500 pb-4">
         CONTACT US
       </h1>
       
-      <div className="bg-gray-100 p-6 rounded-lg shadow-md">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Our Contact Info</h2>
-        <p className="text-lg text-gray-700 mb-2 flex items-center">
+      <div className=" p-6 rounded-lg shadow-md">
+        <h2 className="text-2xl font-bold  mb-4">Our Contact Info</h2>
+        <p className="text-lg  mb-2 flex items-center">
           <FaMapMarkerAlt className="text-blue-500 mr-2" />
           <span className="font-semibold">Address:</span> Jigjiga, Somali Region, Ethiopia
         </p>
-        <p className="text-lg text-gray-700 mb-2 flex items-center">
+        <p className="text-lg  mb-2 flex items-center">
           <FaMapMarkerAlt className="text-blue-500 mr-2" />
           <span className="font-semibold">Plus Code:</span> 9Q4W+F4H, Jigjiga
         </p>
-        <p className="text-lg text-gray-700 mb-2 flex items-center">
+        <p className="text-lg  mb-2 flex items-center">
           <FaPhone className="text-blue-500 mr-2" />
           <span className="font-semibold">Phone 1:</span> 
           <a 
@@ -28,7 +28,7 @@ function Contact() {
             +251 915 224 186
           </a>
         </p>
-        <p className="text-lg text-gray-700 mb-2 flex items-center">
+        <p className="text-lg  mb-2 flex items-center">
           <FaPhone className="text-blue-500 mr-2" />
           <span className="font-semibold">Phone 2:</span> 
           <a 
@@ -38,7 +38,7 @@ function Contact() {
             +251 915 741 616
           </a>
         </p>
-        <p className="text-lg text-gray-700 mb-2 flex items-center">
+        <p className="text-lg  mb-2 flex items-center">
           <FaEnvelope className="text-blue-500 mr-2" />
           <span className="font-semibold">Email 1:</span> 
           <a 
@@ -48,7 +48,7 @@ function Contact() {
             info@srs-educb.gov.et
           </a>
         </p>
-        <p className="text-lg text-gray-700 flex items-center">
+        <p className="text-lg  flex items-center">
           <FaEnvelope className="text-blue-500 mr-2" />
           <span className="font-semibold">Email 2:</span> 
           <a 
@@ -61,8 +61,8 @@ function Contact() {
       </div>
       
       {/* Map Section */}
-      <div className="bg-gray-100 p-6 rounded-lg shadow-md mt-8">
-        <h2 className="text-2xl font-bold text-gray-800 mb-4">Find Us on the Map</h2>
+      <div className=" p-6 rounded-lg shadow-md mt-8">
+        <h2 className="text-2xl font-bold  mb-4">Find Us on the Map</h2>
         <div className="w-full h-64 bg-gray-300 rounded-md overflow-hidden">
           <iframe
             className="w-full h-full"

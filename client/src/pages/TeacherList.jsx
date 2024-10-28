@@ -38,7 +38,7 @@ const TeacherList = () => {
         );
         setTeachers(teachersWithImages);
       } catch (err) {
-        setError('Failed to fetch teachers');
+        setError('Waan ka xumanahay interner kaga ayaa xun  ');
       } finally {
         setIsLoading(false);
       }
@@ -50,7 +50,7 @@ const TeacherList = () => {
   const handleUpdate = (id) => {
     navigate(`/update-teacher/${id}`);
   };
-
+  
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this teacher?')) {
       try {
