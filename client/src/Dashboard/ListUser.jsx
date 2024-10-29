@@ -1,6 +1,8 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
 import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { useSelector } from 'react-redux';   
+
 
 const Button = ({ type = 'button', onClick, disabled, className, children }) => (
   <button
@@ -29,9 +31,30 @@ const UserManagement = () => {
   const [searchQuery, setSearchQuery] = useState('');
   const [selectedRole, setSelectedRole] = useState('');
   const [userCount, setUserCount] = useState(0);
-  const [selectedRegion, setSelectedRegion] = useState('');
+  const [selectedRegion, setSelectedRegion] = useState(''); 
+   const { currentUser } = useSelector((state) => state.user);
+   const [usernames, setUsernames] = useState({}); // New state for usernames
 
-  useEffect(() => {
+
+
+   const fetchUsernamesByIds = async (userIds) => {
+    try {
+      const response = await axios.get('https://tuserapi.vercel.app/', {
+        headers: { Authorization: `Bearer ${localStorage.getItem('token')}` },
+      });
+      const users = response.data.reduce((acc, user) => {
+        acc[user._id] = user.username; // Map user ID to username
+        return acc;
+      }, {});
+      return users;
+    } catch (error) {
+      console.error('Error fetching usernames:', error);
+      return {};
+    }
+  };
+  
+
+   useEffect(() => {
     const fetchUsers = async () => {
       setIsLoading(true);
       try {
@@ -41,8 +64,12 @@ const UserManagement = () => {
         setUsers(response.data);
         setFilteredUsers(response.data);
         setUserCount(response.data.length);
+        
+        // Fetch usernames for updatedBy field
+        const userIds = response.data.map(user => user.updatedBy).filter(Boolean); // Get unique IDs
+        const usernames = await fetchUsernamesByIds(userIds);
+        setUsernames(usernames);
       } catch (error) {
-        // console.error('Error fetching users:', error);
         setError('Failed to fetch users. Please try again later.');
       } finally {
         setIsLoading(false);
@@ -121,7 +148,13 @@ const UserManagement = () => {
     try {
       const response = await axios.put(
         `https://tuserapi.vercel.app/${selectedUser._id}`,
-        { role: selectedUser.role, region: selectedUser.region, email: selectedUser.email, username: selectedUser.username },
+        { 
+          role: selectedUser.role, 
+          region: selectedUser.region, 
+          email: selectedUser.email, 
+          username: selectedUser.username,
+          updatedBy: currentUser._id // Add the updatedBy field
+        },
         {
           headers: {
             'Content-Type': 'application/json',
@@ -192,6 +225,7 @@ const UserManagement = () => {
       <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
       <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Role</th>
       <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Region</th>
+      {/* <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Update By</th> */}
       <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
     </tr>
   </thead>
@@ -206,6 +240,7 @@ const UserManagement = () => {
         <td className="px-6 py-4 whitespace-nowrap text-sm">{user.email}</td>
         <td className="px-6 py-4 whitespace-nowrap text-sm">{user.role}</td>
         <td className="px-6 py-4 whitespace-nowrap text-sm">{user.region}</td>
+        {/* <td className="px-6 py-4 whitespace-nowrap text-sm">{usernames[user.updatedBy] || 'N/A'}</td> Show updatedBy username */}
         <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-2">
           <Button onClick={() => handleEdit(user)} className="bg-blue-500 hover:bg-blue-600 text-white">
             <FaEdit className="mr-2" />

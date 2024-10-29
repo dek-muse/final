@@ -122,8 +122,8 @@ function TeacherDetails() {
                   <p><strong>Region:</strong> {update.newregion}</p>
                   <p><strong>District:</strong> {update.newdistrict}</p>
                   <p><strong>Updated At:</strong> {new Date(update.updatedAt).toLocaleString()}</p>
-                  <p><strong>Updated By:</strong> {teacher.updatedBy?.username || 'Unknown'}</p>
-                  <p><strong>Transfer Reason:</strong> {update.transferReason || 'N/A'}</p>
+                  {/* <p><strong>Updated By:</strong> {teacher.updatedBy?.username || 'Unknown'}</p> */}
+                  {/* <p><strong>Transfer Reason:</strong> {update.transferReason || 'N/A'}</p> */}
                 </div>
               ))
             ) : (
@@ -141,7 +141,7 @@ function TeacherDetails() {
                 <p><strong>Previous Region:</strong> {transfer.previousRegion}</p>
                 <p><strong>Previous District:</strong> {transfer.previousDistrict}</p>
                 <p><strong>Transfer Date:</strong> {new Date(transfer.transferDate).toLocaleString()}</p>
-                <p><strong>Transferred By:</strong> {transfer.transferredBy || 'Unknown'}</p>
+                {/* <p><strong>Transferred By:</strong> {transfer.transferredBy.username || 'Unknown'}</p> */}
                 <p><strong>Transfer Reason:</strong> {transfer.transferReason || 'N/A'}</p>
               </div>
             ))}
@@ -153,4 +153,3 @@ function TeacherDetails() {
 }
 
 export default TeacherDetails;
-  
