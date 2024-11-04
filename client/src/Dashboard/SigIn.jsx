@@ -3,7 +3,7 @@ import { useSelector, useDispatch } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 import { FaEye, FaEyeSlash } from 'react-icons/fa';
 import { signInStart, signInSuccess, signInFailure } from '../redux/user/userSlice'; // Adjust the import path as needed
-import sigin from '../assets/sigin.svg'
+import sigin from '../assets/sigin.svg';
 
 const Signin = () => {
   const [formData, setFormData] = useState({ email: '', password: '', region: '' });
@@ -37,20 +37,22 @@ const Signin = () => {
         headers: { 'Content-Type': 'application/json' },
         body: JSON.stringify(formData),
       });
-      const data = await res.json();
 
-      if (res.ok) {
-        localStorage.setItem('token', data.token);
-        localStorage.setItem('role', data.role);
-        localStorage.setItem('region', data.region || ''); // Store region if available
-        localStorage.setItem('profilePicture', data.profilePicture);
-        localStorage.setItem('username', data.username);
-
-        dispatch(signInSuccess(data));
-        navigate('/', '/');
-      } else {
-        dispatch(signInFailure(data.message || 'Sign in failed'));
+      if (!res.ok) {
+        const errorData = await res.json();
+        dispatch(signInFailure(errorData.message || 'Sign in failed'));
+        return; // Prevent further processing if the request fails
       }
+
+      const data = await res.json();
+      localStorage.setItem('token', data.token);
+      localStorage.setItem('role', data.role);
+      localStorage.setItem('region', data.region || ''); // Store region if available
+      localStorage.setItem('profilePicture', data.profilePicture);
+      localStorage.setItem('username', data.username);
+
+      dispatch(signInSuccess(data));
+      navigate('/'); // Navigate to the home page after successful login
     } catch (error) {
       dispatch(signInFailure(error.message || 'An error occurred'));
     }
@@ -58,8 +60,8 @@ const Signin = () => {
 
   return (
     <div className="flex flex-col lg:flex-row justify-around items-center min-h-screen p-4">
-      <img src={sigin} alt="Login" className="w-64 sm:w-80 md:w-[420px] mb-8 lg:mb-0 " />
-      <div className="p-6 w-full max-w-md lg:max-w-lg     rounded-lg transition-transform duration-300 ease-in-out">
+      <img src={sigin} alt="Login" className="w-64 sm:w-80 md:w-[420px] mb-8 lg:mb-0" />
+      <div className="p-6 w-full max-w-md lg:max-w-lg rounded-lg transition-transform duration-300 ease-in-out">
         <h2 className="text-3xl md:text-4xl font-extrabold mb-6 text-center">Login</h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-6">
@@ -114,13 +116,12 @@ const Signin = () => {
               />
             </div>
           )}
-          {errorMessage && <p className="mb-4 text-red-500 text-center">{errorMessage}</p>}
+          {errorMessage && <p className="mb-4 text-red-500 text-center">{errorMessage}</p>} {/* Show error message */}
           <div className="flex items-center justify-between mb-6">
             <button
               type="submit"
               className="bg-blue-600 hover:bg-blue-700 text-white font-semibold py-3 px-6 rounded-lg w-full focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200 ease-in-out"
-              disabled={loading}
-            >
+             >
               {loading ? 'Signing in...' : 'Sign In'}
             </button>
           </div>

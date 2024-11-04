@@ -210,7 +210,7 @@ const TeacherList = () => {
         <table className="min-w-full border border-gray-300">
           <thead className="border-b border-gray-300">
             <tr>
-              <th className="py-3 px-4 text-left">#</th>
+              <th className="py-3 px-4 text-left">Id</th>
               <th className="py-3 px-4 text-left">Profile</th>
               <th className="py-3 px-4 text-left hidden md:table-cell">Name</th>
               <th className="py-3 px-4 text-left hidden md:table-cell">Email</th>
@@ -224,8 +224,8 @@ const TeacherList = () => {
             {currentTeachers.length > 0 ? (
               currentTeachers.map((teacher, index) => (
                 <tr key={teacher._id} className="border-b border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                  <td className="py-4 px-4">{indexOfFirstEntry + index + 1}</td>
-                  <td className="py-4 px-4 flex items-center">
+                  <td className="py-4 px-4 hidden md:table-cell">{teacher.teacherId}</td>
+                   <td className="py-4 px-4 flex items-center">
                     {teacher.picture ? (
                       <img
                         src={teacher.picture}

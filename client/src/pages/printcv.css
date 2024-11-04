@@ -1,0 +1,47 @@
+/* print.css */
+@media print {
+    /* Hide all elements that shouldn't be printed */
+    body * {
+      visibility: hidden; /* Hide all elements */
+      margin: 0; /* Remove default page margins */
+      padding: 0;
+    }
+  
+    /* Show the main container only */
+    .printable-area, .printable-area * {
+      visibility: visible; /* Make the printable area visible */
+    }
+  
+    /* Ensure the printable area takes the full page */
+    .printable-area {
+      position: absolute;
+      left: 0;
+      top: 0;
+      width: 100%;
+      height: auto;
+      background-color: #f3f4f6; /* Match the background color */
+      padding: 20px;
+      margin: 0 auto;
+      max-width: 210mm; /* A4 width */
+    }
+  
+    /* Hide buttons in print view */
+    .no-print {
+      display: none !important;
+    }
+  
+    /* Adjust for better print layout */
+    img {
+      max-width: 100%;
+      height: auto;
+    }
+  
+    h1, h2, h3 {
+      page-break-after: avoid;
+    }
+  
+    .shadow-lg, .shadow-md, .shadow-sm {
+      box-shadow: none;
+    }
+  }
+      

@@ -2,24 +2,20 @@ import React, { useState, useEffect } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
-import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaLinkedin, FaFacebookSquare, FaCheck } from 'react-icons/fa';
+import { FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
-import { Document, Packer, Paragraph, TextRun } from 'docx';
+import './printcv.css'; // Import the print stylesheet
 
 const calculateAge = (birthDate) => {
   if (!birthDate) return null;
-  
   const birth = new Date(birthDate);
   const today = new Date();
-  
   let age = today.getFullYear() - birth.getFullYear();
   const monthDifference = today.getMonth() - birth.getMonth();
-  
   if (monthDifference < 0 || (monthDifference === 0 && today.getDate() < birth.getDate())) {
     age--;
   }
-  
   return age;
 };
 
@@ -29,6 +25,7 @@ const TeacherDetailsCV = () => {
   const [teacher, setTeacher] = useState(null);
   const [isLoading, setIsLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [showQualifications, setShowQualifications] = useState(false); // State to toggle qualifications display
   const storage = getStorage();
 
   useEffect(() => {
@@ -38,10 +35,8 @@ const TeacherDetailsCV = () => {
         const response = await axios.get(`https://finalbakend.vercel.app/${id}`);
         const teacherData = response.data;
 
-        // Calculate age
         teacherData.age = calculateAge(teacherData.birthDate);
 
-        // Determine retirement status
         const retirementAge = 60;
         if (teacherData.age >= retirementAge) {
           teacherData.isRetire = true;
@@ -51,6 +46,7 @@ const TeacherDetailsCV = () => {
           teacherData.yearsToRetirement = retirementAge - teacherData.age;
         }
 
+        // Fetch teacher picture from Firebase
         if (teacherData.picture) {
           try {
             const imageRef = ref(storage, teacherData.picture);
@@ -60,6 +56,9 @@ const TeacherDetailsCV = () => {
             console.error('Error fetching teacher image:', err);
           }
         }
+
+        // Handle qualifications URL
+        teacherData.qualifications = teacherData.qualifications || null; // Ensure qualifications is set
 
         setTeacher(teacherData);
       } catch (err) {
@@ -83,7 +82,6 @@ const TeacherDetailsCV = () => {
       let heightLeft = imgHeight;
 
       let position = 0;
-
       pdf.addImage(imgData, 'PNG', 10, position, imgWidth, imgHeight);
       heightLeft -= pageHeight;
 
@@ -97,49 +95,15 @@ const TeacherDetailsCV = () => {
     });
   };
 
-  const downloadWord = () => {
-    const doc = new Document({
-      sections: [{
-        properties: {},
-        children: [
-          new Paragraph({
-            children: [
-              new TextRun(`Name: ${teacher.name}`),
-              new TextRun({ text: '\nEmail: ' + teacher.email }),
-              new TextRun({ text: '\nMobile: ' + teacher.mobile }),
-              new TextRun({ text: '\nAddress: ' + teacher.address }),
-              new TextRun({ text: '\nEducation Level: ' + teacher.educationLevel }),
-              new TextRun({ text: '\nSalary: ' + (teacher.salary ? `$${teacher.salary}` : 'N/A') }),
-              new TextRun({ text: '\nDescription: ' + (teacher.description || 'N/A') }),
-              new TextRun({ text: '\nExperience: ' + (teacher.experience || 'N/A') }),
-              new TextRun({ text: '\nRetirement Status: ' + (teacher.isRetire ? 'Retired' : 'Active') }),
-            ],
-          }),
-        ],
-      }],
-    });
-
-    Packer.toBlob(doc).then((blob) => {
-      const url = window.URL.createObjectURL(blob);
-      const a = document.createElement('a');
-      a.href = url;
-      a.download = `${teacher.name}-CV.docx`;
-      a.click();
-      window.URL.revokeObjectURL(url);
-    });
+  const toggleQualifications = () => {
+    setShowQualifications(prevState => !prevState); // Toggle qualifications display
   };
 
-  if (isLoading) return <div className="min-h-screen flex items-center justify-center -mt-6">
-  <div className="flex-col gap-4 w-full flex items-center justify-center">
-    <div className="w-20 h-20 md:w-24 md:h-24 lg:w-28 lg:h-28 border-4 border-transparent text-[#f27405] text-4xl md:text-5xl lg:text-6xl animate-spin flex items-center justify-center border-t-[#f27405] rounded-full">
-      <div className="w-16 h-16 md:w-20 md:h-20 lg:w-24 lg:h-24 border-4 border-transparent text-2xl md:text-3xl lg:text-4xl animate-spin flex items-center justify-center border-t-gray-800 rounded-full" />
-    </div>
-  </div>
-</div>;
+  if (isLoading) return <div>Loading...</div>;
   if (error) return <p className="text-center text-red-500">{error}</p>;
 
   return (
-    <div className="max-w-[210mm] mx-auto my-10 p-8 shadow-xl rounded-lg transition-transform transform hover:scale-105" id="cv-content">
+    <div className="max-w-[210mm] mx-auto my-10 p-8 shadow-xl rounded-lg transition-transform transform hover:scale-105 printable-area" id="cv-content">
       <div className="flex justify-between items-start mb-10">
         <div className="flex items-center gap-6">
           <div className="w-32 rounded-full overflow-hidden border-4 border-blue-300 shadow-lg">
@@ -163,88 +127,49 @@ const TeacherDetailsCV = () => {
             <FaPhone size={20} />
             {teacher.mobile}
           </p>
-          <p className="flex items-center uppercase ">
+          <p className="flex items-center uppercase">
             <FaMapMarkerAlt size={20} />
-              {teacher.region}, {teacher.district}
+            {teacher.region}, {teacher.district}
           </p>
-          <div className="flex gap-2 mt-2">
-            
-             
-          </div>
         </div>
       </div>
 
       {/* Personal Information */}
       <section className="mb-8">
         <h2 className="text-2xl font-semibold mb-4 text-blue-700">Personal Information</h2>
-        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 uppercase ">
+        <div className="grid grid-cols-1 md:grid-cols-2 gap-4 uppercase">
           <div>
             <p><strong>Birth Date:</strong> {teacher.birthDate ? new Date(teacher.birthDate).toLocaleDateString() : 'N/A'}</p>
-            <p><strong>Sex:</strong> {teacher.sex ? teacher.sex.join(', ') : 'N/A'}</p>
+            <p><strong>Sex:</strong> {teacher.sex || 'N/A'}</p>
             <p><strong>Age:</strong> {teacher.age !== null ? teacher.age : 'N/A'}</p>
+            <p><strong>Native Status:</strong> {teacher.nativeStatus || 'N/A'}</p>
           </div>
           <div>
-            <p><strong>Native Status:</strong> {teacher.nativeStatus ? teacher.nativeStatus.join(', ') : 'N/A'}</p>
             <p><strong>Retirement Status:</strong> {teacher.isRetire ? 'Retired' : 'Active'} (Years to Retirement: {teacher.yearsToRetirement})</p>
           </div>
         </div>
       </section>
 
-      {/* Education */}
-      <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-700 uppercase ">Education</h2>
-        <p><strong>Highest Education Level:</strong> {teacher.educationLevel || 'N/A'}</p>
-        {/* <p><strong>Qualifications:</strong> {teacher.qualifications || 'N/A'}</p> */}
-      </section>
-
-      {/* Experience */}
-      <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-700">Experience</h2>
-        <p><strong>Years of Experience:</strong> {teacher.experience || 'N/A'}</p>
-        <p><strong>Joining Date:</strong> {teacher.joiningDate ? new Date(teacher.joiningDate).toLocaleDateString() : 'N/A'}</p>
-        <p><strong>Subjects Taught:</strong> {teacher.subjectsTech && teacher.subjectsTech.length > 0 ? teacher.subjectsTech.join(', ') : 'N/A'}</p>
-        <p><strong>Subjects Learned:</strong> {teacher.subjectsLearned && teacher.subjectsLearned.length > 0 ? teacher.subjectsLearned.join(', ') : 'N/A'}</p>
-      </section>
-
-        {/* Skills
+      {/* Qualifications Section */}
+      {teacher.qualifications && (
         <section className="mb-8">
-          <h2 className="text-2xl font-semibold mb-4 text-blue-700">Skills</h2>
-          <ul className="list-disc pl-5">
-            {teacher.skills && teacher.skills.length > 0 ? (
-              teacher.skills.map((skill, index) => (
-                <li key={index} className="flex items-center gap-2">
-                  <FaCheck size={16} className="text-green-600" /> {skill}
-                </li>
-              ))
-            ) : (
-              <p>No skills listed</p>
-            )}
-          </ul>
-        </section> */}
-
-      {/* Additional Information */}
-      <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-700">Additional Information</h2>
-        <p><strong>Description:</strong> {teacher.description || 'N/A'}</p>
-        <p><strong>Salary:</strong> {teacher.salary ? `${teacher.salary} Birr` : 'N/A'}</p>
-      </section>
-
-      {/* Attachments */}
-      {/* <section className="mb-8">
-        <h2 className="text-2xl font-semibold mb-4 text-blue-700">Attachments</h2>
-        {teacher.fileAttachment ? (
-          <a
-            href={teacher.fileAttachment}
-            target="_blank"
-            rel="noopener noreferrer"
-            className="inline-block bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300 shadow-md"
-          >
-            View Attachment
-          </a>
-        ) : (
-          <p>No file attached</p>
-        )}
-      </section> */}
+          <h2 className="text-2xl font-semibold mb-4 text-blue-700">Qualifications</h2>
+          <button onClick={toggleQualifications} className="text-blue-600 underline">
+            {showQualifications ? 'Hide Qualifications' : 'View Qualifications'}
+          </button>
+          {showQualifications && (
+            <div className="mt-4">
+              <iframe
+                src={teacher.qualifications}
+                title="Qualifications PDF"
+                width="100%"
+                height="500px"
+                style={{ border: 'none' }}
+              ></iframe>
+            </div>
+          )}
+        </section>
+      )}
 
       {/* Buttons */}
       <div className="flex justify-between gap-4">
@@ -255,9 +180,9 @@ const TeacherDetailsCV = () => {
           <button onClick={downloadPDF} className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300">
             Download as PDF
           </button>
-          {/* <button onClick={downloadWord} className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300">
-            Download CV as Word
-          </button> */}
+          <button onClick={() => window.print()} className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition duration-300">
+            Print CV
+          </button>
         </div>
       </div>
     </div>

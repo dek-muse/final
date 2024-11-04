@@ -2,7 +2,7 @@
 import { Navigate } from 'react-router-dom';
 import React from 'react';
 import { BrowserRouter as Router, Routes, Route } from 'react-router-dom';
-import Sidebare from './common/Sidebare'; // Ensure component name is correct
+import Sidebare from './common/Sidebare.jsx'; // Ensure component name is correct
 import Dashboard from './components/Dashboard';
 import TeacherForm from './pages/TeacherForm.jsx';
 import TeacherList from './pages/TeacherList';
@@ -55,8 +55,8 @@ const App = () => {
       <div className="flex flex-col h-screen app">
         <NaveBare /> {/* Ensure the NaveBare is fixed at the top */}
         <div className="flex flex-1 top-20">
-          <Sidebare /> {/* Sidebare is fixed to the left */}
-          <main className="flex-1 p-6 overflow-auto">
+        <Sidebare />
+        <main className="flex-1 p-6 overflow-auto">
             <Routes>
               <Route path="/" element={<Home />} />
               <Route path="/*" element={<NotFound />} />

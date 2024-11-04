@@ -5,7 +5,7 @@ import DatePicker from 'react-datepicker';
 import 'react-datepicker/dist/react-datepicker.css'; // Import CSS for DatePicker
 
 
-const educationLevels = ['High School', "Master's Degree", 'Doctorate'];
+const educationLevels = ['TTI', 'DIP', 'Deg', 'MA'];
 
 // Helper function to get week number of the year
 const getWeekNumber = (date) => {
@@ -194,10 +194,10 @@ const Dashboard = () => {
   const getCounts = () => {
     const counts = {
       sex: { Male: 0, Female: 0 },
-      nativeStatus: { Native: 0, 'Non-native': 0 },
-      teacherType: { Kg: 0, Primary: 0, Secondary: 0, Preparatory: 0, 'University/Colleges': 0 },
+      nativeStatus: { Region: 0, 'Non-region': 0 }, //Region Non-region
+      teacherType: { Primary: 0, Preprimary: 0, Secondary: 0, College: 0, Boarding: 0 },
       retirementStatus: { active: 0, retired: 0 }
-    };
+     };
     filteredTeachers.forEach(teacher => {
       if (teacher.sex) counts.sex[teacher.sex] = (counts.sex[teacher.sex] || 0) + 1;
       if (teacher.nativeStatus) counts.nativeStatus[teacher.nativeStatus] = (counts.nativeStatus[teacher.nativeStatus] || 0) + 1;
@@ -365,8 +365,8 @@ const retiredTeachersCount = teachers.length - activeTeachersCount;
             className="block dark:text-black w-full p-2 border   rounded-md shadow-sm focus:ring-gray-800 focus:border-gray-800  sm:text-sm"
           >
             <option value="">All Types</option>
-            {['Kg', 'Primary', 'Secondary', 'Preparatory', 'University/Colleges'].map(type => (
-              <option key={type} value={type}>{type}</option>
+            {['Primary', 'Preprimary', 'Secondary', 'College', 'Boarding'].map(type => (
+               <option key={type} value={type}>{type}</option>
             ))}
           </select>
         </div>
@@ -402,12 +402,12 @@ const retiredTeachersCount = teachers.length - activeTeachersCount;
     <h3 className="text-[14px] font-semibold mb-2">Native Status</h3>
     <div className="flex flex-col gap-2">
       <div className="flex justify-between">
-        <span>Native</span>
-        <span className="text-xl font-bold">{counts.nativeStatus.Native || 0}</span>
+        <span>Region</span>
+        <span className="text-xl font-bold">{counts.nativeStatus.Region || 0}</span> 
       </div>
       <div className="flex justify-between">
-        <span>Non-native</span>
-        <span className="text-xl font-bold">{counts.nativeStatus['Non-native'] || 0}</span>
+        <span>Non-region</span>
+        <span className="text-xl font-bold">{counts.nativeStatus['Non-region'] || 0}</span>
       </div>
     </div>
   </div>
@@ -430,12 +430,12 @@ const retiredTeachersCount = teachers.length - activeTeachersCount;
     <h3 className="text-[16px] font-semibold mb-4">Teacher Types</h3>
     <div className="flex flex-wrap gap-4">
       {[
-        { type: 'KG', count: counts.teacherType.Kg || 0 },
         { type: 'Primary', count: counts.teacherType.Primary || 0 },
+        { type: 'Preprimary', count: counts.teacherType.Preprimary || 0 },
         { type: 'Secondary', count: counts.teacherType.Secondary || 0 },
-        { type: 'Preparatory', count: counts.teacherType.Preparatory || 0 },
-        { type: 'University/Colleges', count: counts.teacherType['University/Colleges'] || 0 }
-      ].map(({ type, count }) => (
+        { type: 'College', count: counts.teacherType.College || 0 },
+        { type: 'Boarding' , count: counts.teacherType.Boarding|| 0 }
+       ].map(({ type, count }) => (
         <div key={type} className="flex-1 min-w-[150px] sm:min-w-[200px] flex justify-between items-center p-4 rounded-lg border transition-transform duration-300 hover:shadow-lg">
           <span className="font-medium">{type}</span>
           <span className="text-lg font-bold">{count}</span>

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from 'react';
 import { storage } from '../firebase'; // Hubi inaad saxdo dariiqa import-ga haddii loo baahdo
-import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
+import { ref, uploadBytes, getDownloadURL, getStorage, } from 'firebase/storage';
+
 import { useSelector } from 'react-redux';
 import { useNavigate } from 'react-router-dom';
 
@@ -13,17 +14,17 @@ const TeacherForm = () => {
   const REGIONS = ['Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
 
   const DISTRICTS = {
-    'Afdheer': ['Hargeelle', 'Dhaawac', 'Baarey', 'Limey Galbeed', 'Raaso', 'Dollow Bay', 'Ceelkari', 'Qooxle', 'Godgod'],
-    'Daawo': ['Qadhadhumo', 'Hudet', 'Mooyale', 'Mubarak'],
-    'Doolo': ['Daraatole', 'Wardheer- Xarunta Gobalka', 'Danood', 'Galxumur', 'Galaadi', 'Bookh', 'Lehel-yucub'],
-    'Erar': ['Fiiq', 'Xamaro', 'Waangay', 'Lagahida', 'Yoxob', 'Salaxaad', 'Mayu-Muluqo', 'Qubi'],
-    'Faafan': ['Tuliguuled', 'Goljano', 'Harooreys', 'Shabeleey', 'Harawo', 'Mula', 'Qabribayax', 'Xarshin', 'Gursum', 'Babili', 'Awbare'],
-    'Jarar': ['Daroor', 'Aware', 'Dhagax-buur', 'Dhagax-madow', 'Gunagado', 'Gashamo', 'Birqod', 'Dig', 'Bilcil buur', 'Araarso', 'Yoocaale'],
-    'Liibaan': ['Filtu', 'Dollo Adow', 'Qarsadula', 'Gura-dhamoole', 'Goora-Baqaqsa', 'Boqol maayo', 'Dekasuftu'],
-    'Nogob': ['Dhuxun', 'Gerbo', 'Xaraarey', 'Ayun', 'Hor-shagah', 'Segeg', 'Ceelweyne'],
-    'Qoraxay': ['Qabridahar', 'Shilaabo', 'Dhobaweyn', 'Shaygoosh', 'Marsin', 'Ceel-ogaden', 'Las-dharkeynle', 'Boodaley', 'Higlooley', 'Goglo/kudunbuur'],
-    'Shabelle': ['Dhanan', 'Godey', 'Qalafe', 'Beer caano', 'Feerfer', 'Iimey bari', 'Mustaxiil', 'Elele', 'Cadaadle', 'Abaqarow'],
-    'Sitti': ['Afdem', 'Ayshaca', 'Mieso', 'Dembel', 'Erar', 'Shiniile', 'Hadhagale', 'Biki', 'Geblalu', 'Dhuunya'],
+    'Afdheer': ['Hargeelle', 'Dhaawac', 'Baarey', 'Limey Galbeed', 'Raaso (City)', 'Dollow Bay (City)', 'Ceelkari', 'Qooxle', 'Godgod', 'Dhiif'],
+    'Daawo': ['Qadhadhumo', 'Hudet', 'Mooyale (City)', 'Mubarak', 'Ceel-huur'],
+    'Doolo': ['Daraatole', 'Wardheer- Xarunta Gobalka (City)', 'Danood', 'Galxumur', 'Galaadi', 'Bookh', 'Lehel-yucub', 'Ceel-sheekh', 'Dhaqandhoor'],
+    'Erar': ['Fiiq (City)', 'Xamaro', 'Waangay', 'Lagahida', 'Yoxob', 'Salaxaad', 'Mayu-Muluqo', 'Qubi', 'Ceel-bi'],
+    'Faafan': ['Tuliguuled', 'Goljano (City)', 'Harooreys', 'Shabeleey', 'Harawo', 'Mula', 'Qabribayax (City)', 'Xarshin', 'Gursum', 'Babili', 'Awbare', 'Gabiley', 'Jigjiga (City)'],
+    'Jarar': ['Daroor', 'Aware', 'Dhagax-buur (City)', 'Dhagax-madow', 'Gunagado', 'Gashamo', 'Birqod', 'Dig', 'Bilcil buur', 'Araarso', 'Yoocaale', 'Dhuure', 'Higlo'],
+    'Liibaan': ['Filtu (City)', 'Dollo Adow', 'Qarsadula', 'Gura-dhamoole', 'Goora-Baqaqsa', 'Boqol maayo', 'Dekasuftu', 'Xamur'],
+    'Nogob': ['Dhuxun', 'Gerbo (City)', 'Xaraarey', 'Ayun', 'Hor-shagah', 'Segeg', 'Ceelweyne', 'Karin', 'Dabqudhac'],
+    'Qoraxay': ['Qabridahar (City)', 'Shilaabo', 'Dhobaweyn', 'Shaygoosh', 'Marsin', 'Ceel-ogaden (City)', 'Las-dharkeynle', 'Boodaley', 'Higlooley', 'Goglo/kudunbuur', 'Galadiid'],
+    'Shabelle': ['Dhanan', 'Godey (City)', 'Qalafe', 'Beer caano', 'Feerfer', 'Iimey bari', 'Mustaxiil', 'Elele', 'Cadaadle', 'Abaqarow', 'Toosweyn'],
+    'Sitti': ['Afdem', 'Ayshaca (City)', 'Mieso', 'Dembel', 'Erar', 'Shiniile (City)', 'Hadhagale', 'Biki', 'Geblalu', 'Dhuunya', 'Tuli Guled']
   };
 
   // Qeexitaanka Heerarka Waxbarashada iyo Kala-duwanaanshaha Mushaharka
@@ -70,8 +71,8 @@ const TeacherForm = () => {
 
   // Qeexitaanka Xulashooyinka Jinsi iyo Heerka Dhalashada
   const sexOptions = ['Male', 'Female'];
-  const nativeStatusOptions = ['Native', 'Non-native'];
-  const teacherTypes = ['Kg', 'Primary', 'Secondary', 'Preparatory', 'University/Colleges'];
+  const nativeStatusOptions = ['Region', 'Non-region'];
+  const teacherTypes = ['Primary', 'Preprimary', 'Secondary', 'College', 'Boarding'];
 
   // Qeexitaanka Mawduucyada
   const subjects = [
@@ -81,7 +82,13 @@ const TeacherForm = () => {
     { id: 4, name: 'History' },
     // Ku dar mawduucyo kale sida loo baahan yahay
   ];
-
+  const SPECIAL_NEED_OPTIONS = [
+    'Hearing Impairment',
+    'Vision Impairment',
+    'Physical Disability',
+    'Learning Disability',
+    'Other'
+  ];
   const subjectsList = subjects.map(subject => subject.name); // Liiska magacyada mawduucyada
 
   // Dejinta State-ka Foomka
@@ -95,7 +102,7 @@ const TeacherForm = () => {
     educationLevel: '',
     experience: '',
     sex: '',
-    nativeStatus: '',
+    nativeStatus: '', // Initialize as an empty string
     teacherType: '',
     joiningDate: '',
     birthDate: '',
@@ -103,10 +110,15 @@ const TeacherForm = () => {
     subjectsTech: '',
     salary: '',
     description: '',
-    healthStatus: '', // Initialized as an empty string
+    healthStatus: 'Yes', // Initialized as an empty string
     healthNote: '',   // Initialized as an empty string
     transfer: false,  // Change to Boolean
     transferReason: '', // Initialized as an empty string
+    teacherId: 1,
+    specialNeedDetail: '', // New field to capture special need details
+    qualifications: '' // URL of the qualifications file
+
+
     // ... (initialize other fields)
   });
 
@@ -115,16 +127,17 @@ const TeacherForm = () => {
   const [error, setError] = useState(''); // State-ka Qalad
   const [errors, setErrors] = useState({}); // State-ka Validation Errors
   const [success, setSuccess] = useState(''); // State-ka Ogeysiiska Guusha
+  const [qualificationsFile, setQualificationsFile] = useState(null); // Define this state
 
-  // Function-ka Isbedelka Goobaha Foomka
+  // Handle change for input fields
   const handleChange = (e) => {
     const { name, value } = e.target;
     setFormData({
       ...formData,
-      [name]: value,
+      [name]: value, // This works for strings (like select and radio buttons)
     });
-    // console.log(`Updated ${name}:`, value); // Log-ga Isbedelada
   };
+
   const handleCheckboxChange = (e) => {
     const { name, value, checked } = e.target;
     const updatedValue = checked
@@ -140,17 +153,54 @@ const TeacherForm = () => {
     });
   };
 
-  // Function-ka Isbedelka Faylka
+  // Function to handle file change
   const handleFileChange = (e) => {
-    const file = e.target.files[0];
+    const file = e.target.files[0]; // Get the first file from the input
     if (file) {
-      setFormData({
-        ...formData,
-        picture: file,
-      });
-      // console.log('Selected file:', file.name); // Log-ga Faylka La Doortay
+      // Update the form data with the selected file
+      setFormData((prevData) => ({
+        ...prevData,
+        picture: file, // Assuming you want to save the file as "picture"
+      }));
+
+      // Also set the qualificationsFile state for upload
+      setQualificationsFile(file);
+
+      // Clear any previous error related to qualifications
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        qualifications: null,
+      }));
+
+      // Optional: Log the selected file for debugging
+      // console.log('Selected file:', file.name);
     }
   };
+
+  const uploadQualifications = async () => {
+    if (!qualificationsFile) {
+      console.error("No qualifications file selected.");
+      return null; // Return early if no file is selected
+    }
+
+    const storage = getStorage(); // Initialize Firebase Storage
+    const storageRef = ref(storage, `qualifications/${qualificationsFile.teacher.name}`); // Create a reference to the file location
+
+    try {
+      console.log('Uploading qualifications to Firebase Storage...');
+      await uploadBytes(storageRef, qualificationsFile); // Upload the file
+      console.log('Qualifications uploaded successfully:', qualificationsFile.name);
+
+      // Get the download URL
+      const qualificationsURL = await getDownloadURL(storageRef);
+      console.log('Qualifications download URL:', qualificationsURL);
+      return qualificationsURL; // Return the URL
+    } catch (error) {
+      console.error('Error uploading qualifications:', error);
+      throw error; // Rethrow the error for further handling in the calling function
+    }
+  };
+
 
   // Function-ka Dib-u-dejinta Foomka
   const resetForm = () => {
@@ -176,6 +226,10 @@ const TeacherForm = () => {
       healthNote: '',   // Initialized as an empty string
       transfer: false,  // Change to Boolean
       transferReason: '', // Initialized as an empty string
+      specialNeedDetail: '', // New field to capture special need details
+      qualifications: '', // URL of the qualifications file
+      teacherId: 1
+
       // ... (initialize other fields)
     });
     navigate('/teacher/form');
@@ -247,24 +301,42 @@ const TeacherForm = () => {
   }, [formData.region]);
 
   // Function-ka Dirista Foomka
-  const handleSubmit = async (e) => {
-    e.preventDefault();
+  const handleSubmit = async (event) => {
+    event.preventDefault();
     console.log('Form submission initiated with data:', formData);
-    handleCheckboxChange
+
+    // Call handleCheckboxChange if needed
+    // handleCheckboxChange(); // Uncomment if this function needs to be called
+
     // Validate the form before submitting
     if (!validate()) {
       console.log('Validation failed with errors:', errors);
-      return; // Ka bax haddii validation aysan guuleysan
+      return; // Exit if validation fails
     }
 
-    setLoading(true); // Bilow Loading state
-    setError(''); // Nadiifi Qaladka
-    setSuccess(''); // Nadiifi Ogeysiiska Guusha
+    setLoading(true); // Start loading state
+    setError(''); // Clear previous errors
+    setSuccess(''); // Clear previous success messages
 
     let pictureURL = '';
+    let qualificationsURL = '';
 
-    if (formData.picture) {
-      const storageRef = ref(storage, `images/${formData.picture.name}`);
+    // Handle qualifications upload and get the URL
+    try {
+      qualificationsURL = await uploadQualifications(); // Function to upload qualifications
+      if (!qualificationsURL) {
+        throw new Error("Failed to upload qualifications."); // Handle if the upload fails
+      }
+    } catch (error) {
+      console.error("Error uploading qualifications: ", error);
+      setError('Error uploading qualifications.'); // Set error message
+      setLoading(false); // Stop loading state
+      return; // Exit to prevent further actions
+    }
+
+    // Handle picture upload if it exists
+    if (formData.picture) { 
+      const storageRef = ref(storage, `images/${formData.picture.teacher.name}`);
       console.log('Uploading picture to Firebase Storage...');
 
       try {
@@ -274,21 +346,23 @@ const TeacherForm = () => {
         console.log('Picture download URL:', pictureURL);
       } catch (error) {
         console.error('Error uploading picture:', error);
-        setError('Error uploading picture.'); // Dejiso fariin qalad
-        setLoading(false); // Jooji Loading state
-        return; // Ka bax si aan loo sii wadin
+        setError('Error uploading picture.'); // Set error message
+        setLoading(false); // Stop loading state
+        return; // Exit to prevent further actions
       }
     }
 
-    // Diyaarinta xogta loo dirayo API-ga
+    // Prepare the data to send to the API
     const dataToSend = {
       ...formData,
-      picture: pictureURL, // Ku dar URL-ka sawirka xogta
-      createdBy: currentUser._id, // Ku dar field-ka createdBy
+      qualifications: qualificationsURL, // Add qualifications URL to form data
+      picture: pictureURL, // Add picture URL to form data
+      createdBy: currentUser._id, // Add the createdBy field
     };
 
     console.log('Data to send to API:', JSON.stringify(dataToSend, null, 2));
 
+    // Send data to your TeacherForm API
     try {
       const response = await fetch('https://finalbakend.vercel.app/', {
         method: 'POST',
@@ -301,21 +375,33 @@ const TeacherForm = () => {
       if (response.ok) {
         const responseData = await response.json();
         console.log('Data successfully sent:', responseData);
-        setSuccess('Form submitted successfully!'); // Dejiso fariin guul
-        resetForm(); // Dib u deji foomka
+        setSuccess('Form submitted successfully!'); // Set success message
+        // Optionally reset the form
+        resetForm(); // Reset the form fields
+        setQualificationsFile(null); // Reset qualifications file
       } else {
         const responseText = await response.text();
         console.error('Response error message:', responseText);
-        setError('Error sending data to API.'); // Dejiso fariin qalad
+        setError('Error sending data .'); // Set error message
       }
 
       console.log('API response status:', response.status);
     } catch (error) {
       console.error('Error sending data to API:', error);
-      setError('Error sending data to API.'); // Dejiso fariin qalad
+      setError('Error sending data .'); // Set error message
     } finally {
-      setLoading(false); // Jooji Loading state
+      setLoading(false); // Stop loading state
     }
+  };
+
+  // Generate a list of years from 1900 to the current year
+  const generateYears = () => {
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    for (let year = currentYear; year >= 1900; year--) {
+      years.push(year);
+    }
+    return years;
   };
 
   return (
@@ -342,7 +428,7 @@ const TeacherForm = () => {
             {/* Name Field */}
             <div>
               <label htmlFor="name" className="block text-sm font-medium text-gray-700 dark:text-gray-300">
-                Name
+                Full Name
               </label>
               <input
                 type="text"
@@ -394,6 +480,57 @@ const TeacherForm = () => {
                 disabled={loading}
               />
               {errors.mobile && <p style={{ color: 'red' }}>{errors.mobile}</p>}
+            </div>
+
+            {/* Transfer Field */}
+            <div className="mb-4">
+              <label className="block font-semibold mb-1">Transfer:</label>
+              <div className="flex items-center space-x-4">
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="transfer"
+                    value="yes"
+                    checked={formData.transfer === true}
+                    onChange={() => setFormData({ ...formData, transfer: true })} // Set to true
+                    className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>Yes</span>
+                </label>
+                <label className="flex items-center space-x-2">
+                  <input
+                    type="radio"
+                    name="transfer"
+                    value="no"
+                    checked={formData.transfer === false}
+                    onChange={() => setFormData({ ...formData, transfer: false })} // Set to false
+                    className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                    disabled={loading}
+                  />
+                  <span>No</span>
+                </label>
+              </div>
+
+              {/* Conditional Transfer Reason Field */}
+              {formData.transfer === true && (
+                <div className="mt-2">
+                  <label htmlFor="transferReason" className="block font-semibold mb-1">
+                    Transfer Reason:
+                  </label>
+                  <input
+                    type="text"
+                    id="transferReason"
+                    name="transferReason"
+                    placeholder='Enter reason for transfer'
+                    value={formData.transferReason}
+                    onChange={(e) => setFormData({ ...formData, transferReason: e.target.value })}
+                    className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                    disabled={loading}
+                  />
+                  {errors.transferReason && <p style={{ color: 'red' }}>{errors.transferReason}</p>}
+                </div>
+              )}
             </div>
 
             {/* Region Dropdown */}
@@ -483,143 +620,136 @@ const TeacherForm = () => {
               {errors.sex && <p style={{ color: 'red' }}>{errors.sex}</p>}
             </div>
 
-
-
-
             {/* Native Status Checkboxes */}
             <div className="mb-4">
-              <label className="block font-semibold mb-1">Native Status:</label>
+              <label className="block font-semibold mb-1 text-gray-700">Native Status:</label>
+              <div className="flex items-center mb-2">
+                <label className="flex items-center mr-4">
+                  <input
+                    type="radio"
+                    name="nativeStatus"
+                    value="Region"
+                    checked={formData.nativeStatus === 'Region'}
+                    onChange={handleChange}
+                    disabled={loading}
+                    className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                  />
+                  <span className="ml-2">Region</span>
+                </label>
+                <label className="flex items-center">
+                  <input
+                    type="radio"
+                    name="nativeStatus"
+                    value="Non-region"
+                    checked={formData.nativeStatus === 'Non-region'}
+                    onChange={handleChange}
+                    disabled={loading}
+                    className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                  />
+                  <span className="ml-2">Non-region</span>
+                </label>
+              </div>
+              {errors.nativeStatus && <p className="text-red-600 text-sm mt-1">{errors.nativeStatus}</p>}
+            </div>
 
-              <div className="flex items-center space-x-4">
-                {nativeStatusOptions.map((status) => (
-                  <label key={status} className="flex items-center space-x-2">
+            {/* Health Status */}
+            <div className="mb-4">
+              <label className="block mb-2 text-gray-700">Health Status:</label>
+              <div className="flex items-center mb-2">
+                <label className="mr-4">
+                  <input
+                    type="radio"
+                    name="healthStatus"
+                    value="Yes"
+                    checked={formData.healthStatus === 'Yes'}
+                    onChange={handleChange}
+                    className="mr-1"
+                    disabled={loading}
+                  />
+                  Yes
+                </label>
+                <label>
+                  <input
+                    type="radio"
+                    name="healthStatus"
+                    value="No"
+                    checked={formData.healthStatus === 'No'}
+                    onChange={handleChange}
+                    className="mr-1"
+                    disabled={loading}
+                  />
+                  No
+                </label>
+              </div>
+              {errors.healthStatus && <p className="text-red-600">{errors.healthStatus}</p>}
+            </div>
+
+            {formData.healthStatus === 'No' && (
+              <div className="mb-4">
+                <label className="block mb-2 text-gray-700">Special Need Detail:</label>
+                <div className="flex items-center mb-2">
+                  <label className="mr-4">
                     <input
                       type="radio"
-                      name="nativeStatus"
-                      value={status}
-                      checked={formData.nativeStatus.includes(status)}
-                      onChange={handleCheckboxChange}
-                      className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
+                      name="specialNeedDetail"
+                      value="Special Need"
+                      checked={formData.specialNeedDetail === 'Special Need'}
+                      onChange={handleChange}
+                      className="mr-1"
                       disabled={loading}
                     />
-                    <span>{status}</span>
+                    Special Need
                   </label>
-                ))}
-              </div>
-              {errors.nativeStatus && <p style={{ color: 'red' }}>{errors.nativeStatus}</p>}
-            </div>
-
-
-
-            {/* Health Status Checkboxes */}
-            <div className="mb-4">
-              <label className="block font-semibold mb-1">Health Status:</label>
-              <div className="flex items-center space-x-4">
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name="healthStatus"
-                    value="yes"
-                    checked={formData.healthStatus === 'yes'}
-                    onChange={() => setFormData((prev) => ({
-                      ...prev,
-                      healthStatus: 'yes',
-                      healthNote: '', // Reset note if user selects "Yes"
-                    }))}
-                    className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
-                    disabled={loading}
-                  />
-                  <span>Yes</span>
-                </label>
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name="healthStatus"
-                    value="no"
-                    checked={formData.healthStatus === 'no'}
-                    onChange={() => setFormData((prev) => ({
-                      ...prev,
-                      healthStatus: 'no',
-                      healthNote: '', // Reset note if user selects "No"
-                    }))}
-                    className="form-checkbox h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
-                    disabled={loading}
-                  />
-                  <span>No</span>
-                </label>
-              </div>
-              {errors.healthStatus && <p style={{ color: 'red' }}>{errors.healthStatus}</p>}
-            </div>
-
-            {/* Health Note Field (Conditional) */}
-            {formData.healthStatus === 'no' && (
-              <div className="mb-4">
-                <label htmlFor="healthNote" className="block font-semibold mb-1">
-                  Health Note:
-                </label>
-                <textarea
-                  id="healthNote"
-                  name="healthNote"
-                  placeholder="Enter your health notes here (optional)"
-                  value={formData.healthNote}
-                  onChange={(e) => setFormData((prev) => ({ ...prev, healthNote: e.target.value }))}
-                  className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                />
+                  <label>
+                    <input
+                      type="radio"
+                      name="specialNeedDetail"
+                      value="Dead"
+                      checked={formData.specialNeedDetail === 'Dead'}
+                      onChange={handleChange}
+                      className="mr-1"
+                      disabled={loading}
+                    />
+                    Dead
+                  </label>
+                </div>
+                {errors.specialNeedDetail && <p className="text-red-600">{errors.specialNeedDetail}</p>}
               </div>
             )}
 
-            {/* Transfer Field */}
-
-            <div className="mb-4">
-              <label className="block font-semibold mb-1">Transfer:</label>
-              <div className="flex items-center space-x-4">
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name="transfer"
-                    value="yes"
-                    checked={formData.transfer === true}
-                    onChange={() => setFormData({ ...formData, transfer: true })} // Set to true
-                    className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
-                    disabled={loading}
-                  />
-                  <span>Yes</span>
-                </label>
-                <label className="flex items-center space-x-2">
-                  <input
-                    type="radio"
-                    name="transfer"
-                    value="no"
-                    checked={formData.transfer === false}
-                    onChange={() => setFormData({ ...formData, transfer: false })} // Set to false
-                    className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
-                    disabled={loading}
-                  />
-                  <span>No</span>
-                </label>
+            {formData.healthStatus === 'No' && formData.specialNeedDetail === 'Special Need' && (
+              <div className="mb-4">
+                <label htmlFor="specialNeed" className="block mb-2 text-gray-700">Select Special Need:</label>
+                <select
+                  name="specialNeed"
+                  value={formData.specialNeed}
+                  onChange={handleChange}
+                  className="w-full p-2 border border-gray-300 rounded"
+                  disabled={loading}
+                >
+                  <option value="">Select a special need</option>
+                  {SPECIAL_NEED_OPTIONS.map(option => (
+                    <option key={option} value={option}>{option}</option>
+                  ))}
+                </select>
+                {errors.specialNeed && <p className="text-red-600">{errors.specialNeed}</p>}
               </div>
+            )}
 
-              {/* Conditional Transfer Reason Field */}
-              {formData.transfer === true && (
-                <div className="mt-2">
-                  <label htmlFor="transferReason" className="block font-semibold mb-1">
-                    Transfer Reason:
-                  </label>
-                  <input
-                    type="text"
-                    id="transferReason"
-                    name="transferReason"
-                    placeholder='Enter reason for transfer'
-                    value={formData.transferReason}
-                    onChange={(e) => setFormData({ ...formData, transferReason: e.target.value })}
-                    className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                    disabled={loading}
-                  />
-                  {errors.transferReason && <p style={{ color: 'red' }}>{errors.transferReason}</p>}
-                </div>
-              )}
-            </div>
-
+            {formData.healthStatus === 'No' && (formData.specialNeedDetail === 'Dead' || formData.specialNeedDetail === 'Special Need') && (
+              <div className="mb-4">
+                <label htmlFor="healthNote" className="block mb-2 text-gray-700">Health Note:</label>
+                <textarea
+                  name="healthNote"
+                  value={formData.healthNote}
+                  onChange={handleChange}
+                  placeholder='Enter health note'
+                  className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
+                  disabled={loading}
+                />
+                {errors.healthNote && <p className="text-red-600">{errors.healthNote}</p>}
+              </div>
+            )}
 
             {/* Birth Date Field */}
             <div className="mb-4">
@@ -745,20 +875,23 @@ const TeacherForm = () => {
 
             {/* Joining Date Field */}
             <div className="mb-4">
-              <label htmlFor="joiningDate" className="block font-semibold mb-1">
-                Joining Date:
+              <label htmlFor="joiningYear" className="block font-semibold mb-1">
+                Joining Year:
               </label>
-              <input
-                type="date"
-                id="joiningDate"
-                name="joiningDate"
-                placeholder="Select your joining date"
-                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              <select
+                name="joiningYear"
+                id="joiningYear"
                 value={formData.joiningDate}
                 onChange={handleChange}
-                required
-                disabled={loading}
-              />
+                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
+              >
+                <option value="">Select a year</option>
+                {generateYears().map((year) => (
+                  <option key={year} value={year}>
+                    {year}
+                  </option>
+                ))}
+              </select>
             </div>
 
             {/* Subjects Learned Dropdown */}
@@ -842,8 +975,21 @@ const TeacherForm = () => {
                 placeholder="Enter a brief description"
                 value={formData.description}
                 onChange={handleChange}
+                disabled={loading}
                 className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
+            </div>
+            <div className="mb-4">
+              <label className="block font-semibold mb-1 text-gray-700">Qualifications:</label>
+              <input
+                type="file"
+                accept=".pdf,.doc,.docx"
+                onChange={handleFileChange}
+                className="border border-gray-300 p-2 rounded w-full"
+                disabled={loading}
+
+              />
+              {errors.qualifications && <p className="text-red-600 text-sm mt-1">{errors.qualifications}</p>}
             </div>
           </div>
         </div>

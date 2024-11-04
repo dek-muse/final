@@ -202,6 +202,7 @@ const DashProfile = () => {
         <div
           className='relative w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full'
           onClick={() => filePickerRef.current.click()}
+          disabled
         >
           {imageFileUploadProgress && (
             <CircularProgressbar
@@ -239,7 +240,8 @@ const DashProfile = () => {
           placeholder='username'
           value={formData.username}
           onChange={handleChange}
-          required
+           
+          disabled
         />
         <TextInput
           type='email'
@@ -261,6 +263,7 @@ const DashProfile = () => {
           placeholder='region'
           value={formData.region}
           onChange={handleChange}
+          disabled
         />
         <button
           type='submit'
@@ -274,7 +277,7 @@ const DashProfile = () => {
       <div className='text-red-500 flex justify-between mt-5'>
         <Link to='/'>
           <span onClick={handleSignout} className='cursor-pointer'>
-            Sign Out
+            
           </span>
         </Link>
       </div>
@@ -293,7 +296,7 @@ const DashProfile = () => {
       )}
       <div className='text-red-500 flex justify-between mt-5'>
         <span onClick={() => setShowModal(true)} className='cursor-pointer'>
-          Delete Profile
+        
         </span>
       </div>
       <Modal show={showModal} onClose={() => setShowModal(false)}>

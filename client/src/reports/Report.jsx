@@ -14,8 +14,8 @@
   ];
 
   const sexOptions = ['Male', 'Female'];
-  const nativeStatusOptions = ['Native', 'Non-native'];
-
+  const nativeStatusOptions = ['Region', 'Non-region'];
+   
   const REGIONS = ['Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
   const DISTRICTS = {
     'Afdheer': ['Hargeelle', 'Dhaawac', 'Baarey', 'limey galbeed', 'Raaso', 'Dollow Bay', 'Ceelkari', 'Qooxle', 'Godgod'],
@@ -31,8 +31,10 @@
     'Sitti': ['Afdem', 'Ayshaca', 'Mieso', 'Dembel', 'Erar', 'Shiniile', 'Hadhagale', 'Biki', 'Geblalu', 'Dhuunya'],
   };
 
-  const teacherType = ['Kg','primary', 'secondary', 'preparatory' , 'university/colleges']
-  const educationLevels = ['High School', 'Master\'s Degree', 'Doctorate'];
+  const teacherType = ['Primary', 'Preprimary', 'Secondary', 'College', 'Boarding']
+  const educationLevels = ['TTI', 'DIP', 'Deg', 'MA'];
+  const transferOptions = ['Yes', 'No'];
+  
 
   // filtered
   // Filters Component
@@ -119,6 +121,21 @@
       />
     </div>
 
+    <div className="flex flex-col">
+  <label className="block text-sm font-medium">Transfer</label>
+  <select
+    name="transfer"
+    value={filters.transfer}
+    onChange={handleFilterChange}
+    className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+  >
+    <option value="">All Transfers</option>
+    {transferOptions.map(option => (
+      <option key={option} value={option}>{option}</option>
+    ))}
+  </select>
+</div>
+
 
     
     <div className="col-span-1 md:col-span-2 lg:col-span-5 flex justify-end mt-4">
@@ -142,7 +159,7 @@
         <table className="min-w-full divide-y divide-gray-200">
           <thead className=" bg-[#b19d60]  opacity-75">
             <tr>
-              {['#', 'Name', 'Email', 'Mobile', 'Region', 'District', 'Birth Date', 'Subjects Learned', 'Subjects Teaching', 'Sex', 'Native Status', 'Teacher Type', 'Level', 'salary','experience',  'Age', 'Retirement Status', 'Years to Retirement', 'Joining Date',  ].map((header) => (
+              {['#', 'Name', 'Email', 'Mobile', 'Region', 'District', 'Birth Date', 'Subjects Learned', 'Subjects Teaching', 'Sex', 'Native Status', 'Teacher Type', 'Level', 'salary','experience',  'Age', 'Retirement Status', 'Years to Retirement', 'Joining Date', 'transfer' ].map((header) => (
                 <th key={header} className="px-6 py-3 text-left text-xs font-medium  text-white dark:border-gray-900 uppercase tracking-wider">
                   {header}
                 </th>
@@ -180,6 +197,7 @@
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.isRetired ? 'Retired' : 'Active'}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.isRetired ? '0' : teacher.yearsToRetirement}</td>
                 <td className="px-6 py-4 whitespace-nowrap text-sm  ">{new Date(teacher.joiningDate).getFullYear()}</td>
+                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.transfer}</td>
                 
               </tr>
             ))}
@@ -308,7 +326,9 @@
           (filters.nativeStatus ? teacher.nativeStatus === filters.nativeStatus : true) &&
           (filters.educationLevel ? teacher.educationLevel === filters.educationLevel : true) &&
           (filters.experience ? teacher.experience >= parseInt(filters.experience, 10) : true) &&
-          (filters.isRetired ? (filters.isRetired === "true" ? teacher.isRetired : !teacher.isRetired) : true)
+          (filters.isRetired ? (filters.isRetired === "true" ? teacher.isRetired : !teacher.isRetired) : true) &&
+          (filters.transfer ? teacher.transfer === filters.transfer : true) // Add this line
+
         );
       });
       setFilteredTeachers(filtered);
@@ -326,7 +346,8 @@
     };
 
     const handleResetFilters = () => {
-      setFilters({ name: '', subject: '', region: '', district: '', teacherType: '', yearJoined: '', sex: '', nativeStatus: '', educationLevel: '',});
+      setFilters({ name: '', subject: '', region: '', district: '', teacherType: '', yearJoined: '', sex: '', nativeStatus: '', educationLevel: '',  transfer: '', // Add this line
+      });
       setPage(1);
     };
 
@@ -370,7 +391,8 @@
     const getCounts = () => {
       const counts = {
         sex: { Male: 0, Female: 0 },
-        nativeStatus: { 'Native': 0, 'Non-native': 0 },
+        nativeStatus: { 'Region': 0, 'Non-region': 0 },
+       
       };
       filteredTeachers.forEach(teacher => {
         counts.sex[teacher.sex] = (counts.sex[teacher.sex] || 0) + 1;
@@ -415,8 +437,8 @@
         <span className="text-sm font-medium">Retired: {retirementCounts.retired}</span>
         <span className="text-sm font-medium">Male: {counts.sex.Male || 0}</span>
         <span className="text-sm font-medium">Female: {counts.sex.Female || 0}</span>
-        <span className="text-sm font-medium">Native: {counts.nativeStatus.Native || 0}</span>
-        <span className="text-sm font-medium">Non-native: {counts.nativeStatus['Non-native'] || 0}</span>
+        <span className="text-sm font-medium">Region: {counts.nativeStatus.Region || 0}</span>
+        <span className="text-sm font-medium">Non-region: {counts.nativeStatus['Non-region'] || 0}</span>
       </div>
     </div>
   </div>
