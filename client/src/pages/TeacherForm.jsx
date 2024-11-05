@@ -127,8 +127,7 @@ const TeacherForm = () => {
   const [error, setError] = useState(''); // State-ka Qalad
   const [errors, setErrors] = useState({}); // State-ka Validation Errors
   const [success, setSuccess] = useState(''); // State-ka Ogeysiiska Guusha
-  const [qualificationsFile, setQualificationsFile] = useState(null); // Define this state
-
+ 
   // Handle change for input fields
   const handleChange = (e) => {
     const { name, value } = e.target;
@@ -154,52 +153,45 @@ const TeacherForm = () => {
   };
 
   // Function to handle file change
-  const handleFileChange = (e) => {
-    const file = e.target.files[0]; // Get the first file from the input
-    if (file) {
+const handleFileChange = (e) => {
+  const file = e.target.files[0]; // Get the first file from the input
+  if (file) {
+      // console.log('Selected file:', file.name); // Log the selected file for debugging
+
       // Update the form data with the selected file
       setFormData((prevData) => ({
-        ...prevData,
-        picture: file, // Assuming you want to save the file as "picture"
+          ...prevData,
+          picture: file, // Assuming you want to save the file as "picture"
       }));
 
-      // Also set the qualificationsFile state for upload
-      setQualificationsFile(file);
-
-      // Clear any previous error related to qualifications
+      // Clear any previous error related to the picture
       setErrors((prevErrors) => ({
-        ...prevErrors,
-        qualifications: null,
+          ...prevErrors,
+          picture: null,
       }));
 
-      // Optional: Log the selected file for debugging
-      // console.log('Selected file:', file.name);
-    }
-  };
+      // console.log('Form data updated with selected file:', { ...formData, picture: file }); // Log the updated form data
+  } else {
+      // console.warn('No file selected.'); // Warn if no file was selected
+  }
+};
 
-  const uploadQualifications = async () => {
-    if (!qualificationsFile) {
-      console.error("No qualifications file selected.");
-      return null; // Return early if no file is selected
-    }
-
-    const storage = getStorage(); // Initialize Firebase Storage
-    const storageRef = ref(storage, `qualifications/${qualificationsFile.teacher.name}`); // Create a reference to the file location
-
-    try {
-      console.log('Uploading qualifications to Firebase Storage...');
-      await uploadBytes(storageRef, qualificationsFile); // Upload the file
-      console.log('Qualifications uploaded successfully:', qualificationsFile.name);
-
-      // Get the download URL
-      const qualificationsURL = await getDownloadURL(storageRef);
-      console.log('Qualifications download URL:', qualificationsURL);
-      return qualificationsURL; // Return the URL
-    } catch (error) {
-      console.error('Error uploading qualifications:', error);
-      throw error; // Rethrow the error for further handling in the calling function
-    }
-  };
+const handleQualificationsChange = (e) => {
+  const file = e.target.files[0]; // Get the first file from the input
+  if (file) {
+    // console.log('Selected qualifications file:', file.name); // Log for debugging
+    setFormData((prevData) => ({
+      ...prevData,
+      qualifications: file, // Store the file in formData
+    }));
+    setErrors((prevErrors) => ({
+      ...prevErrors,
+      qualifications: null, // Clear any previous error
+    }));
+  } else {
+    // console.warn('No qualifications file selected.'); // Warn if no file was selected
+  }
+};
 
 
   // Function-ka Dib-u-dejinta Foomka
@@ -278,7 +270,7 @@ const TeacherForm = () => {
         ...prevData,
         salary: calculatedSalary,
       }));
-      console.log(`Calculated Salary: ${calculatedSalary}`);
+      // console.log(`Calculated Salary: ${calculatedSalary}`);
     } else {
       setFormData(prevData => ({
         ...prevData,
@@ -301,98 +293,90 @@ const TeacherForm = () => {
   }, [formData.region]);
 
   // Function-ka Dirista Foomka
-  const handleSubmit = async (event) => {
-    event.preventDefault();
-    console.log('Form submission initiated with data:', formData);
+ // Function to handle form submission
+ const handleSubmit = async (event) => {
+  event.preventDefault(); // Prevent default form submission
+  setLoading(true); // Set loading state to true
+  setError(''); // Reset error state
+  setSuccess(''); // Reset success state
 
-    // Call handleCheckboxChange if needed
-    // handleCheckboxChange(); // Uncomment if this function needs to be called
+  // Validate the form before submission
+  if (!validate()) {
+    setLoading(false);
+    return; // Exit if validation fails
+  }
 
-    // Validate the form before submitting
-    if (!validate()) {
-      console.log('Validation failed with errors:', errors);
-      return; // Exit if validation fails
+  try {
+    // console.log('Submitting form with data:', formData); // Log the form data before submission
+
+    // Upload the profile picture if it exists
+    let pictureURL = ''; // Initialize pictureURL
+    if (formData.picture) { // Check if picture exists in formData
+      const picturePath = `profilePictures/${formData.picture.name}`; // Define the storage path
+      const pictureRef = ref(storage, picturePath); // Create a reference to the file
+      // console.log(`Uploading picture to path: ${picturePath}`); // Log the upload path
+      await uploadBytes(pictureRef, formData.picture); // Upload the file
+      pictureURL = await getDownloadURL(pictureRef); // Get the download URL
+      // console.log('Picture uploaded successfully, URL:', pictureURL); // Log the picture URL
     }
 
-    setLoading(true); // Start loading state
-    setError(''); // Clear previous errors
-    setSuccess(''); // Clear previous success messages
-
-    let pictureURL = '';
+    // Upload the qualifications file if it exists
     let qualificationsURL = '';
-
-    // Handle qualifications upload and get the URL
-    try {
-      qualificationsURL = await uploadQualifications(); // Function to upload qualifications
-      if (!qualificationsURL) {
-        throw new Error("Failed to upload qualifications."); // Handle if the upload fails
-      }
-    } catch (error) {
-      console.error("Error uploading qualifications: ", error);
-      setError('Error uploading qualifications.'); // Set error message
-      setLoading(false); // Stop loading state
-      return; // Exit to prevent further actions
+    if (formData.qualifications) {
+      const qualificationsPath = `qualifications/${formData.qualifications.name}`; // Define the storage path
+      const qualificationsRef = ref(storage, qualificationsPath); // Create a reference to the file
+      // console.log(`Uploading qualifications to path: ${qualificationsPath}`); // Log the upload path
+      await uploadBytes(qualificationsRef, formData.qualifications); // Upload the file
+      qualificationsURL = await getDownloadURL(qualificationsRef); // Get the download URL
+      // console.log('Qualifications file uploaded successfully, URL:', qualificationsURL); // Log the qualifications URL
     }
 
-    // Handle picture upload if it exists
-    if (formData.picture) { 
-      const storageRef = ref(storage, `images/${formData.picture.teacher.name}`);
-      console.log('Uploading picture to Firebase Storage...');
-
-      try {
-        await uploadBytes(storageRef, formData.picture);
-        console.log('Picture uploaded successfully:', formData.picture.name);
-        pictureURL = await getDownloadURL(storageRef);
-        console.log('Picture download URL:', pictureURL);
-      } catch (error) {
-        console.error('Error uploading picture:', error);
-        setError('Error uploading picture.'); // Set error message
-        setLoading(false); // Stop loading state
-        return; // Exit to prevent further actions
-      }
-    }
-
-    // Prepare the data to send to the API
+    // Prepare the data to send
     const dataToSend = {
       ...formData,
-      qualifications: qualificationsURL, // Add qualifications URL to form data
-      picture: pictureURL, // Add picture URL to form data
-      createdBy: currentUser._id, // Add the createdBy field
+      qualifications: qualificationsURL, // Use the URL of the uploaded qualifications file
+      picture: pictureURL, // Use the URL of the uploaded picture
+      createdBy: currentUser._id,
     };
 
-    console.log('Data to send to API:', JSON.stringify(dataToSend, null, 2));
+    // Send data to the server
+    // console.log('Sending data to the server:', dataToSend); // Log the data being sent
+    const response = await fetch('https://finalbakend.vercel.app/', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify(dataToSend), // Send as JSON
+    });
 
-    // Send data to your TeacherForm API
-    try {
-      const response = await fetch('https://finalbakend.vercel.app/', {
-        method: 'POST',
-        headers: {
-          'Content-Type': 'application/json',
-        },
-        body: JSON.stringify(dataToSend),
-      });
-
-      if (response.ok) {
-        const responseData = await response.json();
-        console.log('Data successfully sent:', responseData);
-        setSuccess('Form submitted successfully!'); // Set success message
-        // Optionally reset the form
-        resetForm(); // Reset the form fields
-        setQualificationsFile(null); // Reset qualifications file
-      } else {
-        const responseText = await response.text();
-        console.error('Response error message:', responseText);
-        setError('Error sending data .'); // Set error message
-      }
-
-      console.log('API response status:', response.status);
-    } catch (error) {
-      console.error('Error sending data to API:', error);
-      setError('Error sending data .'); // Set error message
-    } finally {
-      setLoading(false); // Stop loading state
+    // Check for response errors
+    if (!response.ok) {
+      // console.error('Network response was not ok', response.statusText); // Log response error
+      throw new Error('Network response was not ok');
     }
-  };
+
+    // If successful, set success message
+    setSuccess('Form submitted successfully!');
+    // console.log('Form submission successful'); // Log successful submission
+    resetForm(); // Reset form after successful submission
+  } catch (err) {
+    // console.error('Error during form submission:', err); // Log the error
+    setError('Error submitting the form.'); // Set error message
+  } finally {
+    setLoading(false); // Reset loading state
+  }
+};
+
+
+// Update the list of districts based on the selected region
+useEffect(() => {
+  if (formData.region) {
+      const updatedDistricts = DISTRICTS[formData.region] || [];
+      setDistricts(updatedDistricts); // Update districts based on selected region
+      // console.log('Districts updated based on region:', updatedDistricts); // Log the updated districts
+  } else {
+      setDistricts([]); // Clear districts if no region selected
+      // console.log('No region selected, clearing districts'); // Log that districts are cleared
+  }
+}, [formData.region]);
 
   // Generate a list of years from 1900 to the current year
   const generateYears = () => {
@@ -979,18 +963,17 @@ const TeacherForm = () => {
                 className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
               />
             </div>
-            <div className="mb-4">
-              <label className="block font-semibold mb-1 text-gray-700">Qualifications:</label>
-              <input
-                type="file"
-                accept=".pdf,.doc,.docx"
-                onChange={handleFileChange}
-                className="border border-gray-300 p-2 rounded w-full"
-                disabled={loading}
+            <div>
+  <label htmlFor="qualifications">Qualifications (PDF/Word):</label>
+  <input
+    type="file"
+    name="qualifications"
+    accept=".pdf, .doc, .docx" // Accept only PDF and Word files
+    onChange={handleQualificationsChange}
+  />
+  {errors.qualifications && <span className="error">{errors.qualifications}</span>}
+</div>
 
-              />
-              {errors.qualifications && <p className="text-red-600 text-sm mt-1">{errors.qualifications}</p>}
-            </div>
           </div>
         </div>
 

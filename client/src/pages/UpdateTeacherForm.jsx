@@ -13,6 +13,8 @@ const UpdateTeacherForm = () => {
   const [previousBirthDate, setPreviousBirthDate] = useState('');
   const [previousJoiningDate, setPreviousJoiningDate] = useState('');
   const [picturePreview, setPicturePreview] = useState(null); // State for picture preview
+  const [previousQualificationsURL, setPreviousQualificationsURL] = useState(''); // Add state for previous qualifications URL
+
 
   // Regions and Districts
   const REGIONS = ['Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
@@ -181,6 +183,22 @@ const UpdateTeacherForm = () => {
 
      }
   };
+  const handleQualificationsChange = (e) => {
+    const file = e.target.files[0];
+    if (file) {
+      setFormData((prevData) => ({
+        ...prevData,
+        qualifications: file,
+      }));
+      setErrors((prevErrors) => ({
+        ...prevErrors,
+        qualifications: null,
+      }));
+    } else {
+      console.warn('No qualifications file selected.');
+    }
+  };
+  
 
   const resetForm = () => {
     setFormData({
@@ -260,31 +278,40 @@ const UpdateTeacherForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-    // console.log('Form submission initiated with data:', formData);
 
     if (!validate()) {
-      // console.log('Validation failed with errors:', errors);
-      return;
+      return; // Exit if validation fails
     }
 
     setLoading(true);
     setError('');
     setSuccess('');
 
-    let pictureURL = previousPictureURL; // Isticmaal URL-ka hore haddii sawir cusub aan la dooran
+    let pictureURL = previousPictureURL; // Use previous URL if no new picture is uploaded
+    let qualificationsURL = previousQualificationsURL; // Initialize the qualifications URL
 
+    // Upload the picture if it exists
     if (formData.picture && formData.picture instanceof File) {
-      const storageRef = ref(storage, `images/${formData.picture.teacher.name}`);
-      // console.log('Uploading picture to Firebase Storage...');
-
+      const storageRef = ref(storage, `images/${formData.picture.name}`);
       try {
         await uploadBytes(storageRef, formData.picture);
-        // console.log('Picture uploaded successfully:', formData.picture.name);
         pictureURL = await getDownloadURL(storageRef);
-        // console.log('Picture download URL:', pictureURL);
       } catch (error) {
-        // console.error('Error uploading picture:', error);
         setError('Error uploading picture.');
+        setLoading(false);
+        return;
+      }
+    }
+
+    // Upload the qualifications file if it exists
+    if (formData.qualifications) {
+      const qualificationsPath = `qualifications/${formData.qualifications.name}`; // Define the storage path
+      const qualificationsRef = ref(storage, qualificationsPath); // Create a reference to the file
+      try {
+        await uploadBytes(qualificationsRef, formData.qualifications); // Upload the file
+        qualificationsURL = await getDownloadURL(qualificationsRef); // Get the download URL
+      } catch (error) {
+        setError('Error uploading qualifications file.');
         setLoading(false);
         return;
       }
@@ -292,7 +319,8 @@ const UpdateTeacherForm = () => {
 
     const dataToSend = {
       ...formData,
-      picture: pictureURL, // Ku dar URL-ka sawirka
+      picture: pictureURL, // Include the picture URL
+      qualifications: formData.qualifications || previousQualificationsURL, // Include the qualifications URL
       updatedBy: currentUser._id,
       district: formData.district || previousDistrict, // Use previous district if not provided
       birthDate: formData.birthDate || previousBirthDate, // Use previous birth date if not provided
@@ -318,23 +346,19 @@ const UpdateTeacherForm = () => {
 
       if (response.ok) {
         const responseData = await response.json();
-        // console.log('Data successfully sent:', responseData);
         setSuccess('Form submitted successfully!');
         resetForm();
       } else {
         const responseText = await response.text();
-        // console.error('Response error message:', responseText);
         setError('Error sending data to API.');
       }
-
-      // console.log('API response status:', response.status);
     } catch (error) {
-      // console.error('Error sending data to API:', error);
       setError('Error sending data to API.');
     } finally {
       setLoading(false);
     }
-  };
+};
+
 
 // Generate a list of years from 1900 to the current year
 const generateYears = () => {
@@ -874,8 +898,20 @@ const generateYears = () => {
               />
             </div>
 
-          </div>
+          <div>
+    <label htmlFor="qualifications">Upload Qualifications:</label>
+    <input
+    value={previousQualificationsURL}
+      type="file"
+      id="qualifications"
+      name="qualifications"
+      accept=".pdf, .doc, .docx" // Specify acceptable file types
+      onChange={handleQualificationsChange} // Call your change handler
+    />
+    {errors.qualifications && <p className="error">{errors.qualifications}</p>}
+  </div>
         </div>
+          </div>
 
         {/* Submit and Reset Buttons */}
         <div className="flex justify-between">
