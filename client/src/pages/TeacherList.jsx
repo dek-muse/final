@@ -13,7 +13,7 @@ const TeacherList = () => {
   const [currentPage, setCurrentPage] = useState(1);
   const [entriesPerPage, setEntriesPerPage] = useState(30);
   const [filterStatus, setFilterStatus] = useState('all');
-  const [filterCreatedBy, setFilterCreatedBy] = useState('all'); // New state for Created By filter
+   const [filterCreatedBy, setFilterCreatedBy] = useState('all'); // New state for Created By filter
   const navigate = useNavigate();
   const storage = getStorage(); // Initialize Firebase Storage
 
@@ -75,12 +75,12 @@ const TeacherList = () => {
     setFilterCreatedBy(event.target.value);
   };
 
-  const filteredTeachers = teachers
-    .filter((teacher) => {
-      const name = teacher.name ? teacher.name.toLowerCase() : '';
-      const term = searchTerm ? searchTerm.toLowerCase() : '';
-      return name.includes(term);
-    })
+  const filteredTeachers = teachers.filter((teacher) => {
+    const name = teacher.name ? teacher.name.toLowerCase() : '';
+    const teacherId = teacher.teacherId ? teacher.teacherId.toLowerCase() : ''; // Assuming _id is the teacher ID
+    const term = searchTerm ? searchTerm.toLowerCase() : '';
+    return name.includes(term) || teacherId.includes(term);
+  })  
     .filter((teacher) => {
       if (filterStatus === 'all') return true;
       return teacher.status === filterStatus;
@@ -104,10 +104,12 @@ const TeacherList = () => {
   const exportToExcel = () => {
     const data = filteredTeachers.map((teacher, index) => ({
       No: index + 1,
+      id: teacher.teacherId || '',
       Name: teacher.name || '',
       Email: teacher.email || '',
       Mobile: teacher.mobile || '',
-      'Created By': teacher.createdBy?.username || 'N/A', // Added Created By
+      'Created By': teacher.createdBy?.username || 'Un know', // Added Created By
+      '	Updated By': teacher.	updatedBy?.username || 'N/A', // Added 	Updated By
     }));
 
     const worksheet = utils.json_to_sheet(data);
@@ -177,16 +179,18 @@ const TeacherList = () => {
         {/* Search and Created By Filter */}
         <div className="flex flex-col sm:flex-row items-center gap-4">
           {/* Search Bar */}
-          <div className="relative">
-            <IoSearch className="absolute inset-y-0 left-0 pl-3 flex items-center text-gray-500 dark:text-gray-400" size={20} />
-            <input
-              type="text"
-              placeholder="Search by name..."
-              value={searchTerm}
-              onChange={handleSearchChange}
-              className="border rounded pl-10 pr-4 py-2 w-full sm:w-64 dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 transition duration-150"
-            />
-          </div>
+         <div className="flex mb-4">
+  <input
+    type="text"
+    placeholder="Search by Name or Teacher ID"
+    value={searchTerm}
+    onChange={(e) => setSearchTerm(e.target.value)}
+    className="border rounded pl-10 pr-4 py-2 w-full sm:w-64 dark:bg-gray-800 focus:ring-2 focus:ring-blue-500 transition duration-150"
+    />
+</div>
+
+    
+
 
           {/* Created By Filter */}
           <div className="flex items-center gap-2">
@@ -210,7 +214,7 @@ const TeacherList = () => {
         <table className="min-w-full border border-gray-300">
           <thead className="border-b border-gray-300">
             <tr>
-              <th className="py-3 px-4 text-left">#</th>
+              <th className="py-3 px-4 text-left">Id</th>
               <th className="py-3 px-4 text-left">Profile</th>
               <th className="py-3 px-4 text-left hidden md:table-cell">Name</th>
               <th className="py-3 px-4 text-left hidden md:table-cell">Email</th>
@@ -224,8 +228,8 @@ const TeacherList = () => {
             {currentTeachers.length > 0 ? (
               currentTeachers.map((teacher, index) => (
                 <tr key={teacher._id} className="border-b border-gray-200 hover:bg-gray-100 dark:hover:bg-gray-700">
-                  <td className="py-4 px-4">{indexOfFirstEntry + index + 1}</td>
-                  <td className="py-4 px-4 flex items-center">
+                  <td className="py-4 px-4 hidden md:table-cell">{teacher.teacherId}</td>
+                   <td className="py-4 px-4 flex items-center">
                     {teacher.picture ? (
                       <img
                         src={teacher.picture}

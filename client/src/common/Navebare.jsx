@@ -65,6 +65,7 @@ const Header = () => {
 
         {/* Desktop Menu Links */}
         <div className="hidden md:flex items-center space-x-4">
+          <NavLink to="/dashboard2" className="px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300">Dashboard</NavLink>
           <NavLink to="/about" className="px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300">About</NavLink>
           <NavLink to="/connect" className="px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300">Connect</NavLink>
 

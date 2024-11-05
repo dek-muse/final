@@ -3,6 +3,7 @@
 @tailwind utilities;
 
 
+
 /* src/styles/global.css */
 body.dark {
   background-color: #1a202c; /* Dark mode background color */

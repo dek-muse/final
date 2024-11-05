@@ -103,7 +103,7 @@ const TeacherForm = () => {
     subjectsTech: '',
     salary: '',
     description: '',
-    healthStatus: '', // Initialized as an empty string
+    healthStatus: 'yes', // Initialized as an empty string
     healthNote: '',   // Initialized as an empty string
     transfer: false,  // Change to Boolean
     transferReason: '', // Initialized as an empty string
@@ -172,7 +172,7 @@ const TeacherForm = () => {
       subjectsTech: '',
       salary: '',
       description: '',
-      healthStatus: '', // Initialized as an empty string
+      healthStatus: 'yes', // Initialized as an empty string
       healthNote: '',   // Initialized as an empty string
       transfer: false,  // Change to Boolean
       transferReason: '', // Initialized as an empty string

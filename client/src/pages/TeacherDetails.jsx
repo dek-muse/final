@@ -77,9 +77,9 @@ function TeacherDetails() {
             <p><strong>Education Level:</strong> {teacher.educationLevel}</p>
             <p><strong>Birth Date:</strong> {teacher.birthDate ? new Date(teacher.birthDate).toLocaleDateString() : 'N/A'}</p>
             <p><strong>Health Status:</strong> {teacher.healthStatus}</p>
-            <p><strong>Sex:</strong> {Array.isArray(teacher.sex) ? teacher.sex.join(', ') : 'N/A'}</p>
-            <p><strong>Native Status:</strong> {Array.isArray(teacher.nativeStatus) ? teacher.nativeStatus.join(', ') : 'N/A'}</p>
-          </div>
+            <p><strong>Sex:</strong> {teacher.sex}</p>
+            <p><strong>Health Status:</strong> {teacher.nativeStatus}</p>
+           </div>
         </div>
 
         {/* Transfer Information */}
@@ -119,10 +119,10 @@ function TeacherDetails() {
             {teacher.updateHistory && teacher.updateHistory.length > 0 ? (
               teacher.updateHistory.map((update, index) => (
                 <div key={index} className="border p-4 my-2 rounded-lg shadow-sm">
-                  <p><strong>Region:</strong> {update.newregion}</p>
-                  <p><strong>District:</strong> {update.newdistrict}</p>
+                  <p><strong>Region:</strong> {update.newRegion}</p>
+                  <p><strong>District:</strong> {update.newDistrict}</p>
                   <p><strong>Updated At:</strong> {new Date(update.updatedAt).toLocaleString()}</p>
-                  {/* <p><strong>Updated By:</strong> {teacher.updatedBy?.username || 'Unknown'}</p> */}
+                  <p><strong>Updated By:</strong> {teacher.updatedBy?.username || 'Unknown'}</p>
                   {/* <p><strong>Transfer Reason:</strong> {update.transferReason || 'N/A'}</p> */}
                 </div>
               ))
@@ -141,8 +141,8 @@ function TeacherDetails() {
                 <p><strong>Previous Region:</strong> {transfer.previousRegion}</p>
                 <p><strong>Previous District:</strong> {transfer.previousDistrict}</p>
                 <p><strong>Transfer Date:</strong> {new Date(transfer.transferDate).toLocaleString()}</p>
-                {/* <p><strong>Transferred By:</strong> {transfer.transferredBy.username || 'Unknown'}</p> */}
                 <p><strong>Transfer Reason:</strong> {transfer.transferReason || 'N/A'}</p>
+                <p><strong>Transferred By:</strong> {teacher.updatedBy?.username || 'Unknown'}</p>
               </div>
             ))}
           </div>
