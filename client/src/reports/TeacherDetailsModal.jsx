@@ -16,7 +16,7 @@ const TeacherDetailsModal = ({ teacher, onClose }) => {
   return (
     <div className="fixed inset-0 flex items-center justify-center bg-gray-500 bg-opacity-75">
       <div className="bg-white p-6 rounded-lg shadow-lg max-w-lg w-full">
-        <h2 className="text-2xl font-bold mb-4">Teacher Details</h2>
+        <h2 className="text-2xl font-bold mb-4">Teacher Details info</h2>
         <div className="border rounded-lg shadow-md p-4 bg-white" style={{ width: '3.375in', height: '2.125in' }}>
           <div className="flex items-center mb-2">
             <img 
