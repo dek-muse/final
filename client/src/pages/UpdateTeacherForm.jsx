@@ -35,7 +35,7 @@ const UpdateTeacherForm = () => {
   };
 
   const EDUCATION_LEVELS = ['TTI', 'DIP', 'Deg', 'MA'];
-
+ 
   const SALARY_RANGES = {
     TTI: {
       'new employee': 3934,
@@ -278,86 +278,77 @@ const UpdateTeacherForm = () => {
 
   const handleSubmit = async (e) => {
     e.preventDefault();
-
+    // console.log("Form submission initiated");
+  
     if (!validate()) {
+      // console.log("Validation failed with errors:", errors);
       return; // Exit if validation fails
     }
-
+  
     setLoading(true);
     setError('');
     setSuccess('');
-
-    let pictureURL = previousPictureURL; // Use previous URL if no new picture is uploaded
-    let qualificationsURL = previousQualificationsURL; // Initialize the qualifications URL
-
-    // Upload the picture if it exists
-    if (formData.picture && formData.picture instanceof File) {
-      const storageRef = ref(storage, `images/${formData.picture.name}`);
-      try {
-        await uploadBytes(storageRef, formData.picture);
-        pictureURL = await getDownloadURL(storageRef);
-      } catch (error) {
-        setError('Error uploading picture.');
-        setLoading(false);
-        return;
-      }
-    }
-
-    // Upload the qualifications file if it exists
-    if (formData.qualifications) {
-      const qualificationsPath = `qualifications/${formData.qualifications.name}`; // Define the storage path
-      const qualificationsRef = ref(storage, qualificationsPath); // Create a reference to the file
-      try {
-        await uploadBytes(qualificationsRef, formData.qualifications); // Upload the file
-        qualificationsURL = await getDownloadURL(qualificationsRef); // Get the download URL
-      } catch (error) {
-        setError('Error uploading qualifications file.');
-        setLoading(false);
-        return;
-      }
-    }
-
-    const dataToSend = {
-      ...formData,
-      picture: pictureURL, // Include the picture URL
-      qualifications: formData.qualifications || previousQualificationsURL, // Include the qualifications URL
-      updatedBy: currentUser._id,
-      district: formData.district || previousDistrict, // Use previous district if not provided
-      birthDate: formData.birthDate || previousBirthDate, // Use previous birth date if not provided
-      joiningDate: formData.joiningDate || previousJoiningDate, // Use previous joining date if not provided
-    };
-
+  
+    let pictureURL = previousPictureURL;
+    let qualificationsURL = previousQualificationsURL;
+  
     try {
-      const response = id
-        ? await fetch(`https://finalbakend.vercel.app/${id}`, {
-          method: 'PUT',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(dataToSend),
-        })
-        : await fetch('https://finalbakend.vercel.app/', {
-          method: 'POST',
-          headers: {
-            'Content-Type': 'application/json',
-          },
-          body: JSON.stringify(dataToSend),
-        });
-
+      if (formData.picture instanceof File) {
+        // console.log("Uploading new picture:", formData.picture.name);
+        const pictureRef = ref(storage, `images/${formData.picture.name}`);
+        await uploadBytes(pictureRef, formData.picture);
+        pictureURL = await getDownloadURL(pictureRef);
+        // console.log("Picture uploaded successfully:", pictureURL);
+      } else {
+        // console.log("No new picture provided, using previous picture URL.");
+      }
+  
+      if (formData.qualifications instanceof File) {
+        // console.log("Uploading new qualifications file:", formData.qualifications.name);
+        const qualificationsRef = ref(storage, `qualifications/${formData.qualifications.name}`);
+        await uploadBytes(qualificationsRef, formData.qualifications);
+        qualificationsURL = await getDownloadURL(qualificationsRef);
+        // console.log("Qualifications uploaded successfully:", qualificationsURL);
+      } else {
+        // console.log("No new qualifications file provided, using previous qualifications URL.");
+      }
+  
+      const dataToSend = {
+        ...formData,
+        picture: pictureURL,
+        qualifications: qualificationsURL,
+        updatedBy: currentUser._id,
+        district: formData.district || previousDistrict,
+        birthDate: formData.birthDate || previousBirthDate,
+        joiningDate: formData.joiningDate || previousJoiningDate,
+      };
+      // console.log("Data prepared for submission:", dataToSend);
+  
+      const response = await fetch(`https://finalbakend.vercel.app/${id || ''}`, {
+        method: id ? 'PUT' : 'POST',
+        headers: { 'Content-Type': 'application/json' },
+        body: JSON.stringify(dataToSend),
+      });
+  
       if (response.ok) {
         const responseData = await response.json();
+        // console.log("Form submission successful:", responseData);
         setSuccess('Form submitted successfully!');
         resetForm();
       } else {
         const responseText = await response.text();
-        setError('Error sending data to API.');
+        // console.error("Error response from API:", responseText);
+        setError('Error submitting form.');
       }
     } catch (error) {
-      setError('Error sending data to API.');
+      // console.error("Error during form submission:", error);
+      setError('Error processing form data.');
     } finally {
+      // console.log("Form submission complete, loading state reset.");
       setLoading(false);
     }
-};
+  };
+  
 
 
 // Generate a list of years from 1900 to the current year
