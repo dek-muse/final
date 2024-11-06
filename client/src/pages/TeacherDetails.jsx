@@ -28,7 +28,13 @@ function TeacherDetails() {
     window.print();
   };
 
-  if (loading) return <div>Loading...</div>;
+  if (loading) return <div> <div className="min-h-screen flex items-center justify-center -mt-6">
+  <div className="flex-col gap-4 w-full flex items-center justify-center">
+    <div className="w-20 h-20 border-4 border-transparent text-[#f27405] text-4xl animate-spin flex items-center justify-center border-t-[#f27405] rounded-full">
+      <div className="w-16 h-16 border-4 border-transparent  text-2xl animate-spin flex items-center justify-center border-t-gray-800 rounded-full" />
+    </div>
+  </div>
+</div></div>;
 
   // Ensure teacher data is available
   if (!teacher) {

@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaEdit, FaTrashAlt } from 'react-icons/fa';
+import { FaEdit, FaFilter, FaSearch, FaTrashAlt } from 'react-icons/fa';
 import { useSelector } from 'react-redux';   
 
 
@@ -48,8 +48,8 @@ const UserManagement = () => {
       }, {});
       return users;
     } catch (error) {
-      console.error('Error fetching usernames:', error);
-      return {};
+      // console.error('Error fetching usernames:', error);
+      return {error};
     }
   };
   
@@ -70,7 +70,7 @@ const UserManagement = () => {
         const usernames = await fetchUsernamesByIds(userIds);
         setUsernames(usernames);
       } catch (error) {
-        setError('Failed to fetch users. Please try again later.');
+        setError('Failed your network. Please try again later.');
       } finally {
         setIsLoading(false);
       }
@@ -178,143 +178,171 @@ const UserManagement = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen p-4 sm:p-8 ">
-      <div className="p-6 rounded-lg shadow-lg w-full max-w-6xl ">
-        <h2 className="text-2xl font-bold mb-4 ">User Management</h2>
+     <div className="p-6 space-y-6 w-full max-w-8xl bg-white rounded-lg shadow-lg">
+  <h2 className="text-4xl font-bold text-gray-800 mb-6">User Management</h2>
 
-        <div className="mb-4 flex flex-col sm:flex-row gap-4">
-          <input
-            type="text"
-            placeholder="Search by username..."
-            value={searchQuery}
-            onChange={(e) => setSearchQuery(e.target.value)}
-            className="border rounded-md px-4 py-2 w-full sm:w-auto"
-          />
+  {/* Search & Filter Section */}
+  <div className="flex flex-col sm:flex-row gap-4 items-center justify-between mb-6">
+    {/* Search Input */}
+    <div className="flex items-center gap-4">
+      <FaSearch className="text-gray-600" />
+      <input
+        type="text"
+        placeholder="Search by username..."
+        value={searchQuery}
+        onChange={(e) => setSearchQuery(e.target.value)}
+        className="border rounded-md px-4 py-2 w-full sm:w-auto focus:ring-2 focus:ring-indigo-500"
+      />
+    </div>
+
+    {/* Filter Dropdowns */}
+    <div className="flex gap-4 items-center">
+      <FaFilter size={22} className="text-gray-600" />
+      <select
+        value={selectedRole}
+        onChange={(e) => setSelectedRole(e.target.value)}
+        className="border rounded-md px-4 py-2 w-full sm:w-auto focus:ring-2 focus:ring-indigo-500"
+      >
+        <option value="">All Roles</option>
+        {roles.map(role => (
+          <option key={role} value={role}>{role}</option>
+        ))}
+      </select>
+      <select
+        value={selectedRegion}
+        onChange={(e) => setSelectedRegion(e.target.value)}
+        className="border rounded-md px-4 py-2 w-full sm:w-auto focus:ring-2 focus:ring-indigo-500"
+      >
+        <option value="">All Regions</option>
+        {REGIONS.map(region => (
+          <option key={region} value={region}>{region}</option>
+        ))}
+      </select>
+    </div>
+  </div>
+
+  {/* User Count Display */}
+  <div className="mb-6">
+    <p className="text-lg text-gray-700">
+      Total Users: <span className="font-semibold">{userCount}</span>
+    </p>
+  </div>
+
+  {/* User Table */}
+  <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
+    <table className="min-w-full divide-y divide-gray-200">
+      <thead className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+        <tr>
+          {['No', 'Profile Picture', 'Username', 'Email', 'Role', 'Region', 'Actions'].map((header) => (
+            <th key={header} className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
+              {header}
+            </th>
+          ))}
+        </tr>
+      </thead>
+      <tbody className="divide-y divide-gray-200">
+        {filteredUsers.map((user, index) => (
+          <tr key={user._id} className="hover:bg-indigo-50">
+            <td className="px-6 py-4 text-sm">{index + 1}</td>
+            <td className="px-6 py-4 text-sm">
+              <img src={user.profilePicture || '/default-profile.png'} alt="Profile" className="h-12 w-12 rounded-full" />
+            </td>
+            <td className="px-6 py-4 text-sm">{user.username}</td>
+            <td className="px-6 py-4 text-sm">{user.email}</td>
+            <td className="px-6 py-4 text-sm">{user.role}</td>
+            <td className="px-6 py-4 text-sm">{user.region}</td>
+            <td className="px-6 py-4 text-sm font-medium flex gap-2">
+              <button
+                onClick={() => handleEdit(user)}
+                className="bg-blue-500 hover:bg-blue-600 text-white py-1 px-3 rounded-md flex items-center"
+              >
+                <FaEdit className="mr-2" />
+                Edit
+              </button>
+              <button
+                onClick={() => confirmDelete(user._id)}
+                className="bg-red-500 hover:bg-red-600 text-white py-1 px-3 rounded-md flex items-center"
+              >
+                <FaTrashAlt className="mr-2" />
+                Delete
+              </button>
+            </td>
+          </tr>
+        ))}
+      </tbody>
+    </table>
+  </div>
+</div>
+
+
+{selectedUser && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
+    <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full transition-transform transform hover:scale-105">
+      <h3 className="text-2xl font-semibold text-gray-900 mb-6">Edit User</h3>
+      <form onSubmit={confirmUpdate} className="space-y-6">
+        <div>
+          <label htmlFor="role" className="block text-sm font-medium text-gray-700">Role</label>
           <select
-            value={selectedRole}
-            onChange={(e) => setSelectedRole(e.target.value)}
-            className="border rounded-md px-4 py-2 w-full sm:w-auto"
+            id="role"
+            value={selectedUser.role}
+            onChange={(e) => setSelectedUser({ ...selectedUser, role: e.target.value })}
+            className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
           >
-            <option value="">All Roles</option>
-            {roles.map(role => (
+            {roles.map((role) => (
               <option key={role} value={role}>{role}</option>
             ))}
           </select>
+        </div>
+
+        <div>
+          <label htmlFor="region" className="block text-sm font-medium text-gray-700">Region</label>
           <select
-            value={selectedRegion}
-            onChange={(e) => setSelectedRegion(e.target.value)}
-            className="border rounded-md px-4 py-2 w-full sm:w-auto"
+            id="region"
+            value={selectedUser.region}
+            onChange={(e) => setSelectedUser({ ...selectedUser, region: e.target.value })}
+            className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-200"
           >
-            <option value="">All Regions</option>
-            {REGIONS.map(region => (
+            {REGIONS.map((region) => (
               <option key={region} value={region}>{region}</option>
             ))}
           </select>
         </div>
 
-        <div className="mb-4">
-          <p className="">Total Users: <span className="font-bold">{userCount}</span></p>
-        </div>
-
-        <div className="overflow-x-auto">
-          <table className="min-w-full divide-y divide-gray-200">
-  <thead>
-    <tr>
-      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">No</th>
-      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Profile Picture</th>
-      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Username</th>
-      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Email</th>
-      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Role</th>
-      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Region</th>
-      {/* <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Update By</th> */}
-      <th className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">Actions</th>
-    </tr>
-  </thead>
-  <tbody className="divide-y divide-gray-200">
-    {filteredUsers.map((user, index) => (
-      <tr key={user._id}>
-        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">{index + 1}</td>
-        <td className="px-6 py-4 whitespace-nowrap text-sm">
-          <img src={user.profilePicture || '/default-profile.png'} alt="Profile" className="h-10 w-10 rounded-full" />
-        </td>
-        <td className="px-6 py-4 whitespace-nowrap text-sm">{user.username}</td>
-        <td className="px-6 py-4 whitespace-nowrap text-sm">{user.email}</td>
-        <td className="px-6 py-4 whitespace-nowrap text-sm">{user.role}</td>
-        <td className="px-6 py-4 whitespace-nowrap text-sm">{user.region}</td>
-        {/* <td className="px-6 py-4 whitespace-nowrap text-sm">{usernames[user.updatedBy] || 'N/A'}</td> Show updatedBy username */}
-        <td className="px-6 py-4 whitespace-nowrap text-sm font-medium flex gap-2">
-          <Button onClick={() => handleEdit(user)} className="bg-blue-500 hover:bg-blue-600 text-white">
-            <FaEdit className="mr-2" />
+        <div className="flex justify-end space-x-4 mt-6">
+          <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md shadow-md transition duration-200">
+            Update
           </Button>
-          <Button onClick={() => confirmDelete(user._id)} className="bg-red-500 hover:bg-red-600 text-white">
-            <FaTrashAlt className="mr-2" />
+          <Button onClick={() => setSelectedUser(null)} className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-md shadow-md transition duration-200">
+            Cancel
           </Button>
-        </td>
-      </tr>
-    ))}
-  </tbody>
-</table>
-
         </div>
+      </form>
+    </div>
+  </div>
+)}
+
+{showConfirmation && (
+  <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
+    <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
+      <p className="text-lg font-medium text-gray-800">Are you sure you want to {actionType} this user?</p>
+      <div className="flex justify-end mt-6 space-x-4">
+        <Button
+          onClick={actionType === 'delete' ? handleConfirmDelete : handleConfirmUpdate}
+          className="bg-red-600 hover:bg-red-700 text-white py-2 px-4 rounded-md shadow-md transition duration-200"
+        >
+          Yes
+        </Button>
+        <Button
+          onClick={() => setShowConfirmation(false)}
+          className="bg-gray-500 hover:bg-gray-600 text-white py-2 px-4 rounded-md shadow-md transition duration-200"
+        >
+          No
+        </Button>
       </div>
+    </div>
+  </div>
+)}
 
-      {selectedUser && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
-          <div className="bg-white p-8 rounded-lg shadow-xl max-w-md w-full transition-transform transform hover:scale-105">
-            <h3 className="text-2xl font-semibold  mb-6">Edit User</h3>
-            <form onSubmit={confirmUpdate} className="space-y-4">
-              <div>
-                <label htmlFor="role" className="block text-sm font-medium ">Role</label>
-                <select
-                  id="role"
-                  value={selectedUser.role}
-                  onChange={(e) => setSelectedUser({ ...selectedUser, role: e.target.value })}
-                  className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-500 transition duration-200"
-                >
-                  {roles.map((role) => (
-                    <option key={role} value={role}>{role}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div>
-                <label htmlFor="region" className="block text-sm font-medium ">Region</label>
-                <select
-                  id="region"
-                  value={selectedUser.region}
-                  onChange={(e) => setSelectedUser({ ...selectedUser, region: e.target.value })}
-                  className="mt-1 block w-full p-3 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring focus:ring-blue-500 transition duration-200"
-                >
-                  {REGIONS.map((region) => (
-                    <option key={region} value={region}>{region}</option>
-                  ))}
-                </select>
-              </div>
-
-              <div className="flex justify-end mt-6 space-x-2">
-                <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white">Update</Button>
-                <Button onClick={() => setSelectedUser(null)} className="bg-gray-300 hover:bg-gray-400 ">Cancel</Button>
-              </div>
-            </form>
-          </div>
-        </div>
-      )}
-
-      {showConfirmation && (
-        <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-10">
-          <div className="bg-white p-6 rounded-lg shadow-lg">
-            <p>Are you sure you want to {actionType} this user?</p>
-            <div className="flex justify-end mt-4">
-              <Button
-                onClick={actionType === 'delete' ? handleConfirmDelete : handleConfirmUpdate}
-                className="bg-red-600 hover:bg-red-700 text-white mr-2"
-              >
-                Yes
-              </Button>
-              <Button onClick={() => setShowConfirmation(false)} className="bg-gray-500 hover:bg-gray-600 text-white">No</Button>
-            </div>
-          </div>
-        </div>
-      )}
 
       {isLoading && (
         <div className="min-h-screen flex items-center justify-center -mt-6">

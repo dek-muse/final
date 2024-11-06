@@ -50,6 +50,7 @@ const subjectsTechOptions = ['Math', 'Science', 'History', 'Language Arts'];
   // filtered
   // Filters Component
   const Filters = ({ filters, onFilterChange, onResetFilters }) => {
+    const [showFilters, setShowFilters] = useState(false); // Toggle filter section visibility
     const handleFilterChange = (e) => {
       const { name, value } = e.target;
       onFilterChange({ ...filters, [name]: value });
@@ -60,154 +61,182 @@ const subjectsTechOptions = ['Math', 'Science', 'History', 'Language Arts'];
     };
 
     return (
-      <div className="p-6 max-w-[2200px] mx-auto rounded-lg shadow-lg border mb-6 bg-[#b19d60] shadow-gray-700 border-gray-900">
-  <h2 className="text-2xl font-bold mb-6 text-gray-800 text-start">Filters</h2>
-  <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
-    <div className="flex flex-col">
-      <label className="block text-sm font-medium">Region</label>
-      <select
-        name="region"
-        value={filters.region}
-        onChange={handleFilterChange}
-        className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-      >
-        <option value="">All Regions</option>
-        {REGIONS.map(region => (
-          <option key={region} value={region}>{region}</option>
-        ))}
-      </select>
-    </div>
+      <div className="p-6 max-w-[2200px] mx-auto  mb-6   border-gray-900">
+<div className='flex justify-between'>
+  <h2
+   className="text-2xl flex items-center gap-4 font-bold mb-6 text-gray-800 text-start"
+   >
+    < FaUserCheck />
+    Teacher report</h2>
+  
+    <button
+                onClick={() => setShowFilters(!showFilters)}
+                className=" flex items-center gap-4 font-bold mb-6 text-gray-800 text-start bg-gray-600 text-white px-4 py-2 rounded-md shadow-md mb-4"
+            >
+              < FaFilter />
+                {showFilters ? "Hide Filters" : "Show Filters"}
+            </button>
+            
+ </div>
 
-    <div className="flex flex-col">
-      <label className="block text-sm font-medium">District</label>
-      <select
-        name="district"
-        value={filters.district}
-        onChange={handleFilterChange}
-        className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-        disabled={!filters.region}
-      >
-        <option value="">All Districts</option>
-        {filters.region && DISTRICTS[filters.region]?.map(district => (
-          <option key={district} value={district}>{district}</option>
-        ))}
-      </select>
-    </div>
-    
-    <div className="flex flex-col">
-      <label className="block text-sm font-medium">Education Level</label>
-      <select
-        name="educationLevel"
-        value={filters.educationLevel}
-        onChange={handleFilterChange}
-        className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-      >
-        <option value="">All Education Levels</option>
-        {educationLevels.map(level => (
-          <option key={level} value={level}>{level}</option>
-        ))}
-      </select>
-    </div>
-    <div className="flex flex-col">
-      <label className="block text-sm font-medium">Teacher Type</label>
-      <select
-        name="teacherType"
-        value={filters.teacherType}
-        onChange={handleFilterChange}
-        className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-      >
-        <option value="">All Teacher Types</option>
-        {teacherType.map(type => (
-          <option key={type} value={type}>{type}</option>
-        ))}
-      </select>
-    </div>
-    <div className="flex flex-col">
-      <label className="block text-sm font-medium">Year Joined</label>
-      <input
-        type="number"
-        name="yearJoined"
-        value={filters.yearJoined}
-        onChange={handleFilterChange}
-        placeholder="Enter Year 1960"
-        className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-      />
-    </div>
+<div className="container mx-auto p-6">
+            
 
-    <div className="flex flex-col">
-  <label className="block text-sm font-medium">Health Status</label>
-  <select
-    name="healthStatus"
-    value={filters.healthStatus}
-    onChange={handleFilterChange}
-    className="mt-1 block w-full border  dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-  >
-    <option value="" className=' '>All Health Status</option>
-    {healthStatusOptions.map(status => (
-      
-      <option key={status} value={status}>{status}</option>
-    ))}
-  </select>
-</div>
+            {showFilters && (
+                <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-6">
+                <div className="flex flex-col">
+                  <label className="block text-sm font-medium">Region</label>
+                  <select
+                    name="region"
+                    value={filters.region}
+                    onChange={handleFilterChange}
+                    className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  >
+                    <option value="">All Regions</option>
+                    {REGIONS.map(region => (
+                      <option key={region} value={region}>{region}</option>
+                    ))}
+                  </select>
+                </div>
+            
+                <div className="flex flex-col">
+                  <label className="block text-sm font-medium">District</label>
+                  <select
+                    name="district"
+                    value={filters.district}
+                    onChange={handleFilterChange}
+                    className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                    disabled={!filters.region}
+                  >
+                    <option value="">All Districts</option>
+                    {filters.region && DISTRICTS[filters.region]?.map(district => (
+                      <option key={district} value={district}>{district}</option>
+                    ))}
+                  </select>
+                </div>
+                
+                <div className="flex flex-col">
+                  <label className="block text-sm font-medium">Education Level</label>
+                  <select
+                    name="educationLevel"
+                    value={filters.educationLevel}
+                    onChange={handleFilterChange}
+                    className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  >
+                    <option value="">All Education Levels</option>
+                    {educationLevels.map(level => (
+                      <option key={level} value={level}>{level}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex flex-col">
+                  <label className="block text-sm font-medium">Teacher Type</label>
+                  <select
+                    name="teacherType"
+                    value={filters.teacherType}
+                    onChange={handleFilterChange}
+                    className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  >
+                    <option value="">All Teacher Types</option>
+                    {teacherType.map(type => (
+                      <option key={type} value={type}>{type}</option>
+                    ))}
+                  </select>
+                </div>
+                <div className="flex flex-col">
+                  <label className="block text-sm font-medium">Year Joined</label>
+                  <input
+                    type="number"
+                    name="yearJoined"
+                    value={filters.yearJoined}
+                    onChange={handleFilterChange}
+                    placeholder="Enter Year 1960"
+                    className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+                  />
+                </div>
+            
+                <div className="flex flex-col">
+              <label className="block text-sm font-medium">Health Status</label>
+              <select
+                name="healthStatus"
+                value={filters.healthStatus}
+                onChange={handleFilterChange}
+                className="mt-1 block w-full border  dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              >
+                <option value="" className=' '>All Health Status</option>
+                {healthStatusOptions.map(status => (
+                  
+                  <option key={status} value={status}>{status}</option>
+                ))}
+              </select>
+            </div>
+            
+            <div className="flex flex-col">
+              <label className="block text-sm font-medium">Special Needs</label>
+              <select
+                name="specialNeed"
+                value={filters.specialNeed}
+                onChange={handleFilterChange}
+                className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              >
+                <option value="">All Special Needs</option>
+                {specialNeedOptions.map(option => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
+              </select>
+            </div>
+            {/* Subjects Learned Filter */}
+            <div className="flex flex-col">
+              <label className="block text-sm font-medium">Subjects Learned</label>
+              <select
+                name="subjectsLearned"
+                value={filters.subjectsLearned}
+                onChange={handleFilterChange}
+                className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              >
+                <option value="">All Subjects Learned</option>
+                {subjectsLearnedOptions.map(option => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
+              </select>
+            </div>
+            
+            {/* Subjects Teaching Filter */}
+            <div className="flex flex-col">
+              <label className="block text-sm font-medium">Subjects Teaching</label>
+              <select
+                name="subjectsTech"
+                value={filters.subjectsTech}
+                onChange={handleFilterChange}
+                className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+              >
+                <option value="">All Subjects Teaching</option>
+                {subjectsTechOptions.map(option => (
+                  <option key={option} value={option}>{option}</option>
+                ))}
+              </select>
+            </div>
+            
+            
+            
+                
+                <div className="col-span-1 md:col-span-2 lg:col-span-5 flex justify-end mt-4">
+                  <button
+                    onClick={handleResetFilters}
+                    className="bg-red-600 flex gap-4 text-white px-6 py-2 rounded-md shadow-sm hover:bg-red-700 transition duration-200"
+                  >
+                    < MdRestore  size={24}/>
+                    Reset Filters
+                  </button>
+                </div>
+              </div>
+            )}
 
-<div className="flex flex-col">
-  <label className="block text-sm font-medium">Special Needs</label>
-  <select
-    name="specialNeed"
-    value={filters.specialNeed}
-    onChange={handleFilterChange}
-    className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-  >
-    <option value="">All Special Needs</option>
-    {specialNeedOptions.map(option => (
-      <option key={option} value={option}>{option}</option>
-    ))}
-  </select>
-</div>
-{/* Subjects Learned Filter */}
-<div className="flex flex-col">
-  <label className="block text-sm font-medium">Subjects Learned</label>
-  <select
-    name="subjectsLearned"
-    value={filters.subjectsLearned}
-    onChange={handleFilterChange}
-    className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-  >
-    <option value="">All Subjects Learned</option>
-    {subjectsLearnedOptions.map(option => (
-      <option key={option} value={option}>{option}</option>
-    ))}
-  </select>
-</div>
-
-{/* Subjects Teaching Filter */}
-<div className="flex flex-col">
-  <label className="block text-sm font-medium">Subjects Teaching</label>
-  <select
-    name="subjectsTech"
-    value={filters.subjectsTech}
-    onChange={handleFilterChange}
-    className="mt-1 block w-full border dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 border-gray-300 rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-  >
-    <option value="">All Subjects Teaching</option>
-    {subjectsTechOptions.map(option => (
-      <option key={option} value={option}>{option}</option>
-    ))}
-  </select>
-</div>
-
-
-
-    
-    <div className="col-span-1 md:col-span-2 lg:col-span-5 flex justify-end mt-4">
-      <button
-        onClick={handleResetFilters}
-        className="bg-red-600 text-white px-6 py-2 rounded-md shadow-sm hover:bg-red-700 transition duration-200"
-      >
-        Reset Filters
-      </button>
-    </div>
-  </div>
+            {/* Rest of the component */}
+        </div>
+ 
+  
+  
 </div>
 
     );
@@ -217,60 +246,55 @@ const subjectsTechOptions = ['Math', 'Science', 'History', 'Language Arts'];
   const TeacherList = ({ teachers, onViewDetails }) => {
     return (
       <div className="overflow-x-auto e shadow-lg rounded-lg border  shadow-[#b19d60] border-[#b19d60] ">
-        <table className="min-w-full divide-y divide-gray-200">
-          <thead className=" bg-[#b19d60]  opacity-75">
-            <tr>
-              {['#', 'Name', 'Email', 'Mobile', 'Region', 'District', 'Birth Date', 'Subjects Learned', 'Subjects Teaching', 'Sex', 'Native Status', 'Teacher Type', 'Level', 'salary','experience',  'Age', 'Retirement Status', 'Years to Retirement', 'Joining Date', 'Health Status', 'Specail Need' ].map((header) => (
-                <th key={header} className="px-6 py-3 text-left text-xs font-medium  text-white dark:border-gray-900 uppercase tracking-wider">
-                  {header}
-                </th>
-              ))}
-            </tr>
-          </thead>
-          <tbody className=" e divide-y divide-gray-200">
-            {teachers.map((teacher, index) => (
-              <tr key={index} className="">
-                <td className="px-6 py-4 whitespace-nowrap text-sm ">{index + 1}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm font-medium">
-                  <button
-                    onClick={() => onViewDetails(teacher)}
-                    className="text-indigo-600 hover:text-indigo-900"
-                  >
-                <td className="px-6 py-4 whitespace-nowrap text-[14px]  font-semibold uppercase">{teacher.name}</td>
+       <table className="min-w-full divide-y divide-gray-200 shadow-lg rounded-lg overflow-hidden bg-gradient-to-r from-gray-100 via-gray-200 to-white">
+  <thead className="bg-gradient-to-r from-indigo-500 to-purple-600 opacity-90 shadow-md text-white">
+    <tr>
+      {['#', 'Name', 'Email', 'Mobile', 'Region', 'District', 'Birth Date', 'Subjects Learned', 'Subjects Teaching', 'Sex', 'Native Status', 'Teacher Type', 'Level', 'Salary', 'Experience', 'Age', 'Retirement Status', 'Years to Retirement', 'Joining Date', 'Health Status', 'Special Need'].map((header) => (
+        <th key={header} className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider text-white">
+          {header}
+        </th>
+      ))}
+    </tr>
+  </thead>
+  <tbody className="divide-y divide-gray-200 bg-white">
+    {teachers.map((teacher, index) => (
+      <tr key={index} className="transition-all duration-300 hover:bg-indigo-100 dark:hover:bg-indigo-700 border-b border-gray-300">
+        <td className="px-6 py-4 text-sm font-medium w-full">{index + 1}</td>
+        <td className="px-6 py-4 text-sm font-medium w-full text-indigo-600 hover:text-indigo-800">
+          <button onClick={() => onViewDetails(teacher)}>{teacher.name}</button>
+        </td>
+        <td className="px-6 py-4 text-sm w-full text-gray-600">{teacher.email}</td>
+        <td className="px-6 py-4 text-sm w-full text-gray-600">{teacher.mobile}</td>
+        <td className="px-6 py-4 text-sm w-full text-gray-700 uppercase">{teacher.region}</td>
+        <td className="px-6 py-4 text-sm w-full text-gray-700 uppercase">{teacher.district}</td>
+        <td className="px-6 py-4 text-sm w-full text-gray-700">{new Date(teacher.birthDate).getFullYear()}</td>
+        <td className="px-6 py-4 text-sm w-full text-gray-700">{teacher.subjectsLearned}</td>
+        <td className="px-6 py-4 text-sm w-full text-gray-700">{teacher.subjectsTech}</td>
+        <td className="px-6 py-4 text-sm w-full text-gray-700">{teacher.sex}</td>
+        <td className="px-6 py-4 text-sm w-full text-gray-700">{teacher.nativeStatus}</td>
+        <td className="px-6 py-4 text-sm font-semibold w-full uppercase text-gray-800">{teacher.teacherType}</td>
+        <td className="px-6 py-4 text-sm w-full text-gray-700">{teacher.educationLevel}</td>
+        <td className="px-6 py-4 text-sm w-full text-gray-700">{teacher.salary}</td>
+        <td className="px-6 py-4 text-sm w-full text-gray-700">{teacher.experience}</td>
+        <td className="px-6 py-4 text-sm w-full text-gray-700">{teacher.age}</td>
+        <td className="px-6 py-4 text-sm w-full text-gray-700">{teacher.isRetired ? 'Retired' : 'Active'}</td>
+        <td className="px-6 py-4 text-sm w-full text-gray-700">{teacher.isRetired ? '0' : teacher.yearsToRetirement}</td>
+        <td className="px-6 py-4 text-sm w-full text-gray-700">{new Date(teacher.joiningDate).getFullYear()}</td>
+        <td className="px-6 py-4 text-sm w-full text-gray-700">{teacher.healthStatus}</td>
+        <td className="px-6 py-4 text-sm w-full text-gray-700">{teacher.specialNeed}</td>
+      </tr>
+    ))}
+  </tbody>
+</table>
 
-                  </button>
-                </td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.email}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.mobile}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm uppercase  ">{teacher.region}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm uppercase  ">{teacher.district}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{new Date(teacher.birthDate).getFullYear()}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.subjectsLearned}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.subjectsTech}</td>
-                {/* <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.description}</td> */}
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.sex}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.nativeStatus}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  uppercase ">{teacher.teacherType}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.educationLevel}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.salary}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  uppercase ">{teacher.experience}</td> {/* Display experience */}
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.age}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.isRetired ? 'Retired' : 'Active'}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{teacher.isRetired ? '0' : teacher.yearsToRetirement}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm  ">{new Date(teacher.joiningDate).getFullYear()}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm uppercase">{teacher.healthStatus}</td>
-                <td className="px-6 py-4 whitespace-nowrap text-sm ">{teacher.specialNeed}</td>
-                
-              </tr>
-            ))}
-          </tbody>
-        </table>
       </div>
     );
   };
 
   // TeacherDetailsModal Component
-  import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaBookOpen, FaUser } from 'react-icons/fa';
+import { FaEnvelope, FaPhone, FaMapMarkerAlt, FaBookOpen, FaUser, FaFilter } from 'react-icons/fa';
+import { FaFileExport, FaUserCheck } from 'react-icons/fa6';
+import { MdRestore } from 'react-icons/md';
 
   const TeacherDetailsModal = ({ teacher, onClose }) => {
     return (
@@ -506,23 +530,62 @@ const subjectsTechOptions = ['Math', 'Science', 'History', 'Language Arts'];
   <div className="flex flex-col md:flex-row justify-between items-start md:items-center mb-4">
     <button
       onClick={handleExport}
-      className="bg-blue-600 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-700 transition duration-200 mb-2 md:mb-0"
+      className="bg-blue-600 flex gap-2 text-white px-4 py-2 rounded-md shadow-sm hover:bg-blue-700 transition duration-200 mb-2 md:mb-0"
     >
+      < FaFileExport  size={20}/>
       Export to Excel
     </button>
     
-    <div className="flex flex-col md:flex-row md:space-x-4 mt-2">
-      <span className="text-lg font-semibold">Total Teachers: {totalTeachers}</span>
-      <div className="flex flex-wrap space-x-2 mt-2">
-        <span className="text-sm font-medium">Active: {retirementCounts.active}</span>
-        <span className="text-sm font-medium">Retired: {retirementCounts.retired}</span>
-        <span className="text-sm font-medium">Male: {counts.sex.Male || 0}</span>
-        <span className="text-sm font-medium">Female: {counts.sex.Female || 0}</span>
-        <span className="text-sm font-medium">Region: {counts.nativeStatus.Region || 0}</span>
-        <span className="text-sm font-medium">Non-region: {counts.nativeStatus['Non-region'] || 0}</span>
-      </div>
+    <div className="flex flex-col md:flex-row md:space-x-4 -mt-7">
+    <div className="flex flex-col md:flex-row md:space-x-4 mt-6">
+    <div className="flex items-center space-x-2 bg-yellow-500 text-white px-3 py-1 rounded-lg shadow-md hover:bg-yellow-600 transition duration-200">
+      <div className="font-medium text-xs sm:text-[14px]">Total Teachers:</div>
+      <div className="font-semibold text-lg sm:text-[18px]">{totalTeachers}</div>
+    </div>
+    <div className="text-lg font-semibold text-gray-800 mb-4 md:mb-0"> </div>
+  
+  <div className="flex flex-wrap space-x-4 mt-2">
+    {/* Active Teachers Card */}
+    <div className="flex items-center space-x-2 bg-green-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-green-600 transition duration-200">
+      <div className="font-medium text-xs sm:text-sm">Active</div>
+      <div className="font-semibold text-lg sm:text-xl">{retirementCounts.active}</div>
+    </div>
+    
+    {/* Retired Teachers Card */}
+    <div className="flex items-center space-x-2 bg-gray-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-gray-600 transition duration-200">
+      <div className="font-medium text-xs sm:text-sm">Retired</div>
+      <div className="font-semibold text-lg sm:text-xl">{retirementCounts.retired}</div>
+    </div>
+
+    {/* Male Teachers Card */}
+    <div className="flex items-center space-x-2 bg-blue-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-blue-600 transition duration-200">
+      <div className="font-medium text-xs sm:text-sm">Male</div>
+      <div className="font-semibold text-lg sm:text-xl">{counts.sex.Male || 0}</div>
+    </div>
+
+    {/* Female Teachers Card */}
+    <div className="flex items-center space-x-2 bg-pink-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-pink-600 transition duration-200">
+      <div className="font-medium text-xs sm:text-sm">Female</div>
+      <div className="font-semibold text-lg sm:text-xl">{counts.sex.Female || 0}</div>
+    </div>
+
+    {/* Region Teachers Card */}
+    <div className="flex items-center space-x-2 bg-teal-500 text-white px-4 py-2 rounded-lg shadow-md hover:bg-teal-600 transition duration-200">
+      <div className="font-medium text-xs sm:text-sm">Region</div>
+      <div className="font-semibold text-lg sm:text-xl">{counts.nativeStatus.Region || 0}</div>
+    </div>
+
+    {/* Non-region Teachers Card */}
+    <div className="flex items-center space-x-2 bg-yellow-500 text-white px-3 py-1 rounded-lg shadow-md hover:bg-yellow-600 transition duration-200">
+      <div className="font-medium text-xs sm:text-[14px]">Non-region</div>
+      <div className="font-semibold text-lg sm:text-[18px]">{counts.nativeStatus['Non-region'] || 0}</div>
     </div>
   </div>
+</div>
+       
+    </div>
+  </div>
+  
   
   <TeacherList teachers={paginatedTeachers} onViewDetails={handleViewDetails} />
 

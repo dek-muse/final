@@ -3,6 +3,7 @@ import { storage } from '../firebase'; // Ensure the import path is correct
 import { ref, uploadBytes, getDownloadURL } from 'firebase/storage';
 import { useSelector } from 'react-redux';
 import { useNavigate, useParams } from 'react-router-dom';
+import { SiReacthookform } from 'react-icons/si';
 
 const UpdateTeacherForm = () => {
   const { currentUser } = useSelector((state) => state.user);
@@ -195,7 +196,7 @@ const UpdateTeacherForm = () => {
         qualifications: null,
       }));
     } else {
-      console.warn('No qualifications file selected.');
+      // console.warn('No qualifications file selected.');
     }
   };
   
@@ -361,10 +362,14 @@ const generateYears = () => {
   return years;
 };
   return (
-    <div className="max-w-7xl mx-auto p-8  rounded-lg   shadow-2xl border shadow-[#b19d60] border-[#b19d60]">
+    <div className="max-w-7xl mx-auto p-8  ">
 
 
-      <h1 className="  text-3xl font-bold  mb-6">Teacher Form Updating</h1>
+      <h1 className="text-4xl font-bold mb-6 flex gap-4 items-center">
+       
+< SiReacthookform />
+        Teacher Form Updating
+        </h1>
 
       {loading && <div className="min-h-screen flex items-center justify-center -mt-6">
         <div className="flex-col gap-4 w-full flex items-center justify-center">
@@ -380,549 +385,518 @@ const generateYears = () => {
       <form onSubmit={handleSubmit}>
         {/* Shaqsiga (Personal Information): */}
         {/* Name Field */}
-        <div className='grid grid-cols-1 md:grid-cols-2 gap-6'>
-          <div>
-            <div className="mb-4">
-              <label htmlFor="name" className="block font-semibold mb-1">
-                Full Name:
-              </label>
-              <input
-                type="text"
-                id="name"
-                name="name"
-                className={`w-full uppercase px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
-                value={formData.name}
-                onChange={handleChange}
-                required
-                disabled={loading} // Disable input while loading
-              />
-              {errors.name && <p style={{ color: 'red' }}>{errors.name}</p>} {/* Display validation error */}
-            </div>
+        <div className='grid grid-cols-1 md:grid-cols-2 gap-12 '>
+          <div className="space-y-6">
+  {/* Full Name Field */}
+  <div className="mb-4">
+    <label htmlFor="name" className="block font-semibold mb-2 text-gray-700">
+      Full Name:
+    </label>
+    <input
+      type="text"
+      id="name"
+      name="name"
+      className={`w-full uppercase px-4 py-3 border rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out`}
+      value={formData.name}
+      onChange={handleChange}
+      required
+      disabled={loading}
+    />
+    {errors.name && <p className="text-red-600 text-sm mt-1">{errors.name}</p>}
+  </div>
 
-            {/* Email Field */}
-            <div className="mb-4">
-              <label htmlFor="email" className="block font-semibold mb-1">
-                Email:
-              </label>
-              <input
-                type="email"
-                id="email"
-                name="email"
-                className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
-                value={formData.email}
-                onChange={handleChange}
-                required
-                disabled={loading}
-              />
-              {errors.email && <p style={{ color: 'red' }}>{errors.email}</p>}
-            </div>
+  {/* Email Field */}
+  <div className="mb-4">
+    <label htmlFor="email" className="block font-semibold mb-2 text-gray-700">
+      Email:
+    </label>
+    <input
+      type="email"
+      id="email"
+      name="email"
+      className={`w-full px-4 py-3 border rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out`}
+      value={formData.email}
+      onChange={handleChange}
+      required
+      disabled={loading}
+    />
+    {errors.email && <p className="text-red-600 text-sm mt-1">{errors.email}</p>}
+  </div>
 
-            {/* Mobile Field */}
-            <div className="mb-4">
-              <label htmlFor="mobile" className="block font-semibold mb-1">
-                Mobile:
-              </label>
-              <input
-                type="tel"
-                id="mobile"
-                name="mobile"
-                className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
-                value={formData.mobile}
-                onChange={handleChange}
-                required
-                disabled={loading}
-              />
-              {errors.mobile && <p style={{ color: 'red' }}>{errors.mobile}</p>}
-            </div>
-              {/* Transfer Field */}
-              <div className="mb-4">
-                <label className="block font-semibold mb-1">Transfer:</label>
-                <div className="flex items-center space-x-4">
-                    <label className="flex items-center space-x-2">
-                        <input
-                            type="radio"
-                            name="transfer"
-                            value="yes"
-                            checked={formData.transfer === true}
-                            onChange={() => setFormData({ ...formData, transfer: true })} // Set to true
-                            className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
-                            disabled={loading}
-                        />
-                        <span>Yes</span>
-                    </label>
-                    <label className="flex items-center space-x-2">
-                        <input
-                            type="radio"
-                            name="transfer"
-                            value="no"
-                            checked={formData.transfer === false}
-                            onChange={() => setFormData({ ...formData, transfer: false })} // Set to false
-                            className="form-radio h-4 w-4 text-blue-600 transition duration-150 ease-in-out"
-                            disabled={loading}
-                        />
-                        <span>No</span>
-                    </label>
-                </div>
+  {/* Mobile Field */}
+  <div className="mb-4">
+    <label htmlFor="mobile" className="block font-semibold mb-2 text-gray-700">
+      Mobile:
+    </label>
+    <input
+      type="tel"
+      id="mobile"
+      name="mobile"
+      className={`w-full px-4 py-3 border rounded-lg shadow-sm dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out`}
+      value={formData.mobile}
+      onChange={handleChange}
+      required
+      disabled={loading}
+    />
+    {errors.mobile && <p className="text-red-600 text-sm mt-1">{errors.mobile}</p>}
+  </div>
 
-                {/* Conditional Transfer Reason Field */}
-                {formData.transfer === true && (
-                    <div className="mt-2">
-                        <label htmlFor="transferReason" className="block font-semibold mb-1">
-                            Transfer Reason:
-                        </label>
-                        <input
-                            type="text"
-                            id="transferReason"
-                            name="transferReason"
-                            placeholder="Enter reason for transfer"
-                            value={formData.transferReason}
-                            onChange={(e) => setFormData({ ...formData, transferReason: e.target.value })}
-                            className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                            disabled={loading}
-                        />
-                        {errors.transferReason && <p style={{ color: 'red' }}>{errors.transferReason}</p>}
-                    </div>
-                )}
-            </div>
-
-            {/* Region Dropdown */}
-            <div className="mb-4">
-              <label htmlFor="region" className="block font-semibold mb-1">
-                Zone:
-              </label>
-              <select
-                id="region"
-                name="region"
-                className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
-                value={formData.region}
-                onChange={handleChange}
-                disabled={loading}
-              >
-                <option value="">Select a Zone</option>
-                {REGIONS.map((region) => (
-                  <option key={region} value={region}>
-                    {region}
-                  </option>
-                ))}
-              </select>
-              {errors.region && <p style={{ color: 'red' }}>{errors.region}</p>}
-            </div>
-
-            {/* District Dropdown */}
-            <div className="mb-4">
-              <label htmlFor="district" className="block font-semibold mb-1">
-                District:
-              </label>
-              <select
-                id="district"
-                name="district"
-                className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
-                value={formData.district}
-                onChange={handleChange}
-                disabled={loading} // Disable if no region selected or loading
-              >
-                <option value="">Select a district</option>
-                {districts.map((district) => (
-                  <option key={district} value={district}>
-                    {district}
-                  </option>
-                ))}
-              </select>
-              {errors.district && <p style={{ color: 'red' }}>{errors.district}</p>}
-            </div>
-
-          {/* Sex Radio Buttons */}
-<div className="mb-4">
-  <label className="block font-semibold mb-1">Sex:</label>
-  <div className="flex items-center  gap-4">
-    {sexOptions.map((sex) => (
-      <label key={sex} className="flex items-center">
+  {/* Transfer Field */}
+  <div className="mb-4">
+    <label className="block font-semibold mb-2 text-gray-700">Transfer:</label>
+    <div className="flex items-center space-x-4">
+      <label className="flex items-center space-x-2">
         <input
           type="radio"
-          name="sex"
-          value={sex}
-          checked={formData.sex === sex}
-          onChange={handleChange}
+          name="transfer"
+          value="yes"
+          checked={formData.transfer === true}
+          onChange={() => setFormData({ ...formData, transfer: true })}
+          className="form-radio h-5 w-5 text-blue-600 focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out"
           disabled={loading}
-          className="mr-2 "
         />
-        {sex}
+        <span>Yes</span>
       </label>
-    ))}
-  </div>
-  {errors.sex && <p style={{ color: 'red' }}>{errors.sex}</p>}
-</div>
-
-{/* Native Status Radio Buttons */}
-<div className="mb-4">
-  <label className="block font-semibold mb-1">Native Status:</label>
-  <div className="flex gap-2 items-center">
-    {nativeStatusOptions.map((status) => (
-      <label key={status} className="flex items-center">
+      <label className="flex items-center space-x-2">
         <input
           type="radio"
-          name="nativeStatus"
-          value={status}
-          checked={formData.nativeStatus === status}
-          onChange={handleChange}
+          name="transfer"
+          value="no"
+          checked={formData.transfer === false}
+          onChange={() => setFormData({ ...formData, transfer: false })}
+          className="form-radio h-5 w-5 text-blue-600 focus:ring-2 focus:ring-blue-500 transition duration-150 ease-in-out"
           disabled={loading}
-          className="mr-2"
         />
-        {status}
+        <span>No</span>
       </label>
-    ))}
+    </div>
+
+    {/* Conditional Transfer Reason */}
+    {formData.transfer === true && (
+      <div className="mt-2">
+        <label htmlFor="transferReason" className="block font-semibold mb-2 text-gray-700">
+          Transfer Reason:
+        </label>
+        <input
+          type="text"
+          id="transferReason"
+          name="transferReason"
+          value={formData.transferReason}
+          onChange={(e) => setFormData({ ...formData, transferReason: e.target.value })}
+          className={`w-full px-4 py-3 border rounded-lg shadow-sm dark:bg-gray-700 dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500`}
+          disabled={loading}
+        />
+        {errors.transferReason && <p className="text-red-600 text-sm mt-1">{errors.transferReason}</p>}
+      </div>
+    )}
   </div>
-  {errors.nativeStatus && <p style={{ color: 'red' }}>{errors.nativeStatus}</p>}
+
+  {/* Region Dropdown */}
+  <div className="mb-4">
+    <label htmlFor="region" className="block font-semibold mb-2 text-gray-700">
+      Zone:
+    </label>
+    <select
+      id="region"
+      name="region"
+      className={`w-full px-4 py-3 border rounded-lg shadow-sm dark:bg-gray-700 dark:text-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500`}
+      value={formData.region}
+      onChange={handleChange}
+      disabled={loading}
+    >
+      <option value="">Select a Zone</option>
+      {REGIONS.map((region) => (
+        <option key={region} value={region}>
+          {region}
+        </option>
+      ))}
+    </select>
+    {errors.region && <p className="text-red-600 text-sm mt-1">{errors.region}</p>}
+  </div>
+
+  {/* District Dropdown */}
+  <div className="mb-4">
+    <label htmlFor="district" className="block font-semibold mb-2 text-gray-700">
+      District:
+    </label>
+    <select
+      id="district"
+      name="district"
+      className={`w-full px-4 py-3 border rounded-lg shadow-sm dark:bg-gray-700 dark:text-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500`}
+      value={formData.district}
+      onChange={handleChange}
+      disabled={loading}
+    >
+      <option value="">Select a district</option>
+      {districts.map((district) => (
+        <option key={district} value={district}>
+          {district}
+        </option>
+      ))}
+    </select>
+    {errors.district && <p className="text-red-600 text-sm mt-1">{errors.district}</p>}
+  </div>
+
+  {/* Sex Radio Buttons */}
+  <div className="mb-4">
+    <label className="block font-semibold mb-2 text-gray-700">Sex:</label>
+    <div className="flex items-center gap-6">
+      {sexOptions.map((sex) => (
+        <label key={sex} className="flex items-center space-x-2">
+          <input
+            type="radio"
+            name="sex"
+            value={sex}
+            checked={formData.sex === sex}
+            onChange={handleChange}
+            className="h-5 w-5 text-blue-600 focus:ring-2 focus:ring-blue-500"
+            disabled={loading}
+          />
+          <span>{sex}</span>
+        </label>
+      ))}
+    </div>
+    {errors.sex && <p className="text-red-600 text-sm mt-1">{errors.sex}</p>}
+  </div>
+
+  {/* Native Status Radio Buttons */}
+  <div className="mb-4">
+    <label className="block font-semibold mb-2 text-gray-700">Native Status:</label>
+    <div className="flex items-center gap-6">
+      {nativeStatusOptions.map((status) => (
+        <label key={status} className="flex items-center space-x-2">
+          <input
+            type="radio"
+            name="nativeStatus"
+            value={status}
+            checked={formData.nativeStatus === status}
+            onChange={handleChange}
+            className="h-5 w-5 text-blue-600 focus:ring-2 focus:ring-blue-500"
+            disabled={loading}
+          />
+          <span>{status}</span>
+        </label>
+      ))}
+    </div>
+    {errors.nativeStatus && <p className="text-red-600 text-sm mt-1">{errors.nativeStatus}</p>}
+  </div>
+
+  {/* Health Status Radio Buttons */}
+  <div className="mb-4">
+    <label className="block font-semibold mb-2 text-gray-700">Health Status:</label>
+    <div className="flex items-center gap-6">
+      <label className="flex items-center space-x-2">
+        <input
+          type="radio"
+          name="healthStatus"
+          value="Yes"
+          checked={formData.healthStatus === 'Yes'}
+          onChange={handleChange}
+          className="h-5 w-5 text-blue-600 focus:ring-2 focus:ring-blue-500"
+          disabled={loading}
+        />
+        <span>Yes</span>
+      </label>
+      <label className="flex items-center space-x-2">
+        <input
+          type="radio"
+          name="healthStatus"
+          value="No"
+          checked={formData.healthStatus === 'No'}
+          onChange={handleChange}
+          className="h-5 w-5 text-blue-600 focus:ring-2 focus:ring-blue-500"
+          disabled={loading}
+        />
+        <span>No</span>
+      </label>
+    </div>
+    {errors.healthStatus && <p className="text-red-600 text-sm mt-1">{errors.healthStatus}</p>}
+  </div>
+ 
+  <div className="space-y-6">
+  {/* Birth Date Field */}
+  <div className="mb-4">
+    <label htmlFor="birthDate" className="block font-semibold mb-2 text-gray-700">
+      Birth Date:
+    </label>
+    <input
+      type="date"
+      id="birthDate"
+      name="birthDate"
+      className="w-full px-4 py-3 border rounded-lg shadow-sm bg-gray-200 dark:bg-gray-700 dark:text-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out"
+      value={formData.birthDate}
+      onChange={handleChange}
+      disabled={loading}
+    />
+    {errors.birthDate && (
+      <p className="text-red-600 text-sm mt-1">{errors.birthDate}</p>
+    )}
+  </div>
+
+  {/* Profile Picture Upload */}
+  <div className="mb-4">
+    <label htmlFor="picture" className="block font-semibold mb-2 text-gray-700">
+      Profile Picture:
+    </label>
+    <input
+      type="file"
+      id="picture"
+      name="picture"
+      accept="image/*"
+      className="w-full px-4 py-2 border rounded-lg shadow-sm dark:bg-gray-700 dark:text-white text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 transition duration-300 ease-in-out"
+      onChange={handleFileChange}
+      disabled={loading}
+    />
+    {errors.picture && (
+      <p className="text-red-600 text-sm mt-1">{errors.picture}</p>
+    )}
+  </div>
+
+  {/* Display picture preview if available */}
+  {picturePreview || previousPictureURL ? (
+    <div className="mt-4 flex justify-center">
+      <img
+        src={picturePreview || previousPictureURL}
+        alt="Preview"
+        className="rounded-full w-[120px] h-[120px] object-cover border-4 border-blue-500 shadow-md"
+      />
+    </div>
+  ) : null}
 </div>
 
+</div>
 
- {/* Health Status Checkboxes */}
-   {/* Health Status */}
-   <div className="mb-4">
-              <label className="block mb-2 text-gray-700">Health Status:</label>
-              <div className="flex items-center mb-2">
-                <label className="mr-4">
-                  <input
-                    type="radio"
-                    name="healthStatus"
-                    value="Yes"
-                    checked={formData.healthStatus === 'Yes'}
-                    onChange={handleChange}
-                    className="mr-1"
-                    disabled={loading}
-                  />
-                  Yes
-                </label>
-                <label>
-                  <input
-                    type="radio"
-                    name="healthStatus"
-                    value="No"
-                    checked={formData.healthStatus === 'No'}
-                    onChange={handleChange}
-                    className="mr-1"
-                    disabled={loading}
-                  />
-                  No
-                </label>
-              </div>
-              {errors.healthStatus && <p className="text-red-600">{errors.healthStatus}</p>}
-            </div>
-
-            {formData.healthStatus === 'No' && (
-              <div className="mb-4">
-                <label className="block mb-2 text-gray-700">Special Need Detail:</label>
-                <div className="flex items-center mb-2">
-                  <label className="mr-4">
-                    <input
-                      type="radio"
-                      name="specialNeedDetail"
-                      value="Special Need"
-                      checked={formData.specialNeedDetail === 'Special Need'}
-                      onChange={handleChange}
-                      className="mr-1"
-                      disabled={loading}
-                    />
-                    Special Need
-                  </label>
-                  <label>
-                    <input
-                      type="radio"
-                      name="specialNeedDetail"
-                      value="Dead"
-                      checked={formData.specialNeedDetail === 'Dead'}
-                      onChange={handleChange}
-                      className="mr-1"
-                      disabled={loading}
-                    />
-                    Dead
-                  </label>
-                </div>
-                {errors.specialNeedDetail && <p className="text-red-600">{errors.specialNeedDetail}</p>}
-              </div>
-            )}
-
-            {formData.healthStatus === 'No' && formData.specialNeedDetail === 'Special Need' && (
-              <div className="mb-4">
-                <label htmlFor="specialNeed" className="block mb-2 text-gray-700">Select Special Need:</label>
-                <select
-                  name="specialNeed"
-                  value={formData.specialNeed}
-                  onChange={handleChange}
-                  className="w-full p-2 border border-gray-300 rounded"
-                  disabled={loading}
-                >
-                  <option value="">Select a special need</option>
-                  {SPECIAL_NEED_OPTIONS.map(option => (
-                    <option key={option} value={option}>{option}</option>
-                  ))}
-                </select>
-                {errors.specialNeed && <p className="text-red-600">{errors.specialNeed}</p>}
-              </div>
-            )}
-
-            {formData.healthStatus === 'No' && (formData.specialNeedDetail === 'Dead' || formData.specialNeedDetail === 'Special Need') && (
-              <div className="mb-4">
-                <label htmlFor="healthNote" className="block mb-2 text-gray-700">Health Note:</label>
-                <textarea
-                  name="healthNote"
-                  value={formData.healthNote}
-                  onChange={handleChange}
-                  placeholder='Enter health note'
-                  className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                  disabled={loading}
-                />
-                {errors.healthNote && <p className="text-red-600">{errors.healthNote}</p>}
-              </div>
-            )}
-
-
-            {/* Birth Date Field */}
-            <div className="mb-4">
-              <label htmlFor="birthDate" className="block font-semibold mb-1">
-                Birth Date:
-              </label>
-              <input
-                type="date"
-                id="birthDate"
-                name="birthDate"
-                className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
-                value={formData.birthDate}
-                onChange={handleChange}
-                disabled={loading}
-              />
-              {errors.birthDate && <p style={{ color: 'red' }}>{errors.birthDate}</p>}
-            </div>
-            {/* Profile Picture Upload */}
-            <div className="mb-4">
-              <label htmlFor="picture" className="block font-semibold mb-1">
-                Profile Picture:
-              </label>
-              <input
-                type="file"
-                id="picture"
-                name="picture"
-                accept="image/*"
-                className="w-full"
-                onChange={handleFileChange}
-                disabled={loading}
-              />
-              {errors.picture && <p style={{ color: 'red' }}>{errors.picture}</p>}
-            </div>
-             {/* Display picture preview if available */}
-       {/* Display picture preview if available */}
-       {picturePreview && (
-        <div className="picture-preview">
-          <img src={picturePreview || previousPictureURL} alt="Preview" className=' rounded-full w-[120px]' />
-        </div>
-      )}
-          </div>
 
           {/* Xirfadeedka (Professional Information): */}
 
-          <div>
-            {/* Education Level Dropdown */}
-            <div className="mb-4">
-              <label htmlFor="educationLevel" className="block font-semibold mb-1">
-                Education Level:
-              </label>
-              <select
-                id="educationLevel"
-                name="educationLevel"
-                className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
-                value={formData.educationLevel}
-                onChange={handleChange}
-                required
-                disabled={loading}
-              >
-                <option value="">Select education level</option>
-                {EDUCATION_LEVELS.map((level) => (
-                  <option key={level} value={level}>
-                    {level}
-                  </option>
-                ))}
-              </select>
-              {errors.educationLevel && <p style={{ color: 'red' }}>{errors.educationLevel}</p>}
-            </div>
+          <div className="space-y-6">
+  {/* Education Level Dropdown */}
+  <div className="mb-4">
+    <label htmlFor="educationLevel" className="block font-semibold mb-2 text-gray-700">
+      Education Level:
+    </label>
+    <select
+      id="educationLevel"
+      name="educationLevel"
+      className="w-full px-4 py-3 border rounded-lg shadow-sm bg-gray-200 dark:bg-gray-700 dark:text-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out"
+      value={formData.educationLevel}
+      onChange={handleChange}
+      required
+      disabled={loading}
+    >
+      <option value="">Select education level</option>
+      {EDUCATION_LEVELS.map((level) => (
+        <option key={level} value={level}>
+          {level}
+        </option>
+      ))}
+    </select>
+    {errors.educationLevel && (
+      <p className="text-red-600 text-sm mt-1">{errors.educationLevel}</p>
+    )}
+  </div>
 
-            {/* Experience Dropdown */}
-            <div className="mb-4">
-              <label htmlFor="experience" className="block font-semibold mb-1">
-                Years of Experience:
-              </label>
-              <select
-                id="experience"
-                name="experience"
-                className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
-                value={formData.experience}
-                onChange={handleChange}
-                required
-                disabled={loading}
-              >
-                <option value="">Select experience</option>
-                {Object.keys(SALARY_RANGES[formData.educationLevel] || {}).map((exp) => (
-                  <option key={exp} value={exp}>
-                    {exp}
-                  </option>
-                ))}
-              </select>
-              {errors.experience && <p style={{ color: 'red' }}>{errors.experience}</p>}
-            </div>
+  {/* Experience Dropdown */}
+  <div className="mb-4">
+    <label htmlFor="experience" className="block font-semibold mb-2 text-gray-700">
+      Years of Experience:
+    </label>
+    <select
+      id="experience"
+      name="experience"
+      className="w-full px-4 py-3 border rounded-lg shadow-sm bg-gray-200 dark:bg-gray-700 dark:text-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out"
+      value={formData.experience}
+      onChange={handleChange}
+      required
+      disabled={loading}
+    >
+      <option value="">Select experience</option>
+      {Object.keys(SALARY_RANGES[formData.educationLevel] || {}).map((exp) => (
+        <option key={exp} value={exp}>
+          {exp}
+        </option>
+      ))}
+    </select>
+    {errors.experience && (
+      <p className="text-red-600 text-sm mt-1">{errors.experience}</p>
+    )}
+  </div>
 
-            {/* Teacher Type Dropdown */}
-            <div className="mb-4">
-              <label htmlFor="teacherType" className="block font-semibold mb-1">
-                Teacher Type:
-              </label>
-              <select
-                id="teacherType"
-                name="teacherType"
-                className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
-                value={formData.teacherType}
-                onChange={handleChange}
-                required
-                disabled={loading}
-              >
-                <option value="">Select teacher type</option>
-                {teacherTypes.map((type) => (
-                  <option key={type} value={type}>
-                    {type}
-                  </option>
-                ))}
-              </select>
-              {errors.teacherType && <p style={{ color: 'red' }}>{errors.teacherType}</p>}
-            </div>
+  {/* Teacher Type Dropdown */}
+  <div className="mb-4">
+    <label htmlFor="teacherType" className="block font-semibold mb-2 text-gray-700">
+      Teacher Type:
+    </label>
+    <select
+      id="teacherType"
+      name="teacherType"
+      className="w-full px-4 py-3 border rounded-lg shadow-sm bg-gray-200 dark:bg-gray-700 dark:text-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out"
+      value={formData.teacherType}
+      onChange={handleChange}
+      required
+      disabled={loading}
+    >
+      <option value="">Select teacher type</option>
+      {teacherTypes.map((type) => (
+        <option key={type} value={type}>
+          {type}
+        </option>
+      ))}
+    </select>
+    {errors.teacherType && (
+      <p className="text-red-600 text-sm mt-1">{errors.teacherType}</p>
+    )}
+  </div>
 
-            {/* Joining Date Field */}
-            <div className="mb-4">
-              <label htmlFor="joiningYear" className="block font-semibold mb-1">
-                Joining Year:
-              </label>
-              <select
-                name="joiningYear"
-                id="joiningYear"
-                value={formData.joiningYear}
-                onChange={handleChange}
-                className={`w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white    focus:outline-none focus:ring-2 focus:ring-blue-500`}
-                >
-                <option value="">Select a year</option>
-                {generateYears().map((year) => (
-                  <option key={year} value={year}>
-                    {year}
-                  </option>
-                ))}
-              </select>
-            </div>
+  {/* Joining Date Field */}
+  <div className="mb-4">
+    <label htmlFor="joiningYear" className="block font-semibold mb-2 text-gray-700">
+      Joining Year:
+    </label>
+    <select
+      name="joiningYear"
+      id="joiningYear"
+      value={formData.joiningYear}
+      onChange={handleChange}
+      className="w-full px-4 py-2.5 dark:bg-gray-700 transition duration-200 ease-in-out transform hover:scale-105 border rounded-lg shadow-sm dark:text-white focus:outline-none focus:ring-2 focus:ring-blue-500"
+    >
+      <option value="">Select a year</option>
+      {generateYears().map((year) => (
+        <option key={year} value={year}>
+          {year}
+        </option>
+      ))}
+    </select>
+  </div>
 
-            {/* Subjects Learned Dropdown */}
-            <div className="mb-4">
-              <label htmlFor="subjectsLearned" className="block font-semibold mb-1">
-                Subjects Learned:
-              </label>
-              <select
-                id="subjectsLearned"
-                name="subjectsLearned"
-                className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
-                value={formData.subjectsLearned}
-                onChange={handleChange}
-                required
-                disabled={loading}
-              >
-                <option value="">Select subjects learned</option>
-                {subjectsList.map((subject) => (
-                  <option key={subject} value={subject}>
-                    {subject}
-                  </option>
-                ))}
-              </select>
-              {errors.subjectsLearned && <p style={{ color: 'red' }}>{errors.subjectsLearned}</p>}
-            </div>
+  {/* Subjects Learned Dropdown */}
+  <div className="mb-4">
+    <label htmlFor="subjectsLearned" className="block font-semibold mb-2 text-gray-700">
+      Subjects Learned:
+    </label>
+    <select
+      id="subjectsLearned"
+      name="subjectsLearned"
+      className="w-full px-4 py-3 border rounded-lg shadow-sm bg-gray-200 dark:bg-gray-700 dark:text-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out"
+      value={formData.subjectsLearned}
+      onChange={handleChange}
+      required
+      disabled={loading}
+    >
+      <option value="">Select subjects learned</option>
+      {subjectsList.map((subject) => (
+        <option key={subject} value={subject}>
+          {subject}
+        </option>
+      ))}
+    </select>
+    {errors.subjectsLearned && (
+      <p className="text-red-600 text-sm mt-1">{errors.subjectsLearned}</p>
+    )}
+  </div>
 
-            {/* Subjects Taught Dropdown */}
-            <div className="mb-4">
-              <label htmlFor="subjectsTech" className="block font-semibold mb-1">
-                Subjects Taught:
-              </label>
-              <select
-                id="subjectsTech"
-                name="subjectsTech"
-                className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
-                value={formData.subjectsTech}
-                onChange={handleChange}
-                required
-                disabled={loading}
-              >
-                <option value="">Select subjects taught</option>
-                {subjectsList.map((subject) => (
-                  <option key={subject} value={subject}>
-                    {subject}
-                  </option>
-                ))}
-              </select>
-              {errors.subjectsTech && <p style={{ color: 'red' }}>{errors.subjectsTech}</p>}
-            </div>
+  {/* Subjects Taught Dropdown */}
+  <div className="mb-4">
+    <label htmlFor="subjectsTech" className="block font-semibold mb-2 text-gray-700">
+      Subjects Taught:
+    </label>
+    <select
+      id="subjectsTech"
+      name="subjectsTech"
+      className="w-full px-4 py-3 border rounded-lg shadow-sm bg-gray-200 dark:bg-gray-700 dark:text-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out"
+      value={formData.subjectsTech}
+      onChange={handleChange}
+      required
+      disabled={loading}
+    >
+      <option value="">Select subjects taught</option>
+      {subjectsList.map((subject) => (
+        <option key={subject} value={subject}>
+          {subject}
+        </option>
+      ))}
+    </select>
+    {errors.subjectsTech && (
+      <p className="text-red-600 text-sm mt-1">{errors.subjectsTech}</p>
+    )}
+  </div>
 
-            {/* Salary Field (Read-Only) */}
-            <div className="mb-4">
-              <label className="block font-semibold mb-1">
-                Salary:
-              </label>
-              <input
-                type="text"
-                name="salary"
-                className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
-                value={formData.salary}
-                readOnly
-              />
-              {errors.salary && <p style={{ color: 'red' }}>{errors.salary}</p>}
-            </div>
-            <div className="mb-5">
-              <label htmlFor="description" className="block  text-sm font-medium mb-2">Description</label>
-              <textarea
-                id="description"
-                name="description"
-                value={formData.description}
-                onChange={handleChange}
-                placeholder='Entry Description'
-                className={`w-full px-4 py-3 border rounded-lg shadow-sm   dark:text-white bg-gray-200 dark:bg-gray-700 placeholder-gray-400 text-gray-800 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out  `}
-
-              />
-            </div>
-
-          <div>
-    <label htmlFor="qualifications">Upload Qualifications:</label>
+  {/* Salary Field (Read-Only) */}
+  <div className="mb-4">
+    <label className="block font-semibold mb-2 text-gray-700">Salary:</label>
     <input
-    value={previousQualificationsURL}
+      type="text"
+      name="salary"
+      className="w-full px-4 py-3 border rounded-lg shadow-sm bg-gray-200 dark:bg-gray-700 dark:text-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out"
+      value={formData.salary}
+      readOnly
+    />
+    {errors.salary && (
+      <p className="text-red-600 text-sm mt-1">{errors.salary}</p>
+    )}
+  </div>
+
+  {/* Description Field */}
+  <div className="mb-5">
+    <label htmlFor="description" className="block text-sm font-medium mb-2 text-gray-700">
+      Description:
+    </label>
+    <textarea
+      id="description"
+      name="description"
+      value={formData.description}
+      onChange={handleChange}
+      placeholder="Entry Description"
+      className="w-full px-4 py-3 border rounded-lg shadow-sm bg-gray-200 dark:bg-gray-700 dark:text-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out"
+    />
+  </div>
+
+  {/* Qualifications Upload Field */}
+  <div className="mb-4">
+    <label htmlFor="qualifications" className="block font-semibold mb-2 text-gray-700">
+      Upload Qualifications:
+    </label>
+    <input
+      value={previousQualificationsURL}
       type="file"
       id="qualifications"
       name="qualifications"
       accept=".pdf, .doc, .docx" // Specify acceptable file types
       onChange={handleQualificationsChange} // Call your change handler
+      className="w-full px-4 py-3 border rounded-lg shadow-sm bg-gray-200 dark:bg-gray-700 dark:text-white text-gray-800 placeholder-gray-400 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition duration-300 ease-in-out"
     />
-    {errors.qualifications && <p className="error">{errors.qualifications}</p>}
+    {errors.qualifications && (
+      <p className="text-red-600 text-sm mt-1">{errors.qualifications}</p>
+    )}
   </div>
-        </div>
+</div>
+
           </div>
 
         {/* Submit and Reset Buttons */}
-        <div className="flex justify-between">
-          <button
-            type="submit"
-            className={`bg-blue-500 text-white py-2 px-4 rounded ${loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
-              }`}
-            disabled={loading}
-          >
-            {loading ? 'Submitting...' : 'Submit'}
-          </button>
-          <button
-            type="button"
-            className="bg-gray-500 text-white py-2 px-4 rounded hover:bg-gray-600"
-            onClick={resetForm}
-            disabled={loading}
-          >
-            Reset
-          </button>
-        </div>
+        <div className="flex justify-between space-x-4">
+  {/* Submit Button */}
+  <button
+    type="submit"
+    className={`bg-blue-500 text-white py-2 px-4 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-opacity-50 ${
+      loading ? 'opacity-50 cursor-not-allowed' : 'hover:bg-blue-600'
+    }`}
+    disabled={loading}
+  >
+    {loading ? 'Submitting...' : 'Submit'}
+  </button>
+
+  {/* Reset Button */}
+  <button
+    type="button"
+    className="bg-gray-500 text-white py-2 px-4 rounded-md shadow-sm hover:bg-gray-600 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-opacity-50"
+    onClick={resetForm}
+    disabled={loading}
+  >
+    Reset
+  </button>
+</div>
+
       </form>
     </div>
   );

@@ -50,21 +50,21 @@ const DashProfile = () => {
   const handleImageChange = (e) => {
     const file = e.target.files[0];
     if (file) {
-      console.log("Selected file:", file); // Log selected file
+      // console.log("Selected file:", file); // Log selected file
       setImageFile(file);
       setImageFileUrl(URL.createObjectURL(file));
     }
   };
 
   useEffect(() => {
-    console.log("Current image file:", imageFile); // Log the current image file
+    // console.log("Current image file:", imageFile); // Log the current image file
     if (imageFile) {
       uploadImage();
     }
   }, [imageFile]);
 
   const uploadImage = async () => {
-    console.log("Starting image upload"); // Log upload start
+    // console.log("Starting image upload"); // Log upload start
     setImageFileUploading(true);
     setImageFileUploadError(null);
     const storage = getStorage(app);
@@ -77,11 +77,11 @@ const DashProfile = () => {
       (snapshot) => {
         const progress =
           (snapshot.bytesTransferred / snapshot.totalBytes) * 100;
-        console.log("Upload progress:", progress); // Log upload progress
+        // console.log("Upload progress:", progress); // Log upload progress
         setImageFileUploadProgress(progress.toFixed(0));
       },
       (error) => {
-        console.error("Upload error:", error); // Log upload error
+        // console.error("Upload error:", error); // Log upload error
         setImageFileUploadError('Could not upload image (File must be less than 2MB)');
         setImageFileUploadProgress(null);
         setImageFile(null);
@@ -90,7 +90,7 @@ const DashProfile = () => {
       },
       () => {
         getDownloadURL(uploadTask.snapshot.ref).then((downloadURL) => {
-          console.log("Image uploaded successfully. Download URL:", downloadURL); // Log successful upload URL
+          // console.log("Image uploaded successfully. Download URL:", downloadURL); // Log successful upload URL
           setImageFileUrl(downloadURL);
           setFormData((prevFormData) => ({
             ...prevFormData,
@@ -103,7 +103,7 @@ const DashProfile = () => {
   };
 
   const handleChange = (e) => {
-    console.log("Form field changed:", e.target.id, e.target.value); // Log form changes
+    // console.log("Form field changed:", e.target.id, e.target.value); // Log form changes
     setFormData({ ...formData, [e.target.id]: e.target.value });
   };
 
@@ -111,7 +111,7 @@ const DashProfile = () => {
     e.preventDefault();
     setUpdateUserError(null);
     setUpdateUserSuccess(null);
-    console.log("Form Data before submit:", formData); // Log form data before submission
+    // console.log("Form Data before submit:", formData); // Log form data before submission
 
     if (Object.keys(formData).length === 0 && !imageFile) {
       setUpdateUserError('No changes made');
@@ -133,16 +133,16 @@ const DashProfile = () => {
       });
       const data = await res.json();
       if (!res.ok) {
-        console.error("Update failed:", data.message); // Log error on update failure
+        // console.error("Update failed:", data.message); // Log error on update failure
         dispatch(updateFailure(data.message));
         setUpdateUserError(data.message);
       } else {
-        console.log("Update successful:", data); // Log successful update
+        // console.log("Update successful:", data); // Log successful update
         dispatch(updateSuccess(data));
         setUpdateUserSuccess("User's profile updated successfully");
       }
     } catch (error) {
-      console.error("Error during update:", error.message); // Log unexpected error
+      // console.error("Error during update:", error.message); // Log unexpected error
       dispatch(updateFailure(error.message));
       setUpdateUserError(error.message);
     }
@@ -157,14 +157,14 @@ const DashProfile = () => {
       });
       const data = await res.json();
       if (!res.ok) {
-        console.error("Delete failed:", data.message); // Log error on delete failure
+        // console.error("Delete failed:", data.message); // Log error on delete failure
         dispatch(deleteUserFailure(data.message));
       } else {
-        console.log("User deleted successfully:", data); // Log successful deletion
+        // console.log("User deleted successfully:", data); // Log successful deletion
         dispatch(deleteUserSuccess(data));
       }
     } catch (error) {
-      console.error("Error during delete:", error.message); // Log unexpected error
+      // console.error("Error during delete:", error.message); // Log unexpected error
       dispatch(deleteUserFailure(error.message));
     }
   };
@@ -176,145 +176,170 @@ const DashProfile = () => {
       });
       const data = await res.json();
       if (!res.ok) {
-        console.error("Sign out failed:", data.message); // Log error on sign out failure
+        // console.error("Sign out failed:", data.message); // Log error on sign out failure
         return data.message;
       } else {
-        console.log("User signed out successfully"); // Log successful sign out
+        // console.log("User signed out successfully"); // Log successful sign out
         dispatch(signoutSuccess());
       }
     } catch (error) {
-      console.error("Error during sign out:", error.message); // Log unexpected error
+      // console.error("Error during sign out:", error.message); // Log unexpected error
       return error.message;
     }
   };
 
   return (
-    <div className='max-w-lg mx-auto p-3 w-full'>
-      <h1 className='my-7 text-center font-semibold text-3xl'>Profile</h1>
-      <form onSubmit={handleSubmit} className='flex flex-col gap-4'>
-        <input
-          type='file'
-          accept='image/*'
-          onChange={handleImageChange}
-          ref={filePickerRef}
-          hidden
-        />
-        <div
-          className='relative w-32 h-32 self-center cursor-pointer shadow-md overflow-hidden rounded-full'
-          onClick={() => filePickerRef.current.click()}
-          disabled
-        >
-          {imageFileUploadProgress && (
-            <CircularProgressbar
-              value={imageFileUploadProgress || 0}
-              text={`${imageFileUploadProgress}%`}
-              strokeWidth={5}
-              styles={{
-                root: {
-                  width: '100%',
-                  height: '100%',
-                  position: 'absolute',
-                  top: 0,
-                  left: 0,
-                },
-                path: {
-                  stroke: `rgba(62, 152, 199, ${imageFileUploadProgress / 100})`,
-                },
-              }}
-            />
-          )}
-          <img
-            src={imageFileUrl || currentUser.profilePicture}
-            alt='user'
-            className={`rounded-full w-full h-full object-cover border-8 border-[lightgray] ${
-              imageFileUploadProgress && imageFileUploadProgress < 100 && 'opacity-60'
-            }`}
+    <div className="max-w-lg mx-auto p-6 w-full  ">
+    {/* Profile Heading */}
+    <h1 className="text-3xl font-semibold text-center mb-6 text-indigo-700">Profile</h1>
+    
+    {/* Form Section */}
+    <form onSubmit={handleSubmit} className="flex flex-col gap-6">
+      
+      {/* File Input for Profile Picture */}
+      <input
+        type="file"
+        accept="image/*"
+        onChange={handleImageChange}
+        ref={filePickerRef}
+        hidden
+      />
+      <div
+        className="relative w-[200px] h-[200px] self-center cursor-pointer shadow-xl rounded-full bg-gray-100 hover:bg-gray-200 transition duration-300"
+        onClick={() => filePickerRef.current.click()}
+      >
+        {imageFileUploadProgress && (
+          <CircularProgressbar
+            value={imageFileUploadProgress || 0}
+            text={`${imageFileUploadProgress}%`}
+            strokeWidth={5}
+            styles={{
+              root: {
+                width: '100%',
+                height: '100%',
+                position: 'absolute',
+                top: 0,
+                left: 0,
+              },
+              path: {
+                stroke: `rgba(62, 152, 199, ${imageFileUploadProgress / 100})`,
+              },
+            }}
           />
-        </div>
-        {imageFileUploadError && (
-          <Alert color='failure'>{imageFileUploadError}</Alert>
         )}
-        <TextInput
-          type='text'
-          id='username'
-          placeholder='username'
-          value={formData.username}
-          onChange={handleChange}
-           
-          disabled
+        <img
+          src={imageFileUrl || currentUser.profilePicture}
+          alt="user"
+          className={`rounded-full w-full h-full object-cover border-4 border-lightgray ${
+            imageFileUploadProgress && imageFileUploadProgress < 100 && 'opacity-60'
+          }`}
         />
-        <TextInput
-          type='email'
-          id='email'
-          placeholder='email'
-          value={formData.email}
-          onChange={handleChange}
-          required
-        />
-        <TextInput
-          type='password'
-          id='password'
-          placeholder='password'
-          onChange={handleChange}
-        />
-        <TextInput
-          type='text'
-          id='region'
-          placeholder='region'
-          value={formData.region}
-          onChange={handleChange}
-          disabled
-        />
-        <button
-          type='submit'
-          outline
-          disabled={loading || imageFileUploading}
-          className='bg-gray-700 rounded-lg p-4 text-white'
-        >
-          {loading ? 'Loading...' : 'Update'}
-        </button>
-      </form>
-      <div className='text-red-500 flex justify-between mt-5'>
-        <Link to='/'>
-          <span onClick={handleSignout} className='cursor-pointer'>
-            
-          </span>
-        </Link>
       </div>
-      {updateUserSuccess && (
-        <Alert color='success' className='mt-3'>
-          {updateUserSuccess}
-        </Alert>
+      {imageFileUploadError && (
+        <Alert color="failure" className="mt-3">{imageFileUploadError}</Alert>
       )}
-      {updateUserError && (
-        <Alert color='failure' className='mt-3'>
-          <div className='flex items-center'>
-            <HiOutlineExclamationCircle className='mr-2' />
-            {updateUserError}
-          </div>
-        </Alert>
-      )}
-      <div className='text-red-500 flex justify-between mt-5'>
-        <span onClick={() => setShowModal(true)} className='cursor-pointer'>
+      
+      {/* Username (Disabled) */}
+      <TextInput
+        type="text"
+        id="username"
+        placeholder="Username"
+        value={formData.username}
+        onChange={handleChange}
+        disabled
+        className="bg-gray-100 cursor-not-allowed"
+      />
+      
+      {/* Email */}
+      <TextInput
+        type="email"
+        id="email"
+        placeholder="Email"
+        value={formData.email}
+        onChange={handleChange}
+        required
+      />
+      
+      {/* Password */}
+      <TextInput
+        type="password"
+        id="password"
+        placeholder="Password"
+        onChange={handleChange}
+        className="bg-gray-100"
+      />
+      
+      {/* Region (Disabled) */}
+      <TextInput
+        type="text"
+        id="region"
+        placeholder="Region"
+        value={formData.region}
+        onChange={handleChange}
+        disabled
+        className="bg-gray-100 cursor-not-allowed"
+      />
+      
+      {/* Submit Button */}
+      <button
+        type="submit"
+        disabled={loading || imageFileUploading}
+        className="bg-indigo-600 text-white rounded-lg py-3 mt-4 hover:bg-indigo-700 transition duration-300"
+      >
+        {loading ? 'Loading...' : 'Update'}
+      </button>
+    </form>
+  
+    {/* Sign Out Link */}
+    <div className="flex justify-between mt-5">
+      <Link to="/">
+        <span onClick={handleSignout} className="text-red-500 cursor-pointer hover:text-red-700 transition duration-300">
         
         </span>
-      </div>
-      <Modal show={showModal} onClose={() => setShowModal(false)}>
-        <ModalBody>
-          <div className='text-center'>
-            <h2 className='text-lg font-bold'>Are you sure you want to delete your profile?</h2>
-            <div className='flex justify-center mt-4'>
-              <Button onClick={handleDeleteUser} color='failure'>
-                Confirm
-              </Button>
-              <Button onClick={() => setShowModal(false)} color='gray' className='ml-2'>
-                Cancel
-              </Button>
-            </div>
-          </div>
-        </ModalBody>
-      </Modal>
+      </Link>
     </div>
+  
+    {/* Success/Failure Alert */}
+    {updateUserSuccess && (
+      <Alert color="success" className="mt-3">
+        {updateUserSuccess}
+      </Alert>
+    )}
+    {updateUserError && (
+      <Alert color="failure" className="mt-3">
+        <div className="flex items-center">
+          <HiOutlineExclamationCircle className="mr-2" />
+          {updateUserError}
+        </div>
+      </Alert>
+    )}
+  
+    {/* Delete Profile Modal Trigger */}
+    <div className="flex justify-between mt-5">
+      <span onClick={() => setShowModal(true)} className="text-red-500 cursor-pointer hover:text-red-700 transition duration-300">
+         
+      </span>
+    </div>
+  
+    {/* Delete Profile Modal */}
+    <Modal show={showModal} onClose={() => setShowModal(false)}>
+      <ModalBody>
+        <div className="text-center">
+          <h2 className="text-lg font-bold mb-4">Are you sure you want to delete your profile?</h2>
+          <div className="flex justify-center gap-4">
+            <Button onClick={handleDeleteUser} color="failure">
+              Confirm
+            </Button>
+            <Button onClick={() => setShowModal(false)} color="gray">
+              Cancel
+            </Button>
+          </div>
+        </div>
+      </ModalBody>
+    </Modal>
+  </div>
+  
+
   );
 };
 

@@ -45,10 +45,10 @@ const Header = () => {
   };
 
   return (
-    <header className={`flex items-center justify-between p-4 shadow-md ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-white text-black'} transition-colors duration-300`}>
+    <header className={`flex items-center justify-between p-4 shadow-md ${isDarkMode ? 'bg-gray-900 text-white' : 'bg-indigo-500 text-white'} transition-colors duration-300`}>
       {/* Logo */}
-      <div className="flex items-center">
-        <NavLink to="/" className="flex items-center space-x-2 text-2xl font-bold uppercase">
+      <div className="flex items-center ">
+        <NavLink to="/" className="flex items-center  text-2xl font-bold uppercase">
           <img src={logo} alt="Logo" className="h-16 w-16" />
         </NavLink>
       </div>
@@ -80,15 +80,14 @@ const Header = () => {
                     alt="user"
                     img={profilePicture}
                     rounded
-                    className="w-12 h-12 rounded-lg border-2 border-gray-200 dark:border-gray-600"
+                    className="w-14 h-14 rounded-full  border-opacity-25 border-2 border-gray-200 dark:border-gray-600"
                   />
                 }
               >
-                <div className="p-2 border-b">
-                  <span className="text-sm">{getGreeting()} @{username}</span>
-                  <span className="text-sm truncate">{email}</span>
-                </div>
-                <NavLink to="/profile" className="px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300">Profile</NavLink>
+                <div className="p-2 border-b w-32">
+                  <span className="text-lg">{getGreeting()} @{username}</span>
+                 </div>
+                <NavLink to="/profile" className="w-full text-left px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300">Profile</NavLink>
                 <button onClick={handleSignOut} className="w-full text-left px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300">Sign Out</button>
               </Dropdown>
             ) : (
@@ -104,6 +103,7 @@ const Header = () => {
           </button>
         </div>
       </div>
+      
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (

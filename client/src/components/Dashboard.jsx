@@ -302,206 +302,199 @@ const retiredTeachersCount = teachers.length - activeTeachersCount;
   return (
     <div className="p-6">
 
-
-      {/* Filters */}
-      <div className="flex flex-wrap gap-6 mb-7 bg-[#b19d60] p-4 rounded-md shadow-lg">
-        {/* Region Filter */}
+    {/* Filters */}
+    <div className="flex flex-wrap gap-6 mb-7 p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800">
+      {/* Region Filter */}
+      <div className="sm:w-full lg:w-1/6">
+        <label htmlFor="region" className="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Region:</label>
+        <select
+          id="region"
+          value={selectedRegion}
+          onChange={(e) => setSelectedRegion(e.target.value)}
+          className="block w-full p-2 border rounded-md shadow-sm sm:text-sm text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-700 focus:ring-indigo-500 focus:border-indigo-500"
+        >
+          <option value="">All Regions</option>
+          {REGIONS.map(region => (
+            <option key={region} value={region}>{region}</option>
+          ))}
+        </select>
+      </div>
+  
+      {/* District Filter - Visible only if Region is selected */}
+      {selectedRegion && (
         <div className="sm:w-full lg:w-1/6">
-          <label htmlFor="region" className="block mb-2 text-sm font-semibold ">Region:</label>
+          <label htmlFor="district" className="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">District:</label>
           <select
-            id="region"
-            value={selectedRegion}
-            onChange={(e) => setSelectedRegion(e.target.value)}
-            className="block w-full p-2 border dark:text-black   rounded-md shadow-sm    sm:text-sm"
+            id="district"
+            value={selectedDistrict}
+            onChange={(e) => setSelectedDistrict(e.target.value)}
+            className="block w-full p-2 border rounded-md shadow-sm sm:text-sm text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-700 focus:ring-indigo-500 focus:border-indigo-500"
           >
-            <option value="" className=''>All Regions</option>
-            {REGIONS.map(region => (
-              <option key={region} value={region}>{region}</option>
+            <option value="">All Districts</option>
+            {(DISTRICTS[selectedRegion] || []).map(district => (
+              <option key={district} value={district}>{district}</option>
             ))}
           </select>
         </div>
-
-        {/* District Filter - Visible only if Region is selected */}
-        {selectedRegion && (
-          <div className="sm:w-full lg:w-1/6">
-            <label htmlFor="district" className="block mb-2 text-sm font-semibold ">District:</label>
-            <select
-              id="district"
-              value={selectedDistrict}
-              onChange={(e) => setSelectedDistrict(e.target.value)}
-              className="block w-full p-2 border dark:text-black   rounded-md shadow-sm focus:ring-gray-800 focus:border-gray-800  sm:text-sm"
-            >
-              <option value="">All Districts</option>
-              {(DISTRICTS[selectedRegion] || []).map(district => (
-                <option key={district} value={district}>{district}</option>
-              ))}
-            </select>
+      )}
+  
+      {/* Education Level Filter */}
+      <div className="sm:w-full lg:w-1/6">
+        <label htmlFor="educationLevel" className="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Education Level:</label>
+        <select
+          id="educationLevel"
+          value={selectedEducationLevel}
+          onChange={(e) => setSelectedEducationLevel(e.target.value)}
+          className="block w-full p-2 border rounded-md shadow-sm sm:text-sm text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-700 focus:ring-indigo-500 focus:border-indigo-500"
+        >
+          <option value="">All Education Levels</option>
+          {educationLevels.map(level => (
+            <option key={level} value={level}>{level}</option>
+          ))}
+        </select>
+      </div>
+  
+      {/* Teacher Type Filter */}
+      <div className="sm:w-full lg:w-1/6">
+        <label htmlFor="teacherType" className="block mb-2 text-sm font-semibold text-gray-700 dark:text-gray-300">Teacher Type:</label>
+        <select
+          id="teacherType"
+          value={selectedTeacherType}
+          onChange={(e) => setSelectedTeacherType(e.target.value)}
+          className="block w-full p-2 border rounded-md shadow-sm sm:text-sm text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-700 focus:ring-indigo-500 focus:border-indigo-500"
+        >
+          <option value="">All Types</option>
+          {['Primary', 'Preprimary', 'Secondary', 'College', 'Boarding'].map(type => (
+            <option key={type} value={type}>{type}</option>
+          ))}
+        </select>
+      </div>
+    </div>
+  
+    {/* Summary Section */}
+    <div className="mb-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
+      <div className="p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800">
+        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Total Teachers</h3>
+        <p className="text-xl font-bold text-gray-900 dark:text-gray-200">{totalTeachers}</p>
+      </div>
+  
+      <div className="p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800">
+        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Sex Breakdown</h3>
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between">
+            <span>Male</span>
+            <span className="text-xl font-bold">{counts.sex.Male || 0}</span>
           </div>
-        )}
-        {/* Education Level Filter */}
-<div className="sm:w-full lg:w-1/6">
-  <label htmlFor="educationLevel" className="block mb-2 text-sm font-semibold">Education Level:</label>
-  <select
-    id="educationLevel"
-    value={selectedEducationLevel}
-    onChange={(e) => setSelectedEducationLevel(e.target.value)}
-    className="block dark:text-black w-full p-2 border rounded-md shadow-sm focus:ring-gray-800 focus:border-gray-800 sm:text-sm"
-  >
-    <option value="">All Education Levels</option>
-    {educationLevels.map(level => (
-      <option key={level} value={level}>{level}</option>
-    ))}
-  </select>
-</div>
-
-
-        {/* Teacher Type Filter */}
-        <div className="sm:w-full lg:w-1/6">
-          <label htmlFor="teacherType" className="block mb-2 text-sm font-semibold ">Teacher Type:</label>
-          <select
-            id="teacherType"
-            value={selectedTeacherType}
-            onChange={(e) => setSelectedTeacherType(e.target.value)}
-            className="block dark:text-black w-full p-2 border   rounded-md shadow-sm focus:ring-gray-800 focus:border-gray-800  sm:text-sm"
-          >
-            <option value="">All Types</option>
-            {['Primary', 'Preprimary', 'Secondary', 'College', 'Boarding'].map(type => (
-               <option key={type} value={type}>{type}</option>
-            ))}
-          </select>
-        </div>
-
-
-      </div>
-
-
-
-
-     {/* Summary Section */}
-<div className="mb-6 grid gap-4 grid-cols-1 sm:grid-cols-2 lg:grid-cols-3">
-  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md dark:shadow-gray-700 dark:p-4">
-    <h3 className="text-[14px] font-semibold mb-2">Total Teachers</h3>
-    <p className="text-xl font-bold">{totalTeachers}</p>
-  </div>
-
-  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md dark:shadow-gray-700 dark:p-4">
-    <h3 className="text-[14px] font-semibold mb-2">Sex Breakdown</h3>
-    <div className="flex flex-col gap-2">
-      <div className="flex justify-between">
-        <span>Male</span>
-        <span className="text-xl font-bold">{counts.sex.Male || 0}</span>
-      </div>
-      <div className="flex justify-between">
-        <span>Female</span>
-        <span className="text-xl font-bold">{counts.sex.Female || 0}</span>
-      </div>
-    </div>
-  </div>
-
-  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md dark:shadow-gray-700 dark:p-4">
-    <h3 className="text-[14px] font-semibold mb-2">Native Status</h3>
-    <div className="flex flex-col gap-2">
-      <div className="flex justify-between">
-        <span>Region</span>
-        <span className="text-xl font-bold">{counts.nativeStatus.Region || 0}</span> 
-      </div>
-      <div className="flex justify-between">
-        <span>Non-region</span>
-        <span className="text-xl font-bold">{counts.nativeStatus['Non-region'] || 0}</span>
-      </div>
-    </div>
-  </div>
-
-  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md dark:shadow-gray-700 dark:p-4">
-    <h3 className="text-[14px] font-semibold mb-2">Retirement Status</h3>
-    <div className="flex flex-col gap-2">
-      <div className="flex justify-between">
-        <p>Active Teachers</p>
-        <span className="text-xl font-bold">{counts.retirementStatus.Active || 0}</span>
-      </div>
-      <div className="flex justify-between">
-        <p>Retired Teachers</p>
-        <span className="text-xl font-bold">{counts.retirementStatus.Retired || 0}</span>
-      </div>
-    </div>
-  </div>
-
-  <div className="p-4 rounded-lg shadow-md transition-transform duration-300 hover:scale-105 dark:shadow-md dark:rounded-md dark:shadow-gray-700 dark:p-4 col-span-1 sm:col-span-2 lg:col-span-3">
-    <h3 className="text-[16px] font-semibold mb-4">Teacher Types</h3>
-    <div className="flex flex-wrap gap-4">
-      {[
-        { type: 'Primary', count: counts.teacherType.Primary || 0 },
-        { type: 'Preprimary', count: counts.teacherType.Preprimary || 0 },
-        { type: 'Secondary', count: counts.teacherType.Secondary || 0 },
-        { type: 'College', count: counts.teacherType.College || 0 },
-        { type: 'Boarding' , count: counts.teacherType.Boarding|| 0 }
-       ].map(({ type, count }) => (
-        <div key={type} className="flex-1 min-w-[150px] sm:min-w-[200px] flex justify-between items-center p-4 rounded-lg border transition-transform duration-300 hover:shadow-lg">
-          <span className="font-medium">{type}</span>
-          <span className="text-lg font-bold">{count}</span>
-        </div>
-      ))}
-    </div>
-  </div>
-</div>
-
-
-      {/* Chart Selector */}
-      <div className="mb-6  p-4 rounded-lg shadow-md">
-        {/* Select Chart Type */}
-        <div className='flex gap-[120px] items-center'>
-          <div className='flex gap-2 items-center'>
-            <label className="block mb-2 text-sm font-medium ">Select Chart Type:</label>
-            <select
-              value={selectedChart}
-              onChange={(e) => setSelectedChart(e.target.value)}
-              className="block dark:text-black p-2 border rounded-md shadow-sm focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
-            >
-              <option value="Daily">Daily Chart</option>
-              <option value="Weekly">Weekly Chart</option>
-              <option value="Monthly">Monthly Chart</option>
-              <option value="Yearly">Yearly Chart</option>
-            </select>
+          <div className="flex justify-between">
+            <span>Female</span>
+            <span className="text-xl font-bold">{counts.sex.Female || 0}</span>
           </div>
-          {/* Date Range Filter */}
-          <div className="flex gap-2 items-center">
-            <label className="block mb-2 text-sm font-medium  ">Date Range:</label>
-            <div className="flex space-x-2 gap-4">
-              <DatePicker
-                selected={startDate}
-                onChange={(date) => setStartDate(date)}
-                selectsStart
-                startDate={startDate}
-                endDate={endDate}
-                className="w-full p-2 border rounded-md shadow-sm sm:text-sm"
-                placeholderText="Start Date"
-              />
-              <DatePicker
-                selected={endDate}
-                onChange={(date) => setEndDate(date)}
-                selectsEnd
-                startDate={startDate}
-                endDate={endDate}
-                minDate={startDate}
-                className="w-full p-2 border rounded-md shadow-sm sm:text-sm"
-                placeholderText="End Date"
-              />
+        </div>
+      </div>
+  
+      <div className="p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800">
+        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Native Status</h3>
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between">
+            <span>Region</span>
+            <span className="text-xl font-bold">{counts.nativeStatus.Region || 0}</span>
+          </div>
+          <div className="flex justify-between">
+            <span>Non-region</span>
+            <span className="text-xl font-bold">{counts.nativeStatus['Non-region'] || 0}</span>
+          </div>
+        </div>
+      </div>
+  
+      <div className="p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800">
+        <h3 className="text-sm font-semibold text-gray-700 dark:text-gray-300 mb-2">Retirement Status</h3>
+        <div className="flex flex-col gap-2">
+          <div className="flex justify-between">
+            <p>Active Teachers</p>
+            <span className="text-xl font-bold">{counts.retirementStatus.Active || 0}</span>
+          </div>
+          <div className="flex justify-between">
+            <p>Retired Teachers</p>
+            <span className="text-xl font-bold">{counts.retirementStatus.Retired || 0}</span>
+          </div>
+        </div>
+      </div>
+  
+      <div className="p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800 col-span-1 sm:col-span-2 lg:col-span-3">
+        <h3 className="text-lg font-semibold text-gray-700 dark:text-gray-300 mb-4">Teacher Types</h3>
+        <div className="flex flex-wrap gap-4">
+          {[
+            { type: 'Primary', count: counts.teacherType.Primary || 0 },
+            { type: 'Preprimary', count: counts.teacherType.Preprimary || 0 },
+            { type: 'Secondary', count: counts.teacherType.Secondary || 0 },
+            { type: 'College', count: counts.teacherType.College || 0 },
+            { type: 'Boarding', count: counts.teacherType.Boarding || 0 }
+          ].map(({ type, count }) => (
+            <div key={type} className="flex-1 min-w-[150px] sm:min-w-[200px] flex justify-between items-center p-4 rounded-lg border bg-white dark:bg-gray-800 shadow-md">
+              <span className="font-medium text-gray-700 dark:text-gray-300">{type}</span>
+              <span className="text-lg font-bold text-gray-900 dark:text-gray-200">{count}</span>
             </div>
-          </div>
-        </div>
-
-        {/* Display Selected Chart */}
-        <div className="mt-4">
-          {selectedChart === 'Daily' && <LineChartComponent data={dailyChartData} title="Daily Teacher Counts" />}
-          {selectedChart === 'Weekly' && <LineChartComponent data={weeklyChartData} title="Weekly Teacher Counts" />}
-          {selectedChart === 'Monthly' && <LineChartComponent data={monthlyChartData} title="Monthly Teacher Counts" />}
-          {selectedChart === 'Yearly' && <LineChartComponent data={yearlyChartData} title="Yearly Teacher Counts" />}
+          ))}
         </div>
       </div>
-    
-
-
     </div>
+  
+    {/* Chart Selector */}
+    <div className="mb-6 p-4 rounded-lg shadow-lg bg-white dark:bg-gray-800">
+      {/* Select Chart Type */}
+      <div className="flex gap-10 items-center">
+        <div className="flex gap-2 items-center">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Select Chart Type:</label>
+          <select
+            value={selectedChart}
+            onChange={(e) => setSelectedChart(e.target.value)}
+            className="block w-full p-2 border rounded-md shadow-sm text-gray-800 dark:text-white bg-gray-200 dark:bg-gray-700 focus:ring-indigo-500 focus:border-indigo-500 sm:text-sm"
+          >
+            <option value="Daily">Daily Chart</option>
+            <option value="Weekly">Weekly Chart</option>
+            <option value="Monthly">Monthly Chart</option>
+            <option value="Yearly">Yearly Chart</option>
+          </select>
+        </div>
+  
+        {/* Date Range Filter */}
+        <div className="flex gap-2 items-center">
+          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300">Date Range:</label>
+          <div className="flex space-x-2">
+            <DatePicker
+              selected={startDate}
+              onChange={(date) => setStartDate(date)}
+              selectsStart
+              startDate={startDate}
+              endDate={endDate}
+              className="w-full p-2 border rounded-md shadow-sm sm:text-sm"
+              placeholderText="Start Date"
+            />
+            <DatePicker
+              selected={endDate}
+              onChange={(date) => setEndDate(date)}
+              selectsEnd
+              startDate={startDate}
+              endDate={endDate}
+              minDate={startDate}
+              className="w-full p-2 border rounded-md shadow-sm sm:text-sm"
+              placeholderText="End Date"
+            />
+          </div>
+        </div>
+      </div>
+  
+      {/* Display Selected Chart */}
+      <div className="mt-4">
+        {selectedChart === 'Daily' && <LineChartComponent data={dailyChartData} title="Daily Teacher Counts" />}
+        {selectedChart === 'Weekly' && <LineChartComponent data={weeklyChartData} title="Weekly Teacher Counts" />}
+        {selectedChart === 'Monthly' && <LineChartComponent data={monthlyChartData} title="Monthly Teacher Counts" />}
+        {selectedChart === 'Yearly' && <LineChartComponent data={yearlyChartData} title="Yearly Teacher Counts" />}
+      </div>
+    </div>
+  
+  </div>
+  
   );
 };
 

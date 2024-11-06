@@ -40,11 +40,11 @@ const Sidebar = () => {
   };
 
   return (
-    <div className={`relative flex ${isSidebarOpen ? 'w-64' : 'w-20'} h-screen transition-all duration-300 fixed bg-gradient-to-b from-gray-800 to-gray-900`}>
-      <div className="flex flex-col w-full h-full shadow-lg shadow-[#b19d60] text-white">
+    <div className={`relative flex ${isSidebarOpen ? 'w-64' : 'w-20'} h-screen transition-all duration-300 fixed bg-gradient-to-b from-indigo-500  to-indigo-500 `}>
+      <div className="flex flex-col w-full h-full shadow-lg shadow-indigo-500  text-white">
         {/* Sidebar Header */}
         <div className="flex items-center justify-between h-12 p-4 border-b border-gray-700">
-          <button onClick={toggleSidebar} className="text-xl transition-all hover:text-[#b19d60]">
+          <button onClick={toggleSidebar} className="text-xl transition-all hover:text-black">
             {isSidebarOpen ? <FaTimes /> : <FaBars />}
           </button>
         </div>
@@ -60,7 +60,7 @@ const Sidebar = () => {
               <NavLink
                 to="/dashboard"
                 className={({ isActive }) =>
-                  `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-[#b19d60] ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
+                  `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-white hover:text-black ${isActive ? 'bg-white text-black  font-bold' : 'bg-transparent'}`
                 }
               >
                 <FaHome size={20} />
@@ -72,7 +72,7 @@ const Sidebar = () => {
               <NavLink
                 to="/teachersList"
                 className={({ isActive }) =>
-                  `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-[#b19d60] ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
+                  `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-white hover:text-black ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
                 }
               >
                 <FaChalkboardTeacher size={20} />
@@ -83,7 +83,7 @@ const Sidebar = () => {
               <NavLink
                 to="/teachersInfo"
                 className={({ isActive }) =>
-                  `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-[#b19d60] ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
+                  `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-white hover:text-black ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
                 }
               >
                 <FaCircleInfo size={20} />
@@ -95,7 +95,7 @@ const Sidebar = () => {
               <NavLink
                 to="/report"
                 className={({ isActive }) =>
-                  `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-[#b19d60] ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
+                  `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-white hover:text-black ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
                 }
               >
                 <BiSolidReport size={20} />
@@ -106,7 +106,7 @@ const Sidebar = () => {
               <NavLink
                 to="/listUsers"
                 className={({ isActive }) =>
-                  `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-[#b19d60] ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
+                  `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-white hover:text-black ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
                 }
               >
                 <FaUsers size={20} />
@@ -116,7 +116,7 @@ const Sidebar = () => {
               <NavLink
                 to="/signup"
                 className={({ isActive }) =>
-                  `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-[#b19d60] ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
+                  `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-white hover:text-black ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
                 }
               >
                 <MdAddModerator size={20} />
@@ -134,7 +134,7 @@ const Sidebar = () => {
                     key={region}
                     to={`/teacher/form/${region.toLowerCase()}`}
                     className={({ isActive }) =>
-                      `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-[#b19d60] ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
+                      `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-white hover:text-black ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
                     }
                   >
                     <MdGroupAdd size={20} />
@@ -155,7 +155,7 @@ const Sidebar = () => {
                     key={region}
                     to={`/teacher/report/${region.toLowerCase()}`}
                     className={({ isActive }) =>
-                      `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-[#b19d60] ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
+                      `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-white hover:text-black ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
                     }
                   >
                     <BiSolidReport size={20} />
@@ -172,7 +172,7 @@ const Sidebar = () => {
               <NavLink
                 to="/userProfile"
                 className={({ isActive }) =>
-                  `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-[#b19d60] ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
+                  `flex items-center space-x-4 p-2 rounded-md transition-all duration-200 hover:bg-white hover:text-black ${isActive ? 'bg-[#b19d60] font-bold' : 'bg-transparent'}`
                 }
               >
                 <FaRegListAlt size={20} />
@@ -187,7 +187,7 @@ const Sidebar = () => {
         <div className="mt-auto p-4">
           <button
             onClick={handleSignOut}
-            className="w-full flex items-center space-x-4 p-2 hover:bg-[#b19d60] transition-all rounded-md"
+            className="w-full flex items-center space-x-4 p-2 hover:bg-white hover:text-black transition-all rounded-md"
           >
             <FaTimes size={20} />
             {isSidebarOpen && <span>Sign Out</span>}

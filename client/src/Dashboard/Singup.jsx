@@ -1,6 +1,8 @@
 import React, { useState } from 'react';
 import axios from 'axios';
 import { useNavigate } from 'react-router-dom';
+import image3 from "../assets/image3.svg"
+import { MdCreate } from 'react-icons/md';
 
 const roles = ['Admin', 'SuperAdmin', 'User'];
 const REGIONS = ['Afdheer', 'Daawo', 'Doolo', 'Erar', 'Faafan', 'Jarar', 'Liibaan', 'Nogob', 'Qoraxay', 'Shabelle', 'Sitti'];
@@ -9,7 +11,7 @@ const SignUp = () => {
   const [formData, setFormData] = useState({
     username: '',
     email: '',
-    password: '',
+    password: '123456',
     role: '',
     region: ''
   });
@@ -82,8 +84,14 @@ const SignUp = () => {
 
   return (
     <div className="flex justify-center items-center min-h-screen p-6 -mt-[50px]">
-      <div className="w-full max-w-md shadow-lg rounded-lg p-8 shadow-[#b19d60] border-[#b19d60]">
-        <h2 className="text-2xl font-bold mb-6 bg-[#b19d60] p-3 rounded-md uppercase">Create users</h2>
+      <img src={image3}
+       alt=""
+        />
+      <div className="w-full max-w-md ">
+        <h2 className="text-2xl font-bold mb-6 flex items-center gap-3   p-3 rounded-md uppercase">
+          < MdCreate />
+          Create users
+          </h2>
         <form onSubmit={handleSubmit}>
           <div className="mb-4">
             <label htmlFor="username" className="block text-sm font-medium mb-1">Username</label>
@@ -116,6 +124,7 @@ const SignUp = () => {
           <div className="mb-4">
             <label htmlFor="password" className="block text-sm font-medium mb-1">Password</label>
             <input
+            
               id="password"
               type="password"
               name="password"
@@ -162,7 +171,7 @@ const SignUp = () => {
           <button
             type="submit"
             disabled={isLoading}
-            className={`w-full px-4 py-2 rounded-md shadow-sm text-white font-semibold ${isLoading ? 'bg-gray-500 cursor-not-allowed' : 'bg-blue-600 hover:bg-blue-700'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
+            className={`w-full px-4 py-2 rounded-md shadow-sm text-white font-semibold ${isLoading ? 'bg-gray-500 cursor-not-allowed' : 'bg-indigo-500 hover:bg-blue-700'} focus:outline-none focus:ring-2 focus:ring-blue-500`}
           >
             {isLoading ? 'Signing up...' : 'Sign Up'}
           </button>
@@ -172,7 +181,7 @@ const SignUp = () => {
       {/* Modal for error alert */}
       {showErrorModal && (
         <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50">
-          <div className="bg-red-200 p-6 rounded-lg shadow-lg text-center w-80 border-2 border-red-400">
+          <div className="bg-red-200 p-6 rounded-lg shadow-lg text-center w-[420px] h-[190px] border-2 border-red-400">
             <h3 className="text-xl font-bold mb-4 text-red-600">Error</h3>
             <p className="text-gray-800">{errorMessage}</p>
             <button
