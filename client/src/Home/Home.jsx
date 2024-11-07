@@ -7,7 +7,7 @@ import homeimage from '../assets/homeimage.svg';
 import { NavLink } from 'react-router-dom';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import work1 from '../../assets/work1.svg';
+import work1 from '../../assets/work1.svg'; 
 import work2 from '../assets/work2.svg'
 import work3 from '../assets/work3.svg'
 
@@ -245,7 +245,9 @@ const Home = () => {
   {/* Section 1 */}
   <div className="flex flex-col md:flex-row items-center gap-10">
     <div className="w-full md:w-1/2">
-      <img src={work1 } alt="Education Illustration" className="w-full " />
+    
+      <img src={work1} alt="Education Illustration" className="w-full "/>
+
     </div>
     <div className="w-full md:w-1/2 mt-8">
       <div className="flex items-center mb-4">
