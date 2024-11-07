@@ -62,7 +62,7 @@ function TeacherDetails() {
             className="w-40 h-40 rounded-full border-4 border-blue-300 shadow-md"
           />
           <div>
-            <h1 className="text-4xl font-bold">{teacher.name}</h1>
+            <h1 className="text-4xl font-bold uppercase">{teacher.name}</h1>
             <p className="text-lg text-gray-500"><strong>Mobile:</strong> {teacher.mobile}</p>
             <p className="text-lg text-gray-500"><strong>Email:</strong> {teacher.email}</p>
             <p className="text-lg text-gray-500"><strong>Address:</strong> {teacher.region}, {teacher.district}</p>

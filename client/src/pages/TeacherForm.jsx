@@ -116,7 +116,7 @@ const TeacherForm = () => {
     transfer: false,  // Change to Boolean
     transferReason: '', // Initialized as an empty string
     teacherId: 1,
-    specialNeedDetail: '', // New field to capture special need details
+    specialNeed: '', // New field to capture special need details
     qualifications: '' // URL of the qualifications file
 
 
@@ -129,13 +129,23 @@ const TeacherForm = () => {
   const [errors, setErrors] = useState({}); // State-ka Validation Errors
   const [success, setSuccess] = useState(''); // State-ka Ogeysiiska Guusha
  
-  // Handle change for input fields
-  const handleChange = (e) => {
-    const { name, value } = e.target;
-    setFormData({
-      ...formData,
-      [name]: value, // This works for strings (like select and radio buttons)
-    });
+  
+ // Handle change for input fields
+ const handleChange = (e) => {
+  const { name, value } = e.target;
+  setFormData((prevFormData) => ({
+    ...prevFormData,
+    [name]: value,
+  }));
+};
+   // Function to generate years from the current year down to 1900
+   const generateYears = () => {
+    const currentYear = new Date().getFullYear();
+    const years = [];
+    for (let year = currentYear; year >= 1900; year--) {
+      years.push(year);
+    }
+    return years;
   };
 
   const handleCheckboxChange = (e) => {
@@ -219,7 +229,7 @@ const handleQualificationsChange = (e) => {
       healthNote: '',   // Initialized as an empty string
       transfer: false,  // Change to Boolean
       transferReason: '', // Initialized as an empty string
-      specialNeedDetail: '', // New field to capture special need details
+      specialNeed: '', // New field to capture special need details
       qualifications: '', // URL of the qualifications file
       teacherId: 1
 
@@ -379,15 +389,7 @@ useEffect(() => {
   }
 }, [formData.region]);
 
-  // Generate a list of years from 1900 to the current year
-  const generateYears = () => {
-    const currentYear = new Date().getFullYear();
-    const years = [];
-    for (let year = currentYear; year >= 1900; year--) {
-      years.push(year);
-    }
-    return years;
-  };
+ 
 
   return (
     <div className="max-w-7xl mx-auto p-8  ">
@@ -646,38 +648,88 @@ useEffect(() => {
     <p className="text-red-600 text-sm mt-2">{errors.nativeStatus}</p>
   )}
 </div>
+ {/* Health Status Field */}
+ <div>
+        <label className="block text-lg font-medium text-gray-700 dark:text-gray-300">
+          Health Status:
+        </label>
+        <div className="flex items-center space-x-6">
+          <label className="flex items-center space-x-2">
+            <input
+              type="radio"
+              name="healthStatus"
+              value="Yes"
+              checked={formData.healthStatus === 'Yes'}
+              onChange={handleChange}
+              className="form-radio h-5 w-5 text-blue-600 transition duration-200 ease-in-out"
+              disabled={loading}
+            />
+            <span className="text-lg">Yes</span>
+          </label>
+          <label className="flex items-center space-x-2">
+            <input
+              type="radio"
+              name="healthStatus"
+              value="No"
+              checked={formData.healthStatus === 'No'}
+              onChange={handleChange}
+              className="form-radio h-5 w-5 text-blue-600 transition duration-200 ease-in-out"
+              disabled={loading}
+            />
+            <span className="text-lg">No</span>
+          </label>
+        </div>
+      </div>
 
-{/* Health Status */}
+      {/* Special Needs and Health Note Fields - Render only if healthStatus is "No" */}
+      {formData.healthStatus === 'No' && (
+        <>
+          {/* Special Needs Field */}
+          <div className="mt-4">
+            <label
+              htmlFor="specialNeed"
+              className="block text-lg font-semibold text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Special Needs:
+            </label>
+            <select
+              name="specialNeed"
+              id="specialNeed"
+              className="w-full px-4 py-2.5 bg-white dark:bg-gray-700 dark:text-white border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out"
+              value={formData.specialNeed}
+              onChange={handleChange}
+            >
+              <option value="">Select an option</option>
+              {SPECIAL_NEED_OPTIONS.map((option) => (
+                <option key={option} value={option}>
+                  {option}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Health Note Field */}
+          <div className="mt-4">
+            <label
+              htmlFor="healthNote"
+              className="block text-lg font-semibold text-gray-700 dark:text-gray-300 mb-1"
+            >
+              Health Note:
+            </label>
+            <textarea
+              name="healthNote"
+              id="healthNote"
+              className="w-full px-4 py-2.5 bg-white dark:bg-gray-700 dark:text-white border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out"
+              value={formData.healthNote}
+              onChange={handleChange}
+              placeholder="Enter any relevant health notes..."
+              rows="4"
+            />
+          </div>
+        </>
+      )}
   <div>
-    <label className="block text-lg font-medium text-gray-700 dark:text-gray-300">
-      Health Status:
-    </label>
-    <div className="flex items-center space-x-6">
-      <label className="flex items-center space-x-2">
-        <input
-          type="radio"
-          name="healthStatus"
-          value="Yes"
-          checked={formData.healthStatus === 'Yes'}
-          onChange={handleChange}
-          className="form-radio h-5 w-5 text-blue-600 transition duration-200 ease-in-out"
-          disabled={loading}
-        />
-        <span className="text-lg">Yes</span>
-      </label>
-      <label className="flex items-center space-x-2">
-        <input
-          type="radio"
-          name="healthStatus"
-          value="No"
-          checked={formData.healthStatus === 'No'}
-          onChange={handleChange}
-          className="form-radio h-5 w-5 text-blue-600 transition duration-200 ease-in-out"
-          disabled={loading}
-        />
-        <span className="text-lg">No</span>
-      </label>
-    </div>
+   
       {/* Birth Date Field */}
   <div className='mt-3'>
     <label htmlFor="birthDate" className="block text-lg font-semibold text-gray-700 dark:text-gray-300 mb-1">
@@ -803,26 +855,29 @@ useEffect(() => {
     {errors.teacherType && <p className="text-sm text-red-500 mt-1">{errors.teacherType}</p>}
   </div>
 
-  {/* Joining Date Field */}
-  <div>
-    <label htmlFor="joiningYear" className="block text-lg font-semibold text-gray-700 dark:text-gray-300 mb-1">
-      Joining Year:
-    </label>
-    <select
-      name="joiningYear"
-      id="joiningYear"
-      className="w-full px-4 py-2.5 bg-white dark:bg-gray-700 dark:text-white border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out transform hover:scale-105"
-      value={formData.joiningDate}
-      onChange={handleChange}
-    >
-      <option value="">Select a year</option>
-      {generateYears().map((year) => (
-        <option key={year} value={year}>
-          {year}
-        </option>
-      ))}
-    </select>
-  </div>
+ {/* Joining Date Field */}
+ <div>
+        <label
+          htmlFor="joiningYear"
+          className="block text-lg font-semibold text-gray-700 dark:text-gray-300 mb-1"
+        >
+          Joining Year:
+        </label>
+        <select
+          name="joiningDate" // Match the field name in formData
+          id="joiningYear"
+          className="w-full px-4 py-2.5 bg-white dark:bg-gray-700 dark:text-white border rounded-lg shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 transition-all duration-300 ease-in-out transform hover:scale-105"
+          value={formData.joiningDate} // Bind value to formData
+          onChange={handleChange} // Handle changes
+        >
+          <option value="">Select a year</option>
+          {generateYears().map((year) => (
+            <option key={year} value={year}>
+              {year}
+            </option>
+          ))}
+        </select>
+      </div>
 
   {/* Subjects Learned Dropdown */}
   <div>

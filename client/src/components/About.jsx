@@ -12,7 +12,7 @@ function About() {
     {/* Education Philosophy Section */}
     <section className="mb-8">
       <h2 className="text-3xl font-semibold text-indigo-600 mb-4">Education Philosophy</h2>
-      <p className="text-gray-200 leading-relaxed">
+      <p className=" leading-relaxed">
         Producing competent citizens who benefit themselves and their country.
       </p>
     </section>
@@ -20,10 +20,10 @@ function About() {
     {/* Vision Section */}
     <section className="mb-8">
       <h2 className="text-3xl font-semibold text-indigo-600 mb-4">Vision</h2>
-      <p className="text-gray-200 leading-relaxed">
+      <p className=" leading-relaxed">
         Building an education system that assures quality and equity of education by the year 2030, aimed at producing competent citizens.
       </p>
-      <p className="text-gray-200 leading-relaxed mt-2">
+      <p className=" leading-relaxed mt-2">
         To see the production of competent citizens who are capable of embracing their nationality and striving for the prosperity of their country by 2030 G.C.
       </p>
     </section>
@@ -31,10 +31,10 @@ function About() {
     {/* Mission Section */}
     <section className="mb-8">
       <h2 className="text-3xl font-semibold text-indigo-600 mb-4">Mission</h2>
-      <p className="text-gray-200 leading-relaxed">
+      <p className=" leading-relaxed">
         Through nurturing the execution capacity of the education sector, designing and assuring standards of efficiency, expanding well-equipped colleges of teacher education, and publicizing all our activities, we ensure productive, equitable, participatory, and quality education.
       </p>
-      <p className="text-gray-200 leading-relaxed mt-2">
+      <p className=" leading-relaxed mt-2">
         Providing citizens with education supported by technology from pre-elementary to secondary education as part of lifelong education and training, built on fairness, inclusivity, accessibility, quality, and good governance.
       </p>
     </section>
@@ -42,7 +42,7 @@ function About() {
     {/* Values Section */}
     <section className="mb-8">
       <h2 className="text-3xl font-semibold text-indigo-600 mb-4">Values</h2>
-      <ul className="list-disc pl-6 text-gray-200 space-y-2">
+      <ul className="list-disc pl-6  space-y-2">
         <li>Ownership</li>
         <li>Effectiveness and Efficiency</li>
         <li>Quality</li>
@@ -60,19 +60,19 @@ function About() {
     <section className="mb-8">
       <h2 className="text-3xl font-semibold text-indigo-600 mb-4">Bureau Leadership</h2>
       <div className=" p-6 rounded-lg shadow-md">
-        <p className="text-lg text-gray-200 mb-3">
+        <p className="text-lg  mb-3">
           <span className="font-semibold text-indigo-600">Bureau Head:</span> Mr. Abdullahi Abdi
         </p>
-        <p className="text-lg text-gray-200 mb-3">
+        <p className="text-lg  mb-3">
           <span className="font-semibold text-indigo-600">Deputy Bureau Head:</span> Mr. Omer Aden
         </p>
-        <p className="text-lg text-gray-200 mb-3">
+        <p className="text-lg  mb-3">
           <span className="font-semibold text-indigo-600">Deputy Bureau Head:</span> Mr. Guled Ahmed Ali
         </p>
-        <p className="text-lg text-gray-200 mb-3">
+        <p className="text-lg  mb-3">
           <span className="font-semibold text-indigo-600">Deputy Bureau Head:</span> Mr. Mahamed Muse Gure
         </p>
-        <p className="text-lg text-gray-200">
+        <p className="text-lg ">
           <span className="font-semibold text-indigo-600">Human Resource Management:</span> Mr. Mahamud Hassan
         </p>
       </div>

@@ -234,7 +234,7 @@ const TeacherList = () => {
               className="transition-all duration-300 hover:bg-indigo-50 dark:hover:bg-indigo-800 dark:bg-gray-800 border-b border-gray-200 hover:shadow-xl"
             >
               <td className="py-4 px-6 hidden md:table-cell">{teacher.teacherId}</td>
-              <td className="py-4 px-6 flex items-center justify-center">
+              <td className="py-4 px-6 flex items-center justify-center ">
                 {teacher.picture ? (
                   <img
                     src={teacher.picture}
@@ -248,7 +248,7 @@ const TeacherList = () => {
               <td className="py-4 px-6 hidden md:table-cell">
                 <button
                   onClick={() => navigate(`/teacher/details/${teacher._id}`)}
-                  className="text-indigo-700 font-semibold hover:text-indigo-900 text-sm transition-all duration-200 transform hover:scale-105"
+                  className=" uppercase text-indigo-700 font-semibold hover:text-indigo-200  hover:text-gray-900 text-sm transition-all duration-200 transform hover:scale-105"
                 >
                   {teacher.name}
                 </button>

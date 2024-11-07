@@ -2,10 +2,12 @@ import React, { useState, useEffect, useMemo } from 'react';
 import { useParams, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import { getStorage, ref, getDownloadURL } from 'firebase/storage';
-import { FaEnvelope, FaPhone, FaMapMarkerAlt } from 'react-icons/fa';
+import {    FaMapMarkerAlt } from 'react-icons/fa';
 import { jsPDF } from 'jspdf';
 import html2canvas from 'html2canvas';
 import './printcv.css'; // Import the print stylesheet
+import { IoCall } from 'react-icons/io5';
+import { MdOutlineLocalPrintshop, MdOutlineMail } from 'react-icons/md';
 
 const calculateAge = (birthDate) => {
   if (!birthDate) return null;
@@ -125,8 +127,9 @@ const TeacherDetailsCV = () => {
             </div>
           </div>
           <div className="text-right space-y-3 ml-2">
-            <p className="flex items-center gap-2"><FaEnvelope size={20} /> {teacher.email}</p>
-            <p className="flex items-center gap-2"><FaPhone size={20} /> {teacher.mobile}</p>
+            <p className="flex items-center gap-2"><MdOutlineMail size={20} /> {teacher.email}</p>
+            <p className="flex items-center gap-2"><IoCall size={20} /> {teacher.mobile}</p>
+          
             <p className="flex items-center uppercase"><FaMapMarkerAlt size={20} /> {teacher.region}, {teacher.district}</p>
           </div>
         </div>
@@ -224,7 +227,10 @@ const TeacherDetailsCV = () => {
  
         <div className="flex justify-between gap-4">
           <button onClick={() => downloadPDF('notification-content', 'Notification-Letter')} className="bg-blue-600 text-white py-2 px-4 rounded-md hover:bg-blue-700 transition duration-300">Download Notification as PDF</button>
-          <button onClick={() => printSection('notification-content')} className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition duration-300">Print Notification</button>
+          <button onClick={() => printSection('notification-content')} className="bg-green-600 text-white py-2 px-4 rounded-md hover:bg-green-700 transition duration-300">Print Notification
+         
+          < MdOutlineLocalPrintshop />
+          </button>
         </div>
       </div>
     </div>

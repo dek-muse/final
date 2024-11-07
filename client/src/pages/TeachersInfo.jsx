@@ -322,7 +322,7 @@ function TeachersInfo() {
               key={teacher._id}
               className=" transition-all duration-300 hover:bg-indigo-50 dark:hover:bg-indigo-800 dark:bg-gray-800 border-b border-gray-200 hover:shadow-xl "
             >
-              <td className="border-b border-gray-200 px-6 py-4 text-sm  capitalize">{teacher.name}</td>
+              <td className="border-b border-gray-200 px-6 py-4 text-sm uppercase">{teacher.name}</td>
               <td className="border-b border-gray-200 px-6 py-4 text-sm ">{teacher.mobile}</td>
               <td className="border-b border-gray-200 px-6 py-4 text-sm  capitalize">{teacher.region}</td>
               <td className="border-b border-gray-200 px-6 py-4 text-sm  capitalize">{teacher.district}</td>

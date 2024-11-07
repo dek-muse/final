@@ -1,200 +1,317 @@
-import React from 'react';
-import image1 from '../assets/student/image1.jpg';
-import image2 from '../assets/student/image2.jpg';
-import image3 from '../assets/sawirkamacalinka.svg'
-import Slider from 'react-slick'; // Import Slider
-import { FaPerson } from 'react-icons/fa6';
-import homeimage from '../assets/homeimage.svg'
+import React, { useEffect, useState, useRef } from 'react';
+import Slider from 'react-slick';
+import axios from 'axios';
+import { FaBook, FaBullseye, FaRocket, FaCheckCircle, FaHandsHelping, FaRegLightbulb, FaBalanceScale, FaUsers, FaStar, FaRegHandshake, FaFlag, FaMedal, FaMale, FaFemale, FaRegGrin } from 'react-icons/fa';
+import { useSpring, animated } from 'react-spring';
+import homeimage from '../assets/homeimage.svg';
+import { NavLink } from 'react-router-dom';
+import "slick-carousel/slick/slick.css";
+import "slick-carousel/slick/slick-theme.css";
 
-import { FaBook, FaBullseye, FaRocket, FaCheckCircle, FaRegLightbulb, FaHandsHelping, FaPeopleArrows, FaGraduationCap, FaLaptop, FaChartLine, FaTabletAlt } from 'react-icons/fa';
-  
-// import { FaBook, FaBullseye, FaRocket, FaCheckCircle, FaRegLightbulb, FaHandsHelping, FaPeopleArrows, FaGraduationCap, FaLaptop, FaChartLine, FaTabletAlt } from 'react-icons/fa';
-
-
+// Animated count component
+const AnimatedCount = ({ count }) => {
+  const { number } = useSpring({
+    from: { number: 0 },
+    number: count,
+    delay: 200,
+    config: { tension: 150, friction: 14, duration: 3000 }
+  });
+  return <animated.span>{number.to((n) => n.toFixed(0))}</animated.span>;
+};
 
 const Home = () => {
+  const [teachers, setTeachers] = useState([]);
+  const [counts, setCounts] = useState({
+    sex: { Male: 0, Female: 0 },
+    nativeStatus: { Region: 0, 'Non-region': 0 },
+    teacherType: { Primary: 0, Preprimary: 0, Secondary: 0, College: 0, Boarding: 0 },
+    retirementStatus: { active: 0, retired: 0 },
+  });
+  const [error, setError] = useState(null);
+  const [loading, setLoading] = useState(true); // Loading state to indicate if data is being fetched
+  const [inView, setInView] = useState(false); // State to track section visibility
+  const countSectionRef = useRef(null); // Reference for the count section
+
+  useEffect(() => {
+    // Fetch teacher data
+    const fetchTeachersData = async () => {
+      try {
+        const response = await axios.get('/finalapi/');
+        if (Array.isArray(response.data)) {
+          setTeachers(response.data);
+          setCounts(processCounts(response.data)); 
+        } else {
+          throw new Error('Invalid data format'); // Trigger error if data is invalid
+        }
+      } catch (err) {
+        setError('Sorry, there was an issue fetching the data.');
+        setCounts({
+          sex: { Male: 0, Female: 0 },
+          nativeStatus: { Region: 0, 'Non-region': 0 },
+          teacherType: { Primary: 0, Preprimary: 0, Secondary: 0, College: 0, Boarding: 0 },
+          retirementStatus: { active: 0, retired: 0 },
+        }); // Set default values (0) if error occurs
+      } finally {
+        setLoading(false); // End loading state
+      }
+    };
+
+    fetchTeachersData();
+  }, []);
+
+  const processCounts = (data) => {
+    const counts = {
+      sex: { Male: 0, Female: 0 },
+      nativeStatus: { Region: 0, 'Non-region': 0 },
+      teacherType: { Primary: 0, Preprimary: 0, Secondary: 0, College: 0, Boarding: 0 },
+      retirementStatus: { active: 0, retired: 0 },
+    };
+
+    const updateCount = (category, item) => {
+      if (item) counts[category][item] = (counts[category][item] || 0) + 1;
+    };
+
+    data.forEach((teacher) => {
+      updateCount('sex', teacher.sex);
+      updateCount('nativeStatus', teacher.nativeStatus);
+      updateCount('teacherType', teacher.teacherType);
+
+      const { status } = getRetirementStatus(teacher.birthDate);
+      updateCount('retirementStatus', status);
+    });
+
+    return counts;
+  };
+
+  // Calculate total teachers
+  const totalTeachers = teachers.length;
+
+  const getRetirementStatus = (birthDate) => {
+    const retirementAge = 60;
+    const currentYear = new Date().getFullYear();
+    const birthYear = new Date(birthDate).getFullYear();
+    const age = currentYear - birthYear;
+    return { status: age >= retirementAge ? 'retired' : 'active' };
+  };
+
+  // Monitor section visibility using Intersection Observer API
+  useEffect(() => {
+    const observer = new IntersectionObserver(
+      (entries) => {
+        entries.forEach(entry => {
+          if (entry.isIntersecting) {
+            setInView(true);
+            observer.disconnect(); // Stop observing after first trigger
+          }
+        });
+      },
+      { threshold: 0.1 } // Trigger when 10% of section is visible
+    );
+
+    if (countSectionRef.current) {
+      observer.observe(countSectionRef.current);
+    }
+
+    return () => observer.disconnect();
+  }, []);
+
   const values = [
-    { title: "Ownership", description: "Encouraging stakeholders to take responsibility for their roles in the educational process." },
-    { title: "Effectiveness and Efficiency", description: "Striving to maximize resources and deliver results that enhance student learning." },
-    { title: "Quality", description: "Maintaining high standards in education to ensure exceptional outcomes for students." },
-    { title: "Responsibility", description: "Fostering accountability among all education stakeholders." },
-    { title: "Equity", description: "Ensuring fair access to educational opportunities for every student." },
-    { title: "Participatory", description: "Promoting involvement from all community members in the educational journey." },
-    { title: "Exemplary", description: "Setting high benchmarks for performance and behavior within the educational system." },
-    { title: "Commitment", description: "Dedication to continuous improvement and student success." },
-    { title: "Excellence", description: "Pursuing excellence in every aspect of education and administration." }
+    { icon: <FaHandsHelping className="text-blue-500 text-4xl mx-auto mb-4" />, title: "Ownership", description: "Encouraging stakeholders to take responsibility for their roles in the educational process." },
+    { icon: <FaCheckCircle className="text-green-500 text-4xl mx-auto mb-4" />, title: "Effectiveness and Efficiency", description: "Striving to maximize resources and deliver results that enhance student learning." },
+    { icon: <FaMedal className="text-red-500 text-4xl mx-auto mb-4" />, title: "Quality", description: "Maintaining high standards in education to ensure exceptional outcomes for students." },
+    { icon: <FaRegLightbulb className="text-yellow-500 text-4xl mx-auto mb-4" />, title: "Responsibility", description: "Fostering accountability among all education stakeholders." },
+    { icon: <FaBalanceScale className="text-purple-500 text-4xl mx-auto mb-4" />, title: "Equity", description: "Ensuring fair access to educational opportunities for every student." },
+    { icon: <FaUsers className="text-indigo-500 text-4xl mx-auto mb-4" />, title: "Participatory", description: "Promoting involvement from all community members in the educational journey." },
+    { icon: <FaStar className="text-pink-500 text-4xl mx-auto mb-4" />, title: "Exemplary", description: "Setting high benchmarks for performance and behavior within the educational system." },
+    { icon: <FaRegHandshake className="text-teal-500 text-4xl mx-auto mb-4" />, title: "Commitment", description: "Dedication to continuous improvement and student success." },
+    { icon: <FaFlag className="text-orange-500 text-4xl mx-auto mb-4" />, title: "Excellence", description: "Pursuing excellence in every aspect of education and administration." }
   ];
 
-  const tips = [
-    { title: "System Strengthening and Governance", description: "Implementing robust systems and frameworks to ensure effective governance.", icon: <FaChartLine size={40} className="text-[#2d1346]" /> },
-    { title: "National Unity With Diversity", description: "Promoting national unity while celebrating cultural diversity.", icon: <FaHandsHelping size={40} className="text-[#2d1346]" /> },
-    { title: "Quality Enhancement and Relevance to Job Market", description: "Ensuring educational programs are aligned with current job market demands.", icon: <FaRegLightbulb size={40} className="text-[#2d1346]" /> },
-    { title: "Access, Equity and Internal Efficiency", description: "Enhancing access to education while ensuring fairness and efficiency.", icon: <FaPeopleArrows size={40} className="text-[#2d1346]" /> },
-    { title: "Youth and Adult Non-Formal Education", description: "Providing alternative educational pathways for youth and adults.", icon: <FaGraduationCap size={40} className="text-[#2d1346]" /> },
-    { title: "Digital Technology for Education Transformation", description: "Leveraging digital tools to enhance learning experiences.", icon: <FaLaptop size={40} className="text-[#2d1346]" /> },
-    { title: "Enhanced Education and Training", description: "Continuous improvement of educational programs to meet evolving needs.", icon: <FaTabletAlt size={40} className="text-[#2d1346]" /> },
-    { title: "Quality Assurance", description: "Maintaining high standards in education and training processes.", icon: <FaCheckCircle size={40} className="text-[#2d1346]" /> }
-  ];
-
-  // Slider settings
   const settings = {
     dots: true,
     infinite: true,
     speed: 500,
     slidesToShow: 3,
-    slidesToScroll: 1,
+    centerMode: true,
+    centerPadding: "20px",
+    autoplay: true,
+    autoplaySpeed: 3000,
+    pauseOnHover: true,
     responsive: [
-      {
-        breakpoint: 1024,
-        settings: {
-          slidesToShow: 2,
-          slidesToScroll: 1,
-        },
-      },
-      {
-        breakpoint: 600,
-        settings: {
-          slidesToShow: 1,
-          slidesToScroll: 1,
-        },
-      },
-    ],
-  };;
+      { breakpoint: 1024, settings: { slidesToShow: 3 } },
+      { breakpoint: 768, settings: { slidesToShow: 1 } }
+    ]
+  };
+
+    // Calculate retired teachers
+    const retiredTeachers = counts.retirementStatus.retired;
+
   return (
     <div className="font-sans">
+  {/* Hero Section */}
+  <header className="bg-indigo-500 h-[600px] text-white flex flex-col items-center -m-6 rounded-bl-[300px]">
+    <main className="flex flex-col md:flex-row items-center justify-between gap-2 w-full max-w-screen-lg mt-[100px] px-6">
+      <div className="text-center md:text-left space-y-6 md:w-2/1">
+        <h2 className="text-[32px] font-bold leading-tight text-white drop-">
+          Welcome to the Somali Regional State Education Bureau
+        </h2>
+        <p className="text-[18px] font-blod font-light text-black">
+          Our goal is to create a supportive educational environment that uplifts students, teachers, and communities across the Somali region. Join us in advancing education and building a more inclusive future.
+        </p>
+        <div className="flex justify-center md:justify-start space-x-6 mt-6">
+          <NavLink to="/about">
+            <button className=" bg-indigo-400 hover:text-black px-8 py-3 rounded-full font-semibold capitalize transition duration-300 transform hover:bg-indigo-100 hover:scale-105">
+              Learn More...
+            </button>
+          </NavLink>
+        </div>
+      </div>
 
-    {/* Hero Section */}
-    <div className="bg-indigo-500 h-[630px] text-white flex flex-col items-center -m-6 rounded-bl-[200px]">
-  
-      <main className="flex flex-col md:flex-row items-center justify-between w-full max-w-screen-lg mt-[100px] px-6">
-        {/* Text Content */}
-        <div className="text-center md:text-left space-y-6 md:w-1/2">
-          <h2 className="text-5xl font-bold leading-tight">
-            Take Your Learning <br /> To The Next Level.
-          </h2>
-          <p className="text-[17px] text-indigo-100">
-            Gain critical student insights while freeing teachers from the pains of grading. Simply add Eduo to your learning platform.
-          </p>
-          <div className="flex justify-center md:justify-start space-x-6 mt-4">
-            <button className="bg-white text-indigo-500 px-6 py-3 rounded-full font-semibold capitalize transition duration-300 hover:bg-indigo-100">
-              Learn More
-            </button>
-            <button className="flex items-center text-indigo-200 space-x-2 hover:text-white">
-              <span>What’s Eduo?</span>
-              <span className="bg-indigo-700 p-2 rounded-full">▶</span>
-            </button>
-          </div>
-        </div>
-  
-        {/* Image */}
-        <div className="mt-8 md:mt-0 md:w-1/2 flex justify-center">
-          <div className="relative overflow-hidden p-6">
-            <img
-              src={homeimage} // Replace with actual image path
-              alt="Woman with laptop"
-              className="w-full h-auto object-cover rounded-lg shadow-md"
-            />
-          </div>
-        </div>
-      </main>
-  
-      {/* Statistics Section */}
-      <section className="flex justify-center space-x-9 mt-16">
-        <div className="text-center bg-white text-[#01ff23] py-[30px] px-[20px] rounded-[20px] shadow-xl">
-          <FaPerson size={35} />
-          <p className="text-[20px] font-bold">16,032</p>
-          <p className="text-sm">Schools</p>
-        </div>
-        <div className="text-center bg-white text-[#ff3939] py-[30px] px-[20px] rounded-[20px] shadow-xl">
-          <FaPerson size={35} />
-          <p className="text-[20px] font-bold">100M</p>
-          <p className="text-sm">Users</p>
-        </div>
-        <div className="text-center bg-white text-indigo-800 py-[30px] px-[20px] rounded-[20px] shadow-xl">
-          <FaPerson size={35} />
-          <p className="text-[20px] font-bold">119</p>
-          <p className="text-sm">Countries</p>
-        </div>
-      </section>
-  
-    </div>
-  
-    {/* About Us Section */}
-    <div className="py-[100px]">
-      <div className="max-w-7xl mx-auto flex flex-col lg:flex-row items-center p-12">
-        {/* Left Side - Image */}
-        <div className="mb-8 lg:mb-0 lg:mr-8">
-          <img 
-            src={image3} 
-            alt="About Us Image" 
-            className="w-[400px] rounded-lg shadow-lg"
-          />
-        </div>
-  
-        {/* Right Side - Text Content */}
-        <div className="flex-1 grid grid-cols-1 gap-6">
-          <h2 className="text-2xl font-bold text-center mb-8">Our Educational Approach and Core Principles</h2>
-  
-          {/* Education Philosophy Card */}
-          <div className="p-6 transition-shadow duration-300 hover:shadow-lg bg-white rounded-lg">
-            <h3 className="text-xl font-semibold mb-2 flex items-center">
-              <FaBook className="mr-2 text-blue-500" />
-              Education Philosophy
-            </h3>
-            <p>
-              Competent citizens benefiting themselves and their country.
-            </p>
-          </div>
-  
-          {/* Vision Card */}
-          <div className="p-6 transition-shadow duration-300 hover:shadow-lg bg-white rounded-lg">
-            <h3 className="text-xl font-semibold mb-2 flex items-center">
-              <FaBullseye className="mr-2 text-green-500" />
-              Vision
-            </h3>
-            <p>
-              Quality and equitable education by 2030, producing capable citizens committed to their nation's prosperity.
-            </p>
-          </div>
-  
-          {/* Mission Card */}
-          <div className="p-6 transition-shadow duration-300 hover:shadow-lg bg-white rounded-lg">
-            <h3 className="text-xl font-semibold mb-2 flex items-center">
-              <FaRocket className="mr-2 text-red-500" />
-              Mission
-            </h3>
-            <p>
-              Nurturing execution capacity and ensuring quality education supported by technology from pre-elementary to secondary.
-            </p>
-          </div>
-        </div>
+      <img src={homeimage} alt="Home Illustration" className="w-[400px] h-[400px] md:w-[500px] md:h-[500px] mt-6 md:mt-0 l-[200px]" />
+    </main>
+  </header>
+
+  {/* Vision, Mission and Core Values Section */}
+  <div className="flex flex-col items-center text-center py-16 mt-20 px-4">
+    <h2 className="text-3xl font-bold mb-12 ">Our Educational Approach and Core Principles</h2>
+
+    <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 gap-12 max-w-5xl mx-auto">
+      {/* Education Philosophy Card */}
+      <div className="p-8 transition duration-300 ease-in-out transform hover:scale-105 ">
+        <FaBook className="text-blue-500 text-4xl mx-auto mb-4" />
+        <h3 className="text-xl font-semibold mb-2">Education Philosophy</h3>
+        <p className="">Competent citizens benefiting themselves and their country.</p>
+      </div>
+
+      {/* Vision Card */}
+      <div className="p-8 transition duration-300 ease-in-out transform hover:scale-105 ">
+        <FaBullseye className="text-green-500 text-4xl mx-auto mb-4" />
+        <h3 className="text-xl font-semibold mb-2">Vision</h3>
+        <p className="">Quality and equitable education by 2030, producing capable citizens committed to their nation's prosperity.</p>
+      </div>
+
+      {/* Mission Card */}
+      <div className="p-8 transition duration-300 ease-in-out transform hover:scale-105 ">
+        <FaRocket className="text-red-500 text-4xl mx-auto mb-4" />
+        <h3 className="text-xl font-semibold mb-2">Mission</h3>
+        <p className="">Nurturing execution capacity and ensuring quality education supported by technology from pre-elementary to secondary.</p>
       </div>
     </div>
-  
-    {/* Tips on Our Principles Section */}
-    <section className="py-16 w-full bg-gray-50">
-      <div className="max-w-[130rem] mx-auto text-center mb-12">
-        <h2 className="text-4xl font-bold mb-4 uppercase">Tips on Our Principles / Types of Business Delivery</h2>
-        <p className="text-lg mb-8">Discover our core principles that guide our approach to education and business delivery.</p>
+  </div>
+
+  {/* Teacher Statistics Section */}
+  <div className="px-4 sm:px-6 lg:px-8 py-16 " ref={countSectionRef}>
+    <h2 className="text-3xl font-bold text-center mb-12 ">Teacher Statistics</h2>
+
+
+
+    <div className="grid grid-cols-1 md:grid-cols-2 justify-between lg:grid-cols-4 gap-8">
+  {/* New "Total Teachers" Section */}
+  <div className="p-6 text-center mb-6  transition duration-300 ease-in-out transform hover:scale-105">
+    <FaUsers className="text-indigo-500 text-4xl mb-4 mx-auto" />
+    <h3 className="text-2xl font-bold mb-2">Total Teachers</h3>
+    <p className="text-indigo-500 text-4xl"><AnimatedCount count={totalTeachers} /></p>
+  </div>
+
+  {/* Male Teachers Card */}
+  <div className="p-6 text-center  transition duration-300 ease-in-out transform hover:scale-105">
+    <FaMale className="text-indigo-600 text-4xl mb-4 mx-auto" />
+    <h3 className="text-2xl font-bold mb-2  ">Male Teachers</h3>
+    <p className="text-indigo-500 text-4xl"><AnimatedCount count={counts.sex.Male} /></p>
+  </div>
+
+  {/* Female Teachers Card */}
+  <div className="p-6 text-center  transition duration-300 ease-in-out transform hover:scale-105">
+    <FaFemale className="text-indigo-600 text-4xl mb-4 mx-auto" />
+    <h3 className="text-2xl font-bold mb-2  ">Female Teachers</h3>
+    <p className="text-indigo-500 text-4xl"><AnimatedCount count={counts.sex.Female} /></p>
+  </div>
+    {/* New "Retired Teachers" Section */}
+    {/* New "Retired Teachers" Section */}
+<div className="p-6   text-center mb-6 transition duration-300 ease-in-out transform hover:scale-105">
+  <FaRegGrin className="text-indigo-500 text-4xl mb-4 mx-auto" />
+  <h3 className="text-2xl font-bold mb-2">Retired Teachers</h3>
+  <p className="text-indigo-500 text-4xl"><AnimatedCount count={retiredTeachers} /></p>
+</div>
+
+
+</div>
+</div>
+
+
+  {/* Core Values Section */}
+  <section className="py-16 mt-20 ">
+      <div className="text-center mb-12">
+        <h2 className="text-3xl font-bold ">Values of the Regional Education Bureau</h2>
       </div>
-      <div className="max-w-[1200px] mx-auto grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-4 gap-8 px-8">
-        {tips.map((tip, index) => (
-          <div key={index} className="flex flex-col items-center text-center p-6 h-[250px] rounded-lg shadow-lg hover:bg-[#b19d60] transition duration-300 transform hover:scale-105">
-            <div className="mb-4">{tip.icon}</div>
-            <div className="text-xl font-bold text-[#2d1346] mb-2">{tip.title}</div>
-            <p className="text-gray-700 text-sm">{tip.description}</p>
+
+      <Slider {...settings} className="max-w-5xl mx-auto">
+        {/* Array of Values */}
+        {[
+          {
+            icon: <FaHandsHelping className="text-blue-500 text-4xl mx-auto mb-4" />,
+            title: "Ownership",
+            description: "Encouraging stakeholders to take responsibility for their roles in the educational process."
+          },
+          {
+            icon: <FaCheckCircle className="text-green-500 text-4xl mx-auto mb-4" />,
+            title: "Effectiveness and Efficiency",
+            description: "Striving to maximize resources and deliver results that enhance student learning."
+          },
+          {
+            icon: <FaMedal className="text-red-500 text-4xl mx-auto mb-4" />,
+            title: "Quality",
+            description: "Maintaining high standards in education to ensure exceptional outcomes for students."
+          },
+          {
+            icon: <FaRegLightbulb className="text-yellow-500 text-4xl mx-auto mb-4" />,
+            title: "Responsibility",
+            description: "Fostering accountability among all education stakeholders."
+          },
+          {
+            icon: <FaBalanceScale className="text-purple-500 text-4xl mx-auto mb-4" />,
+            title: "Equity",
+            description: "Ensuring fair access to educational opportunities for every student."
+          },
+          {
+            icon: <FaUsers className="text-indigo-500 text-4xl mx-auto mb-4" />,
+            title: "Participatory",
+            description: "Promoting involvement from all community members in the educational journey."
+          },
+          {
+            icon: <FaStar className="text-pink-500 text-4xl mx-auto mb-4" />,
+            title: "Exemplary",
+            description: "Setting high benchmarks for performance and behavior within the educational system."
+          },
+          {
+            icon: <FaRegHandshake className="text-teal-500 text-4xl mx-auto mb-4" />,
+            title: "Commitment",
+            description: "Dedication to continuous improvement and student success."
+          },
+          {
+            icon: <FaFlag className="text-orange-500 text-4xl mx-auto mb-4" />,
+            title: "Excellence",
+            description: "Pursuing excellence in every aspect of education and administration."
+          }
+        ].map((value, index) => (
+          <div 
+            key={index} 
+            className="slide-item p-8  text-center transition transform duration-300 hover:scale-105"
+          >
+            {value.icon}
+            <h3 className="text-xl font-semibold mb-2">{value.title}</h3>
+            <p className="">{value.description}</p>
           </div>
         ))}
-      </div>
+      </Slider>
     </section>
-  
-    {/* Footer Section */}
-    <footer className="py-8 bg-indigo-700 text-white">
-      <div className="text-center">© 2024 Somali Regional State Education Bureau</div>
-    </footer>
-  
-  </div>
-  
+
+  {/* Footer */}
+  <footer className="py-8 text-center bg-indigo-600 text-white">
+    <p>&copy; 2023 Somali Regional State Education Bureau. All rights reserved.</p>
+  </footer>
+</div>
+
   );
 };
 

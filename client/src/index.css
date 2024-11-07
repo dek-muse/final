@@ -11,6 +11,20 @@ body.dark {
   
 }
  
+.slide-item {
+  opacity: 0.6;
+  transform: scale(0.9);
+  transition: transform 0.3s, opacity 0.3s;
+  width: 250px; /* Width asalka ah ee slides-ka */
+}
+
+.slick-center .slide-item {
+  opacity: 1;
+  transform: scale(1.1); /* Card-ka dhexe oo weyn */
+  width: 300px; /* Width dheeraad ah oo ka dhigaysa midka dhexe weyn */
+  box-shadow: 0px 10px 20px rgba(0, 0, 0, 0.2); /* Shadow xooggan */
+  border: 2px solid #b19d60; /* Border-ka dhexe oo midab gaar ah */
+}
 
 /* print.css */
 

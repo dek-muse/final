@@ -1,26 +1,20 @@
 import { defineConfig } from 'vite'
 import react from '@vitejs/plugin-react'
 
-// Load the environment variables from .env file
-import dotenv from 'dotenv'
-
-// Load the environment variables
-dotenv.config()
-
 // https://vitejs.dev/config/
 export default defineConfig({
   plugins: [react()],
   server: {
     proxy: {
-      // Proxy API requests using the environment variable
+      // Proxy API requests to tuserapi
       '/api': {
-        target: process.env.VITE_API_URL,
+        target: 'https://tuserapi.vercel.app/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
-      // Proxy API requests using another environment variable
+      // Proxy API requests to finalbakend
       '/finalapi': {
-        target: process.env.VITE_FINAL_API_URL,
+        target: 'https://finalbakend.vercel.app/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/finalapi/, ''),
       },
