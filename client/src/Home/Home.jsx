@@ -4,6 +4,9 @@ import axios from 'axios';
 import { FaBook, FaBullseye, FaRocket, FaCheckCircle, FaHandsHelping, FaRegLightbulb, FaBalanceScale, FaUsers, FaStar, FaRegHandshake, FaFlag, FaMedal, FaMale, FaFemale, FaRegGrin } from 'react-icons/fa';
 import { useSpring, animated } from 'react-spring';
 import homeimage from '../assets/homeimage.svg';
+import officeworkone from '../assets/officeworkone.svg';
+import officeworktwo from '../assets/officeworktwo.svg';
+import officeworkthree from '../assets/officeworkthree.svg';
 import { NavLink } from 'react-router-dom';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
@@ -36,7 +39,7 @@ const Home = () => {
     // Fetch teacher data
     const fetchTeachersData = async () => {
       try {
-        const response = await axios.get('/finalapi/');
+        const response = await axios.get('/finalapi');
         if (Array.isArray(response.data)) {
           setTeachers(response.data);
           setCounts(processCounts(response.data)); 
@@ -243,7 +246,7 @@ const Home = () => {
   <div className="flex flex-col md:flex-row items-center gap-10">
     <div className="w-full md:w-1/2">
     
-      <img src={homeimage} alt="Education Illustration" className="w-full "/>
+      <img src={officeworkone} alt="Education Illustration" className="w-full "/>
 
     </div>
     <div className="w-full md:w-1/2 mt-8">
@@ -263,7 +266,7 @@ const Home = () => {
   {/* Section 2 */}
   <div className="flex flex-col md:flex-row items-center gap-10">
     <div className="w-full md:w-1/2 mt-8 md:order-2">
-      <img src={homeimage} alt="Education Illustration" className="w-full " />
+      <img src={officeworktwo} alt="Education Illustration" className="w-full " />
     </div>
     <div className="w-full md:w-1/2">
       <div className="flex items-center mb-4">
@@ -282,7 +285,7 @@ const Home = () => {
   {/* Section 3 */}
   <div className="flex flex-col md:flex-row items-center gap-10">
     <div className="w-full md:w-1/2">
-      <img src={work3 } alt="Education Illustration" className="w-full " />
+      <img src={officeworkthree} alt="Education Illustration" className="w-full " />
     </div>
     <div className="w-full md:w-1/2 mt-8">
       <div className="flex items-center mb-4">
