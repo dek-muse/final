@@ -50,6 +50,7 @@ import QoraxayReport from "./zone/reportZone/QoraxayReport"
 import TeacherDetailsCard from './pages/TeacherDetailsCard';
 import NoSidebarLayout from './layouts/NoSidebarLayout';
 import SidebarLayout from './layouts/SidebarLayout';
+import dashboard from './components/Dashboard.jsx'
 
 
 const App = () => {
@@ -68,13 +69,12 @@ const App = () => {
               <Route path="/about" element={<About  />} />
 
               {/* Protected routes */}
-              <Route path="/profile" element={<PrivateRoute><DashProfile/>
-                <SidebarLayout><DashProfile/></SidebarLayout></PrivateRoute>} />
+              <Route path="/profile" element={<PrivateRoute><SidebarLayout><DashProfile/></SidebarLayout></PrivateRoute>} />
+          <Route path="dashboard2" element={<RoleBasedRoute requiredRole="SuperAdmin" requiredRegion="Sitti"><SidebarLayout><Dashboard  /></SidebarLayout></RoleBasedRoute>} />
+          <Route path="dashboard2" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Sitti"><SidebarLayout><Dashboard  /></SidebarLayout></RoleBasedRoute>} />
 
-              {/* Region-specific teacher forms */}
+    
               {/* Wrap all region-specific teacher form routes with SidebarLayout */}
-         
-
           <Route path="/teacher/form/sitti" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Sitti"><SidebarLayout><SittiForm /></SidebarLayout></RoleBasedRoute>} />
           <Route path="/teacher/form/daawo" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Daawo"><SidebarLayout><DaawoForm /></SidebarLayout></RoleBasedRoute>} />
           <Route path="/teacher/form/erar" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Erar"><SidebarLayout><ErarForm /></SidebarLayout></RoleBasedRoute>} />

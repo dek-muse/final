@@ -7,13 +7,13 @@ export default defineConfig({
   server: {
     proxy: {
       // Proxy API requests to tuserapi
-      '/api': {
+      '/a': {
         target: 'https://tuserapi.vercel.app/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/api/, ''),
       },
       // Proxy API requests to finalbakend
-      '/finalapi': {
+      '/final': {
         target: 'https://finalbakend.vercel.app/',
         changeOrigin: true,
         rewrite: (path) => path.replace(/^\/finalapi/, ''),

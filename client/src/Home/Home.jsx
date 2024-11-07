@@ -39,7 +39,7 @@ const Home = () => {
     // Fetch teacher data
     const fetchTeachersData = async () => {
       try {
-        const response = await axios.get('/finalapi');
+        const response = await axios.get('/finalapi/');
         if (Array.isArray(response.data)) {
           setTeachers(response.data);
           setCounts(processCounts(response.data)); 

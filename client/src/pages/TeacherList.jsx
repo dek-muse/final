@@ -22,7 +22,7 @@ const TeacherList = () => {
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
-        const response = await axios.get('https://finalbakend.vercel.app/');
+        const response = await axios.get('/api/');
         const teachersWithImages = await Promise.all(
           response.data.map(async (teacher) => {
             if (teacher.picture) {
