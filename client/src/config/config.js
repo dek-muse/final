@@ -1,6 +1,11 @@
-// src/config.js
-const config = {
-  API_URL: process.env.REACT_APP_API_URL, // Access the environment variable
-};
+import { createProxyMiddleware } from 'http-proxy-middleware';
 
-export default config;
+export default createProxyMiddleware({
+  target: 'https://finalbakend.vercel.app', // URL sax ah
+  changeOrigin: true,
+  pathRewrite: { '^/finalapi': '' },
+});
+
+export const config = {
+  api: { bodyParser: false },
+};
