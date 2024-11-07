@@ -7,7 +7,7 @@ import homeimage from '../assets/homeimage.svg';
 import { NavLink } from 'react-router-dom';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
-import work1 from '../assets/work1.svg'
+import work1 from '../../assets/work1.svg';
 import work2 from '../assets/work2.svg'
 import work3 from '../assets/work3.svg'
 
