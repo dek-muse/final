@@ -7,8 +7,6 @@ import homeimage from '../assets/homeimage.svg';
 import { NavLink } from 'react-router-dom';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
- import work2 from '../assets/work2.svg'
-import work3 from '../assets/work3.svg'
 
 // Animated count component
 const AnimatedCount = ({ count }) => {
@@ -245,7 +243,7 @@ const Home = () => {
   <div className="flex flex-col md:flex-row items-center gap-10">
     <div className="w-full md:w-1/2">
     
-      <img src={work2} alt="Education Illustration" className="w-full "/>
+      <img src={homeimage} alt="Education Illustration" className="w-full "/>
 
     </div>
     <div className="w-full md:w-1/2 mt-8">
@@ -265,7 +263,7 @@ const Home = () => {
   {/* Section 2 */}
   <div className="flex flex-col md:flex-row items-center gap-10">
     <div className="w-full md:w-1/2 mt-8 md:order-2">
-      <img src={work2 } alt="Education Illustration" className="w-full " />
+      <img src={homeimage} alt="Education Illustration" className="w-full " />
     </div>
     <div className="w-full md:w-1/2">
       <div className="flex items-center mb-4">
