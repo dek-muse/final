@@ -40,7 +40,7 @@ const TeacherList = () => {
         );
         setTeachers(teachersWithImages);
       } catch (err) {
-        setError('Waan ka xumanahay interner kaga ayaa xun  ');
+        setError('Waan ka xumanahay interner kaga ayaa  ');
       } finally {
         setIsLoading(false);
       }
