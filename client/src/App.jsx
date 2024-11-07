@@ -68,7 +68,8 @@ const App = () => {
               <Route path="/about" element={<About  />} />
 
               {/* Protected routes */}
-              <Route path="/profile" element={<PrivateRoute><DashProfile/></PrivateRoute>} />
+              <Route path="/profile" element={<PrivateRoute><DashProfile/>
+                <SidebarLayout><DashProfile/></SidebarLayout></PrivateRoute>} />
 
               {/* Region-specific teacher forms */}
               {/* Wrap all region-specific teacher form routes with SidebarLayout */}
