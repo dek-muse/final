@@ -1,6 +1,6 @@
 import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { FaEdit, FaFilter, FaSearch, FaTrashAlt } from 'react-icons/fa';
+import { FaEdit, FaFilter, FaSearch, FaTrashAlt, FaUsers } from 'react-icons/fa';
 import { useSelector } from 'react-redux';   
 
 
@@ -34,6 +34,7 @@ const UserManagement = () => {
   const [selectedRegion, setSelectedRegion] = useState(''); 
    const { currentUser } = useSelector((state) => state.user);
    const [usernames, setUsernames] = useState({}); // New state for usernames
+   const [filtersVisible, setFiltersVisible] = useState(true); // State for toggling filter visibility
 
 
 
@@ -178,60 +179,78 @@ const UserManagement = () => {
 
   return (
     <div className="flex flex-col items-center min-h-screen p-4 sm:p-8 ">
-     <div className="p-6 space-y-6 w-full max-w-8xl bg-white rounded-lg shadow-lg">
-  <h2 className="text-4xl font-bold text-gray-800 mb-6">User Management</h2>
+     <div className="p-6 space-y-6 w-full max-w-8xl ">
+     <div className='flex flex-col sm:flex-row justify-between gap-8'>
+  {/* Title Section */}
+  <h2 className="text-4xl font-bold  mb-6 flex items-center gap-4">
+    <FaUsers size={28} className="text-indigo-600" />
+    User Management
+  </h2>
 
   {/* Search & Filter Section */}
-  <div className="flex flex-col sm:flex-row gap-4 items-center justify-between mb-6">
+  <div className="flex flex-col sm:flex-row gap-4 items-center mb-6">
+    
     {/* Search Input */}
     <div className="flex items-center gap-4">
-      <FaSearch className="text-gray-600" />
-      <input
-        type="text"
-        placeholder="Search by username..."
-        value={searchQuery}
-        onChange={(e) => setSearchQuery(e.target.value)}
-        className="border rounded-md px-4 py-2 w-full sm:w-auto focus:ring-2 focus:ring-indigo-500"
-      />
-    </div>
-
-    {/* Filter Dropdowns */}
-    <div className="flex gap-4 items-center">
-      <FaFilter size={22} className="text-gray-600" />
-      <select
-        value={selectedRole}
-        onChange={(e) => setSelectedRole(e.target.value)}
-        className="border rounded-md px-4 py-2 w-full sm:w-auto focus:ring-2 focus:ring-indigo-500"
-      >
-        <option value="">All Roles</option>
-        {roles.map(role => (
-          <option key={role} value={role}>{role}</option>
-        ))}
-      </select>
-      <select
-        value={selectedRegion}
-        onChange={(e) => setSelectedRegion(e.target.value)}
-        className="border rounded-md px-4 py-2 w-full sm:w-auto focus:ring-2 focus:ring-indigo-500"
-      >
-        <option value="">All Regions</option>
-        {REGIONS.map(region => (
-          <option key={region} value={region}>{region}</option>
-        ))}
-      </select>
-    </div>
+    <FaSearch className="text-gray-600" />
+    <input
+      type="text"
+      placeholder="Search by username..."
+      value={searchQuery}
+      onChange={(e) => setSearchQuery(e.target.value)}
+      className="border rounded-md px-4 py-2 w-full sm:w-auto focus:ring-2 focus:ring-indigo-500"
+    />
   </div>
+
+    {/* Toggle Button */}
+    <button
+      onClick={() => setFiltersVisible(!filtersVisible)}
+      className="flex items-center gap-2 text-indigo-600 hover:text-indigo-800 font-medium"
+    >
+      <FaFilter size={20} />
+      {filtersVisible ? 'Hide Filter' : 'Show Filter'}
+    </button>
+
+    {/* Filter Section */}
+    {filtersVisible && (
+      <div className="flex gap-4 items-center">
+        <select
+          value={selectedRole}
+          onChange={(e) => setSelectedRole(e.target.value)}
+          className="border rounded-md px-4 py-2 w-full sm:w-auto focus:ring-2 focus:ring-indigo-500"
+        >
+          <option value="">All Roles</option>
+          {roles.map(role => (
+            <option key={role} value={role}>{role}</option>
+          ))}
+        </select>
+        <select
+          value={selectedRegion}
+          onChange={(e) => setSelectedRegion(e.target.value)}
+          className="border rounded-md px-4 py-2 w-full sm:w-auto focus:ring-2 focus:ring-indigo-500"
+        >
+          <option value="">All Zone</option>
+          {REGIONS.map(region => (
+            <option key={region} value={region}>{region}</option>
+          ))}
+        </select>
+      </div>
+    )}
+  </div>
+</div>
+
 
   {/* User Count Display */}
   <div className="mb-6">
-    <p className="text-lg text-gray-700">
+    <p className="text-lg ">
       Total Users: <span className="font-semibold">{userCount}</span>
     </p>
   </div>
 
   {/* User Table */}
-  <div className="overflow-x-auto bg-white rounded-lg shadow-lg">
+  <div className="overflow-x-auto   rounded-lg shadow-lg">
     <table className="min-w-full divide-y divide-gray-200">
-      <thead className="bg-gradient-to-r from-indigo-600 to-purple-600 text-white">
+      <thead className="bg-gradient-to-r from-indigo-600 to-purple-600 ">
         <tr>
           {['No', 'Profile Picture', 'Username', 'Email', 'Role', 'Region', 'Actions'].map((header) => (
             <th key={header} className="px-6 py-3 text-left text-xs font-medium uppercase tracking-wider">
@@ -242,7 +261,7 @@ const UserManagement = () => {
       </thead>
       <tbody className="divide-y divide-gray-200">
         {filteredUsers.map((user, index) => (
-          <tr key={user._id} className="hover:bg-indigo-50">
+          <tr key={user._id} className="hover:bg-indigo-300 hover:text-black">
             <td className="px-6 py-4 text-sm">{index + 1}</td>
             <td className="px-6 py-4 text-sm">
               <img src={user.profilePicture || '/default-profile.png'} alt="Profile" className="h-12 w-12 rounded-full" />
@@ -281,7 +300,7 @@ const UserManagement = () => {
       <h3 className="text-2xl font-semibold text-gray-900 mb-6">Edit User</h3>
       <form onSubmit={confirmUpdate} className="space-y-6">
         <div>
-          <label htmlFor="role" className="block text-sm font-medium text-gray-700">Role</label>
+          <label htmlFor="role" className="block text-sm font-medium ">Role</label>
           <select
             id="role"
             value={selectedUser.role}
@@ -295,7 +314,7 @@ const UserManagement = () => {
         </div>
 
         <div>
-          <label htmlFor="region" className="block text-sm font-medium text-gray-700">Region</label>
+          <label htmlFor="region" className="block text-sm font-medium ">Region</label>
           <select
             id="region"
             value={selectedUser.region}
@@ -312,7 +331,7 @@ const UserManagement = () => {
           <Button type="submit" className="bg-blue-600 hover:bg-blue-700 text-white py-2 px-4 rounded-md shadow-md transition duration-200">
             Update
           </Button>
-          <Button onClick={() => setSelectedUser(null)} className="bg-gray-300 hover:bg-gray-400 text-gray-800 py-2 px-4 rounded-md shadow-md transition duration-200">
+          <Button onClick={() => setSelectedUser(null)} className="bg-gray-300 hover:bg-gray-400  py-2 px-4 rounded-md shadow-md transition duration-200">
             Cancel
           </Button>
         </div>
@@ -324,7 +343,7 @@ const UserManagement = () => {
 {showConfirmation && (
   <div className="fixed inset-0 flex items-center justify-center bg-black bg-opacity-50 z-20">
     <div className="bg-white p-6 rounded-lg shadow-lg max-w-sm w-full">
-      <p className="text-lg font-medium text-gray-800">Are you sure you want to {actionType} this user?</p>
+      <p className="text-lg font-medium ">Are you sure you want to {actionType} this user?</p>
       <div className="flex justify-end mt-6 space-x-4">
         <Button
           onClick={actionType === 'delete' ? handleConfirmDelete : handleConfirmUpdate}

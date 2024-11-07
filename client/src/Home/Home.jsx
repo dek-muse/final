@@ -7,6 +7,9 @@ import homeimage from '../assets/homeimage.svg';
 import { NavLink } from 'react-router-dom';
 import "slick-carousel/slick/slick.css";
 import "slick-carousel/slick/slick-theme.css";
+import work1 from '../assets/work1.svg'
+import work2 from '../assets/work2.svg'
+import work3 from '../assets/work3.svg'
 
 // Animated count component
 const AnimatedCount = ({ count }) => {
@@ -149,10 +152,10 @@ const Home = () => {
   return (
     <div className="font-sans">
   {/* Hero Section */}
-  <header className="bg-indigo-500 h-[600px] text-white flex flex-col items-center -m-6 rounded-bl-[300px]">
+  <header className=" h-[600px]   flex flex-col items-center -m-6 rounded-bl-[300px]">
     <main className="flex flex-col md:flex-row items-center justify-between gap-2 w-full max-w-screen-lg mt-[100px] px-6">
       <div className="text-center md:text-left space-y-6 md:w-2/1">
-        <h2 className="text-[32px] font-bold leading-tight text-white drop-">
+        <h2 className="text-[32px] font-bold leading-tight   drop-">
           Welcome to the Somali Regional State Education Bureau
         </h2>
         <p className="text-[18px] font-blod font-light text-black">
@@ -237,6 +240,65 @@ const Home = () => {
 
 </div>
 </div>
+{/*  middle section */}
+<div className="space-y-20 px-6 md:px-12 lg:px-24 py-16 font-sans">
+  {/* Section 1 */}
+  <div className="flex flex-col md:flex-row items-center gap-10">
+    <div className="w-full md:w-1/2">
+      <img src={work1 } alt="Education Illustration" className="w-full " />
+    </div>
+    <div className="w-full md:w-1/2 mt-8">
+      <div className="flex items-center mb-4">
+        <div className="w-6 h-1 bg-blue-500 mr-4"></div>
+        <h1 className="text-4xl font-bold uppercase">Important Education</h1>
+      </div>
+      <p className="text-lg leading-relaxed ">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, illo blanditiis. Dignissimos, provident rerum!
+        Eligendi, quidem labore cumque, eveniet tenetur aut aspernatur beatae harum unde mollitia consequuntur magni
+        illum recusandae. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, provident rerum! Eligendi,
+        quidem labore cumque.
+      </p>
+    </div>
+  </div>
+
+  {/* Section 2 */}
+  <div className="flex flex-col md:flex-row items-center gap-10">
+    <div className="w-full md:w-1/2 mt-8 md:order-2">
+      <img src={work2 } alt="Education Illustration" className="w-full " />
+    </div>
+    <div className="w-full md:w-1/2">
+      <div className="flex items-center mb-4">
+        <div className="w-6 h-1 bg-blue-500 mr-4"></div>
+        <h1 className="text-4xl font-bold uppercase">Important Education</h1>
+      </div>
+      <p className="text-lg leading-relaxed ">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, illo blanditiis. Dignissimos, provident rerum!
+        Eligendi, quidem labore cumque, eveniet tenetur aut aspernatur beatae harum unde mollitia consequuntur magni
+        illum recusandae. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, provident rerum! Eligendi,
+        quidem labore cumque.
+      </p>
+    </div>
+  </div>
+
+  {/* Section 3 */}
+  <div className="flex flex-col md:flex-row items-center gap-10">
+    <div className="w-full md:w-1/2">
+      <img src={work3 } alt="Education Illustration" className="w-full " />
+    </div>
+    <div className="w-full md:w-1/2 mt-8">
+      <div className="flex items-center mb-4">
+        <div className="w-6 h-1 bg-blue-500 mr-4"></div>
+        <h1 className="text-4xl font-bold uppercase">Important Education</h1>
+      </div>
+      <p className="text-lg leading-relaxed ">
+        Lorem ipsum dolor sit amet consectetur adipisicing elit. Quasi, illo blanditiis. Dignissimos, provident rerum!
+        Eligendi, quidem labore cumque, eveniet tenetur aut aspernatur beatae harum unde mollitia consequuntur magni
+        illum recusandae. Lorem ipsum dolor sit amet consectetur adipisicing elit. Dignissimos, provident rerum! Eligendi,
+        quidem labore cumque.
+      </p>
+    </div>
+  </div>
+</div>
 
 
   {/* Core Values Section */}
@@ -306,10 +368,28 @@ const Home = () => {
       </Slider>
     </section>
 
-  {/* Footer */}
-  <footer className="py-8 text-center bg-indigo-600 text-white">
-    <p>&copy; 2023 Somali Regional State Education Bureau. All rights reserved.</p>
-  </footer>
+    <div className="connetus">
+  <div className="bg-indigo-500 text-white rounded py-16 px-6 lg:px-12 font-sans">
+    <div className="max-w-7xl mx-auto text-center">
+      {/* Section Header */}
+      <h2 className="text-4xl font-bold mb-8">Contact Us</h2>
+      <p className="text-lg text-gray-200 mb-8">
+        Stay updated with the latest news by subscribing to our email list.
+      </p>
+
+      {/* Single Email Input Form */}
+      <form className="bg-white rounded-lg shadow-lg p-6 max-w-md mx-auto flex flex-col space-y-4">
+        <input
+          type="email"
+          placeholder="Enter your email"
+          className="w-full px-6 py-4 text-lg border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-indigo-500"
+        />
+      </form>
+    </div>
+  </div>
+</div>
+
+
 </div>
 
   );

@@ -22,7 +22,7 @@ const TeacherList = () => {
   useEffect(() => {
     const fetchTeachers = async () => {
       try {
-        const response = await axios.get('/finalapi/');
+        const response = await axios.get('https://finalbakend.vercel.app/');
         const teachersWithImages = await Promise.all(
           response.data.map(async (teacher) => {
             if (teacher.picture) {
@@ -56,7 +56,7 @@ const TeacherList = () => {
   const handleDelete = async (id) => {
     if (window.confirm('Are you sure you want to delete this teacher?')) {
       try {
-        await axios.delete(`/finalapi/${id}`);
+        await axios.delete(`https://finalbakend.vercel.app/${id}`);
         setTeachers(teachers.filter((teacher) => teacher._id !== id));
       } catch (err) {
         // console.error('Failed to delete teacher', err);

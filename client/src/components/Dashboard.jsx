@@ -94,7 +94,7 @@ const Dashboard = () => {
   useEffect(() => {
     const fetchTeachersData = async () => {
       try {
-        const response = await axios.get('/finalapi/'); // Replace with your API endpoint
+        const response = await axios.get('https://finalbakend.vercel.app/'); // Replace with your API endpoint
         if (Array.isArray(response.data)) {
           setTeachers(response.data);
           setFilteredTeachers(response.data); // Initialize filtered list
