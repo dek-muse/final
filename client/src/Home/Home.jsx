@@ -4,6 +4,9 @@ import axios from 'axios';
 import { FaBook, FaBullseye, FaRocket, FaCheckCircle, FaHandsHelping, FaRegLightbulb, FaBalanceScale, FaUsers, FaStar, FaRegHandshake, FaFlag, FaMedal, FaMale, FaFemale, FaRegGrin } from 'react-icons/fa';
 import { useSpring, animated } from 'react-spring';
 import homeimage from '../assets/homeimage.svg';
+import officeworkone from '../assets/officeworkone.svg'
+import officeworktwo from '../assets/officeworktwo.svg'
+import officeworkthree from '../assets/officeworkthree.svg'
  
 // Ensure the file exists and path is correct
 
@@ -246,7 +249,7 @@ const Home = () => {
   <div className="flex flex-col md:flex-row items-center gap-10">
     <div className="w-full md:w-1/2">
     
-      <img src={homeimage} alt="Education Illustration" className="w-full "/>
+      <img src={officeworkone} alt="Education Illustration" className="w-full "/>
 
     </div>
     <div className="w-full md:w-1/2 mt-8">
@@ -266,7 +269,7 @@ const Home = () => {
   {/* Section 2 */}
   <div className="flex flex-col md:flex-row items-center gap-10">
     <div className="w-full md:w-1/2 mt-8 md:order-2">
-      <img src={homeimage} alt="Education Illustration" className="w-full " />
+      <img src={officeworktwo} alt="Education Illustration" className="w-full " />
     </div>
     <div className="w-full md:w-1/2">
       <div className="flex items-center mb-4">
@@ -285,7 +288,7 @@ const Home = () => {
   {/* Section 3 */}
   <div className="flex flex-col md:flex-row items-center gap-10">
     <div className="w-full md:w-1/2">
-      <img src={homeimage} alt="Education Illustration" className="w-full " />
+      <img src={officeworkthree} alt="Education Illustration" className="w-full " />
     </div>
     <div className="w-full md:w-1/2 mt-8">
       <div className="flex items-center mb-4">
