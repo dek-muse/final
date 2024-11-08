@@ -69,37 +69,36 @@ const App = () => {
               <Route path="/about" element={<About />} />
 
               {/* Protected routes */}
-              <Route path="/profile" element={<PrivateRoute><SidebarLayout><DashProfile /></SidebarLayout></PrivateRoute>} />
+              <Route path="/profile" element={<PrivateRoute><DashProfile /></PrivateRoute>} />
               <Route path="dashboard2" element={<RoleBasedRoute requiredRole="SuperAdmin" requiredRegion="Sitti"><SidebarLayout><Dashboard /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="dashboard2" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Sitti"><SidebarLayout><Dashboard /></SidebarLayout></RoleBasedRoute>} />
-
+ 
 
               {/* Wrap all region-specific teacher form routes with SidebarLayout */}
-              <Route path="/teacher/form/sitti" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Sitti"><SidebarLayout><SittiForm /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teacher/form/daawo" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Daawo"><SidebarLayout><DaawoForm /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teacher/form/erar" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Erar"><SidebarLayout><ErarForm /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teacher/form/fafaan" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Faafan"><SidebarLayout><FaafanForm /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teacher/form/jarar" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Jarar"><SidebarLayout><JararForm /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teacher/form/liibaan" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Liibaan"><SidebarLayout><LiibaanForm /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teacher/form/nogob" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Nogob"><SidebarLayout><NogobForm /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teacher/form/qoraxay" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Qoraxay"><SidebarLayout><QoraxayForm /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teacher/form/shabelle" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Shabelle"><SidebarLayout><ShabelleForm /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teacher/form/afdheer" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Afdheer"><SidebarLayout><AfdheerForm /></SidebarLayout></RoleBasedRoute>} />
+              <Route path="/teacher/form/sitti" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Sitti"><SittiForm /></RoleBasedRoute>} />
+              <Route path="/teacher/form/daawo" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Daawo"><DaawoForm /></RoleBasedRoute>} />
+              <Route path="/teacher/form/erar" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Erar"><ErarForm /></RoleBasedRoute>} />
+              <Route path="/teacher/form/fafaan" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Faafan"><FaafanForm /></RoleBasedRoute>} />
+              <Route path="/teacher/form/jarar" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Jarar"><JararForm /></RoleBasedRoute>} />
+              <Route path="/teacher/form/liibaan" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Liibaan"><LiibaanForm /></RoleBasedRoute>} />
+              <Route path="/teacher/form/nogob" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Nogob"><NogobForm /></RoleBasedRoute>} />
+              <Route path="/teacher/form/qoraxay" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Qoraxay"><QoraxayForm /></RoleBasedRoute>} />
+              <Route path="/teacher/form/shabelle" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Shabelle"><ShabelleForm /></RoleBasedRoute>} />
+              <Route path="/teacher/form/afdheer" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Afdheer"><AfdheerForm /></RoleBasedRoute>} />
 
 
 
               {/* Region-specific teacher reports */}
-              <Route path="/teacher/report/afdheer" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Afdheer"><SidebarLayout><AfdheerReport /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teacher/report/daawo" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Daawo"><SidebarLayout><DaawoReport /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teacher/report/doolo" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Doolo"><SidebarLayout><DooloReport /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teacher/report/erar" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Erar"><SidebarLayout><ErarReport /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teacher/report/faafan" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Faafan"><SidebarLayout><FaafanReport /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teacher/report/jarar" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Jarar"><JararReport /><SidebarLayout></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teacher/report/liibaan" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Liibaan"><SidebarLayout><LiibaanReport /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teacher/report/nogob" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Nogob"><SidebarLayout><NogobReport /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teacher/report/qoraxay" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Qoraxay"><SidebarLayout><QoraxayReport /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teacher/report/shabelle" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Shabelle"><SidebarLayout><ShabelleReport /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teacher/report/sitti" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Sitti"><SidebarLayout><SittiReport /> </SidebarLayout></RoleBasedRoute>} />
+              <Route path="/teacher/report/afdheer" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Afdheer"><AfdheerReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/daawo" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Daawo"><DaawoReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/doolo" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Doolo"><DooloReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/erar" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Erar"><ErarReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/faafan" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Faafan"><FaafanReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/jarar" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Jarar"><JararReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/liibaan" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Liibaan"><LiibaanReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/nogob" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Nogob"><NogobReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/qoraxay" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Qoraxay"><QoraxayReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/shabelle" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Shabelle"><ShabelleReport /></RoleBasedRoute>} />
+              <Route path="/teacher/report/sitti" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Sitti"><SittiReport /> </RoleBasedRoute>} />
 
               {/* SuperAdmin general */}
               <Route path="/dashboard" element={<RoleBasedRoute requiredRole="SuperAdmin"><SidebarLayout><Dashboard /></SidebarLayout></RoleBasedRoute>} />
