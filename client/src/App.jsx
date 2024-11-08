@@ -59,34 +59,34 @@ const App = () => {
       <div className="flex flex-col h-screen app">
         <NaveBare /> {/* Ensure the NaveBare is fixed at the top */}
         <div className="">
-        {/* <Sidebare /> */}
-        <main className="flex-1 p-6 overflow-auto">
+          {/* <Sidebare /> */}
+          <main className="flex-1 p-6 overflow-auto">
             <Routes>
-            <Route path="/" element={<NoSidebarLayout><Home /></NoSidebarLayout>} />
-            <Route path="/*" element={<NotFound />} />
+              <Route path="/" element={<NoSidebarLayout><Home /></NoSidebarLayout>} />
+              <Route path="/*" element={<NotFound />} />
               <Route path="/signin" element={<SingIn />} />
-              <Route path="/connect" element={<Connect  />} />
-              <Route path="/about" element={<About  />} />
+              <Route path="/connect" element={<Connect />} />
+              <Route path="/about" element={<About />} />
 
               {/* Protected routes */}
-              <Route path="/profile" element={<PrivateRoute><SidebarLayout><DashProfile/></SidebarLayout></PrivateRoute>} />
-          <Route path="dashboard2" element={<RoleBasedRoute requiredRole="SuperAdmin" requiredRegion="Sitti"><SidebarLayout><Dashboard  /></SidebarLayout></RoleBasedRoute>} />
-          <Route path="dashboard2" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Sitti"><SidebarLayout><Dashboard  /></SidebarLayout></RoleBasedRoute>} />
+              <Route path="/profile" element={<PrivateRoute><SidebarLayout><DashProfile /></SidebarLayout></PrivateRoute>} />
+              <Route path="dashboard2" element={<RoleBasedRoute requiredRole="SuperAdmin" requiredRegion="Sitti"><SidebarLayout><Dashboard /></SidebarLayout></RoleBasedRoute>} />
+              <Route path="dashboard2" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Sitti"><SidebarLayout><Dashboard /></SidebarLayout></RoleBasedRoute>} />
 
-    
+
               {/* Wrap all region-specific teacher form routes with SidebarLayout */}
-          <Route path="/teacher/form/sitti" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Sitti"><SidebarLayout><SittiForm /></SidebarLayout></RoleBasedRoute>} />
-          <Route path="/teacher/form/daawo" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Daawo"><SidebarLayout><DaawoForm /></SidebarLayout></RoleBasedRoute>} />
-          <Route path="/teacher/form/erar" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Erar"><SidebarLayout><ErarForm /></SidebarLayout></RoleBasedRoute>} />
-          <Route path="/teacher/form/fafaan" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Faafan"><SidebarLayout><FaafanForm /></SidebarLayout></RoleBasedRoute>} />
-          <Route path="/teacher/form/jarar" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Jarar"><SidebarLayout><JararForm /></SidebarLayout></RoleBasedRoute>} />
-          <Route path="/teacher/form/liibaan" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Liibaan"><SidebarLayout><LiibaanForm /></SidebarLayout></RoleBasedRoute>} />
-          <Route path="/teacher/form/nogob" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Nogob"><SidebarLayout><NogobForm /></SidebarLayout></RoleBasedRoute>} />
-          <Route path="/teacher/form/qoraxay" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Qoraxay"><SidebarLayout><QoraxayForm /></SidebarLayout></RoleBasedRoute>} />
-          <Route path="/teacher/form/shabelle" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Shabelle"><SidebarLayout><ShabelleForm /></SidebarLayout></RoleBasedRoute>} />
-          <Route path="/teacher/form/afdheer" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Afdheer"><SidebarLayout><AfdheerForm /></SidebarLayout></RoleBasedRoute>} />
+              <Route path="/teacher/form/sitti" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Sitti"><SidebarLayout><SittiForm /></SidebarLayout></RoleBasedRoute>} />
+              <Route path="/teacher/form/daawo" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Daawo"><SidebarLayout><DaawoForm /></SidebarLayout></RoleBasedRoute>} />
+              <Route path="/teacher/form/erar" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Erar"><SidebarLayout><ErarForm /></SidebarLayout></RoleBasedRoute>} />
+              <Route path="/teacher/form/fafaan" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Faafan"><SidebarLayout><FaafanForm /></SidebarLayout></RoleBasedRoute>} />
+              <Route path="/teacher/form/jarar" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Jarar"><SidebarLayout><JararForm /></SidebarLayout></RoleBasedRoute>} />
+              <Route path="/teacher/form/liibaan" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Liibaan"><SidebarLayout><LiibaanForm /></SidebarLayout></RoleBasedRoute>} />
+              <Route path="/teacher/form/nogob" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Nogob"><SidebarLayout><NogobForm /></SidebarLayout></RoleBasedRoute>} />
+              <Route path="/teacher/form/qoraxay" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Qoraxay"><SidebarLayout><QoraxayForm /></SidebarLayout></RoleBasedRoute>} />
+              <Route path="/teacher/form/shabelle" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Shabelle"><SidebarLayout><ShabelleForm /></SidebarLayout></RoleBasedRoute>} />
+              <Route path="/teacher/form/afdheer" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Afdheer"><SidebarLayout><AfdheerForm /></SidebarLayout></RoleBasedRoute>} />
 
-        
+
 
               {/* Region-specific teacher reports */}
               <Route path="/teacher/report/afdheer" element={<RoleBasedRoute requiredRole="Admin" requiredRegion="Afdheer"><SidebarLayout><AfdheerReport /></SidebarLayout></RoleBasedRoute>} />
@@ -110,7 +110,7 @@ const App = () => {
               <Route path="/listUsers" element={<RoleBasedRoute requiredRole="SuperAdmin"><SidebarLayout><ListUser /></SidebarLayout></RoleBasedRoute>} />
               <Route path="/report" element={<RoleBasedRoute requiredRole="SuperAdmin"><SidebarLayout><Report /></SidebarLayout></RoleBasedRoute>} />
               <Route path="/teachersInfo" element={<RoleBasedRoute requiredRole="SuperAdmin"><SidebarLayout><TeachersInfo /></SidebarLayout></RoleBasedRoute>} />
-              <Route path="/teachers/:id" element={<RoleBasedRoute requiredRole="SuperAdmin"><SidebarLayout><TeacherDetails   /></SidebarLayout></RoleBasedRoute>} />
+              <Route path="/teachers/:id" element={<RoleBasedRoute requiredRole="SuperAdmin"><SidebarLayout><TeacherDetails /></SidebarLayout></RoleBasedRoute>} />
               <Route path="/teacher/form" element={<RoleBasedRoute requiredRole="SuperAdmin"><SidebarLayout><TeacherForm /></SidebarLayout></RoleBasedRoute>} />
 
             </Routes>

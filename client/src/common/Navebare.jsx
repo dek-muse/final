@@ -107,8 +107,9 @@ const Header = () => {
 
       {/* Mobile Menu */}
       {isMobileMenuOpen && (
-        <div className={`md:hidden mt-2 absolute right-0 top-[90px] z-10 p-4 rounded-lg ${isDarkMode ? 'bg-gray-800' : 'bg-white'} transition duration-300 shadow-md`}>
+        <div className={`md:hidden mt-2 absolute right-0 top-[90px] z-10 p-4 rounded-lg ${isDarkMode ? 'bg-gray-800 ' : 'text-black bg-white'} transition duration-300 shadow-md`}>
           <NavLink to="/" className="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600">Home</NavLink>
+          <NavLink to="/dashboard2" className="px-4 py-2 rounded-md hover:bg-gray-200 dark:hover:bg-gray-600 transition duration-300">Dashboard</NavLink>
           <NavLink to="/about" className="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600">About</NavLink>
           <NavLink to="/connect" className="block px-4 py-2 hover:bg-gray-200 dark:hover:bg-gray-600">Connect</NavLink>
           {currentUser ? (
